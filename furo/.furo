@@ -1,0 +1,26 @@
+spectools: "1.22.3"
+module: "github.com:theNorstroem/spectools"
+version: "v1.0.0"
+specDir: "./pkg/descriptor/specs"
+specFormat: "yaml" #set to yaml or json
+dependencies:
+  - "git@github.com:theNorstroem/furoBaseSpecs.git v1.16.4" # The importer looks for all **/*.type.spec files recursive The importer looks for all **/*.service.spec files recursive
+dependenciesDir: "./dependencies"
+commands: #camelCase is not allowed, command scripts can only be executed from a flow
+  buf_generate: "./scripts/buf_generate.sh"
+flows:
+  default:
+    - genMessageProtos
+    - buf_generate
+build:
+  proto:
+    targetDir: "pkg/" #Hint: add this to your proto include path
+dist:
+  files: # enter a list of files and directories which should be installed by other projects
+    - pkg/descriptor
+    - README.md
+    - .furo
+extensions:
+  genserver:
+    corename: fruit
+    modulename: fruits
