@@ -8,7 +8,7 @@ bookHidden: true
 # bookComments: true
 ---
 
-# フロー Furo web
+# フロー Furo Web Components
 
 
 {{< columns >}}
