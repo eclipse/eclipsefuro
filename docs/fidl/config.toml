@@ -1,10 +1,10 @@
-baseURL = "http://furo.pro/"
+baseURL = "http://fidl.furo.pro/"
 languageCode = "en-us"
-title = "フロー Furo"
+title = "フロー FIDL"
 theme = ["book"]
 
 # (Optional) Set Google Analytics if you use it to track your website.
-# googleAnalytics = "G-9RXJYQ94NB"
+# googleAnalytics = "G-9RXJYQ94NB" UA-
 
 # Highlighting config
 pygmentsCodeFences = true
@@ -56,7 +56,10 @@ enableGitInfo = true
   url = "https://github.com/eclipse/eclipsefuro"
   weight = 10
 
-
+[[menu.after]]
+  name = "furo.pro"
+  url = "https://furo.pro/"
+  weight = 20
 
 [params]
   # (Optional, default light) Sets color theme: light, dark or auto.
@@ -70,7 +73,7 @@ enableGitInfo = true
 
   # (Optional, default none) Set the path to a logo for the book. If the logo is
   # /static/logo.png then the path would be logo.png
-  # BookLogo = 'incubation.png'
+  # BookLogo = 'logo.png'
 
   # (Optional, default none) Set leaf bundle to render as side menu
   # When not specified file structure and weights will be used
@@ -83,7 +86,7 @@ enableGitInfo = true
 
   # Set source repository location.
   # Used for 'Last Modified' and 'Edit this page' links.
-  BookRepo = 'https://github.com/theNorstroem/furo/documentation'
+  BookRepo = 'https://github.com/eclipse/eclipsefuro'
 
   # Enable "Edit this page" links for 'doc' page type.
   # Disabled by default. Uncomment to enable. Requires 'BookRepo' param.
