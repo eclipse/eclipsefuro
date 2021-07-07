@@ -1,7 +1,7 @@
 ## フロー Furo
 
 Furo provides simply enterprise-flavoured, language-agnostic API development.
-It comes with multiple source of truths and generates border-crossing type and service definitions.
+It comes with multiple sources of truth and generates border-crossing type and service definitions.
 
 Furo contains helpful generators, converters, sanitizer for the Furo specs.
 
