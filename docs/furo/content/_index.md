@@ -6,7 +6,8 @@ description: フロー Furo
 ---
 
 # フロー Furo
-Intro text
+Furo provides simply enterprise-flavoured, language-agnostic API development.
+It comes with multiple sources of truth and generates border-crossing type and service definitions.
 
 {{< columns >}}
 ## Enterprise ready
