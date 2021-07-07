@@ -6,10 +6,7 @@ description: フロー Furo, the utility to work with Furo FIDLs
 ---
 
 # フロー Furo
-Furo is the main utility to work with furo specs ([FIDLs](https://fidl.furo.pro) ).
-
-Furo contains helpful generators, converters, sanitizer for the furo specs.
-
+Intro text
 
 {{< columns >}}
 ## Enterprise ready
@@ -22,7 +19,16 @@ Furo contains helpful generators, converters, sanitizer for the furo specs.
 Define your types once and use them on any layer from the frontend to the backend.
 <--->
 ## Easy to write
-The furo interface definition language (([FIDLs](https://fidl.furo.pro)) 
+The furo interface definition language ([FIDL](https://fidl.furo.pro)) makes it easy to define your types and services.
+
+```yaml
+# This is am example µSpec for a type
+- type: 'person.Client #A generic client.'
+  fields:
+    id: '* string:1 #This field is required (*).'
+    name: '- string:2 #This one is readonly (-).'
+    tags: '[] string:3 #This one is repeated ([]).'
+```
 {{< /columns >}}
 
 
