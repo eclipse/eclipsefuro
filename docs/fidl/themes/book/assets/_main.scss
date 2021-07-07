@@ -103,7 +103,12 @@ ul.pagination {
     width: $menu-width;
     padding: $padding-16;
     background: var(--body-background);
-
+    background-image: url(/incubation.png);
+    background-position: bottom left;
+    background-size: 160px;
+    background-opacity: 0.5;
+    background-repeat: no-repeat;
+    padding-bottom:180px;
     @include fixed;
   }
 
