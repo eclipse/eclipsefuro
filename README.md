@@ -1,14 +1,16 @@
 ## フロー Furo
-Furo spectools is the main utility to work with furo specs ( FIDLs ).
 
-Furo spectools contains helpful generators, converters, sanitizer for the furo specs.
+Furo provides simply enterprise-flavoured, language-agnostic API development.
+It comes with multiple source of truths and generates border-crossing type and service definitions.
+
+Furo contains helpful generators, converters, sanitizer for the Furo specs.
 
 ### Synopsis
 
-Furo spectools contains helpful generators, converters, sanitizer for the furo specs.
+Furo contains helpful generators, converters, sanitizer for the furo specs.
 Read more about the single commands in the see also section below.
 
-Calling spectools without any arguments and flags will run the flow runner with the default flow. 
+Calling furo without any arguments and flags will run the flow runner with the default flow. 
 Modify your default flow in the .furo config file to your needs. You can set any of the sub commands as default.
 
 ### Installation
