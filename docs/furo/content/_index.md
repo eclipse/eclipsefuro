@@ -6,7 +6,8 @@ description: フロー Furo, the utility to work with Furo FIDLs
 ---
 
 # フロー Furo
-Intro text
+Furo provides simply enterprise-flavoured, language-agnostic API development.
+It comes with multiple sources of truth and generates border-crossing type and service definitions.
 
 {{< columns >}}
 ## Enterprise ready
