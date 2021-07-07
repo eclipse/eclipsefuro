@@ -2,7 +2,7 @@
 title: Introduction
 type: docs
 bookToc: false
-description: フロー Furo
+description: フロー Furo provides simply enterprise-flavoured, language-agnostic API development.
 ---
 
 # フロー Furo
