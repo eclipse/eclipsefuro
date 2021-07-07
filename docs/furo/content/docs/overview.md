@@ -10,11 +10,8 @@ bookToc: false
 
 
 # Overview
-A brief overview over the main tasks where furo / furoc / protoc[^1] are used for.
-
-We have seen some nice generators like *furoc-gen-ddl*[^3], which uses simple type and field extensions to generate mysql DDLs. 
-
-A documentation generator *furoc-gen-apidocs*[^2] is in development.
+Furo can produce and consume proto files. This enables you to use all the existing protoc generators to generate the 
+output that fits your needs. Outputs can be documentations, boilerplate code and even applications. 
 
 {{< mermaid >}}
 graph TD
@@ -23,14 +20,10 @@ graph TD
 Spec([Spec])
 µSpec-- furo -->Spec
 Spec-. furo .->µSpec
-someProto[Proto] -- protoc-gen-furo-specs*1 --> µSpec
 
+
+Spec-- furoc-gen-XXX  -->x[...]
 Spec-- furo -->Es6Module
-Spec-- furoc-gen-apidocs -->Docs
-Spec-- furoc-gen-u33e  -->U33E
-U33E-- simple-generator  -->web-components
-Spec-. furoc-gen-ddl .->ddl[(DDL)]
-Spec-- furo  -->xs[...]
 Spec-- furo -->Proto
 
 
@@ -38,11 +31,9 @@ Proto-- protoc-gen-grpc-gateway  -->Gateway
 Proto-- protoc-gen-openapiv2  -->OpenApi
 OpenApi-- swagger  -->xo[...]
 Proto-- protoc  -->xp[...]
+Proto -. protoc-gen-furo-specs .->µSpec
 
+classDef green fill:#9f6,stroke:#333,stroke-width:2px;
+class Spec,µSpec green
 {{< /mermaid >}}
 
-[^1]: Protos are usualy a product of furo, but they can also be a source for the µSpecs (protoc-gen-furo-specs). 
-
-[^2]:  not released yet
-
-[^3]: sadly not open source :-(
