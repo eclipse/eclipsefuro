@@ -19,8 +19,10 @@ Furo contains helpful generators, converters, sanitizer for the furo specs.
 
 {{< columns >}}
 ## Language agnostic
+Define your types once and use them on any layer from the frontend to the backend.
 <--->
 ## Easy to write
+The furo interface definition language (([FIDLs](https://fidl.furo.pro)) 
 {{< /columns >}}
 
 
@@ -72,4 +74,6 @@ Protoc --> Publish(publish)
 ## Browser integration
 <--->
 ## web-components
+Based on web standards and future proved. Compliant with any technology of choice. With minimal footprint it includes all enterprise standards, i18n, theming, etc
+[read more](/docs/web-components/)
 {{< /columns >}}
