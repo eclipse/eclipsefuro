@@ -2,7 +2,7 @@
 title: Introduction
 type: docs
 bookToc: false
-description: フロー Furo, the utility to work with Furo FIDLs 
+description: フロー Furo
 ---
 
 # フロー Furo
