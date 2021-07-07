@@ -1,6 +1,6 @@
-baseURL = "http://spectools.furo.pro/"
+baseURL = "http://furo.pro/"
 languageCode = "en-us"
-title = "フロー Spectools"
+title = "フロー Furo"
 theme = ["book"]
 
 # (Optional) Set Google Analytics if you use it to track your website.
@@ -53,13 +53,10 @@ enableGitInfo = true
 # [[menu.before]]
 [[menu.after]]
   name = "Github"
-  url = "https://github.com/theNorstroem/spectools"
+  url = "https://github.com/eclipse/eclipsefuro/furo"
   weight = 10
 
-[[menu.after]]
-  name = "furo.pro"
-  url = "https://furo.pro/"
-  weight = 20
+
 
 [params]
   # (Optional, default light) Sets color theme: light, dark or auto.
@@ -86,7 +83,7 @@ enableGitInfo = true
 
   # Set source repository location.
   # Used for 'Last Modified' and 'Edit this page' links.
-  BookRepo = 'https://github.com/theNorstroem/spectools/documentation'
+  BookRepo = 'https://github.com/theNorstroem/furo/documentation'
 
   # Enable "Edit this page" links for 'doc' page type.
   # Disabled by default. Uncomment to enable. Requires 'BookRepo' param.

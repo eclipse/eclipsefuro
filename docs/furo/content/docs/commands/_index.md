@@ -9,7 +9,7 @@ The furo spec toolkit 1.21.2
 
 ### Synopsis
 
-Furo furo contains helpful generators, converters, sanitizer for the furo specs.
+Furo contains helpful generators, converters, sanitizer for the furo specs.
 Read more about the single commands in the see also section below.
 
 Calling furo without any arguments and flags will run the flow runner with the default flow.
