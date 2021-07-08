@@ -229,7 +229,7 @@ message Type {
     // the type description
     string description = 3;
 
-    // Type lifecycle information, setting deprecated to true will log a warning when running spectools
+    // Type lifecycle information, setting deprecated to true will log a warning when running furo
     descriptor.Lifecycle lifecycle = 7;
 
     // information for the proto generator, should be removed for the client spec

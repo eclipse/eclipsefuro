@@ -83,7 +83,7 @@ fields:
         constraints: {}
     lifecycle:
         type: descriptor.Lifecycle
-        description: Type lifecycle information, setting deprecated to true will log a warning when running spectools
+        description: Type lifecycle information, setting deprecated to true will log a warning when running furo
         __proto:
             number: 7
         __ui:

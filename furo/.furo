@@ -1,5 +1,5 @@
-spectools: "1.22.3"
-module: "github.com:theNorstroem/spectools"
+furo: "1.22.3"
+module: "github.com:theNorstroem/furo"
 version: "v1.0.0"
 specDir: "./pkg/descriptor/specs"
 specFormat: "yaml" #set to yaml or json

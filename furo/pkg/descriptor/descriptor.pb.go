@@ -972,7 +972,7 @@ type Type struct {
 	Type string `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`
 	// the type description
 	Description string `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	// Type lifecycle information, setting deprecated to true will log a warning when running spectools
+	// Type lifecycle information, setting deprecated to true will log a warning when running furo
 	Lifecycle *Lifecycle `protobuf:"bytes,7,opt,name=lifecycle,proto3" json:"lifecycle,omitempty"`
 	// information for the proto generator, should be removed for the client spec
 	XProto *Typeproto `protobuf:"bytes,4,opt,name=__proto,json=Proto,proto3" json:"__proto,omitempty"`

@@ -341,7 +341,7 @@
   - commit: 605c2762a6c9c5fd457c1cdc9b226d67b76245f8
     note: |-
       feat: semver check against .furo config.
-      A config which requires a newer release then installed, forces spectools to quit.
+      A config which requires a newer release then installed, forces furo to quit.
     author:
       name: veith
       email: veithz@gmail.com
@@ -483,7 +483,7 @@
   - commit: 4f7be62325741c58a5be96d0e9f175d2b404d9e8
     note: |-
       feat: using argument for flow, so you can write
-      spectools run flowname instead spectools run -f=flowname
+      furo run flowname instead furo run -f=flowname
     author:
       name: veith
       email: veithz@gmail.com
@@ -1275,7 +1275,7 @@
   - commit: 605c2762a6c9c5fd457c1cdc9b226d67b76245f8
     note: |-
       feat: semver check against .furo config.
-      A config which requires a newer release then installed, forces spectools to quit.
+      A config which requires a newer release then installed, forces furo to quit.
     author:
       name: veith
       email: veithz@gmail.com
@@ -1437,7 +1437,7 @@
   - commit: 4f7be62325741c58a5be96d0e9f175d2b404d9e8
     note: |-
       feat: using argument for flow, so you can write
-      spectools run flowname instead spectools run -f=flowname
+      furo run flowname instead furo run -f=flowname
     author:
       name: veith
       email: veithz@gmail.com
@@ -2681,7 +2681,7 @@
       description: Release version 1.1.0
       body: ""
   - commit: b4b823f7148ed17d88bc99189db0141b4cdeda38
-    note: 'feat: calling spectools without arguments will run the default flow.'
+    note: 'feat: calling furo without arguments will run the default flow.'
     author:
       name: veith
       email: veithz@gmail.com
@@ -2692,7 +2692,7 @@
       category: feat
       scope: ""
       breaking: false
-      description: calling spectools without arguments will run the default flow.
+      description: calling furo without arguments will run the default flow.
       body: ""
   - commit: 173aad3d53ef3a219bf7600a721bd51c7e962682
     note: 'doc: doc updated'
@@ -3275,7 +3275,7 @@
       description: Release version 1.1.0
       body: ""
   - commit: b4b823f7148ed17d88bc99189db0141b4cdeda38
-    note: 'feat: calling spectools without arguments will run the default flow.'
+    note: 'feat: calling furo without arguments will run the default flow.'
     author:
       name: veith
       email: veithz@gmail.com
@@ -3286,7 +3286,7 @@
       category: feat
       scope: ""
       breaking: false
-      description: calling spectools without arguments will run the default flow.
+      description: calling furo without arguments will run the default flow.
       body: ""
   - commit: 173aad3d53ef3a219bf7600a721bd51c7e962682
     note: 'doc: doc updated'
@@ -3833,7 +3833,7 @@
       description: Release version 1.1.0
       body: ""
   - commit: b4b823f7148ed17d88bc99189db0141b4cdeda38
-    note: 'feat: calling spectools without arguments will run the default flow.'
+    note: 'feat: calling furo without arguments will run the default flow.'
     author:
       name: veith
       email: veithz@gmail.com
@@ -3844,7 +3844,7 @@
       category: feat
       scope: ""
       breaking: false
-      description: calling spectools without arguments will run the default flow.
+      description: calling furo without arguments will run the default flow.
       body: ""
   - commit: 173aad3d53ef3a219bf7600a721bd51c7e962682
     note: 'doc: doc updated'

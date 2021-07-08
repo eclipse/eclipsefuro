@@ -33,12 +33,12 @@ var RootCmd = rootCmd
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "spectools",
+	Use:   "furo",
 	Short: "The furo spec toolkit",
-	Long: `Furo spectools contains helpful generators, converters, sanitizer for the furo specs.
+	Long: `Furo furo contains helpful generators, converters, sanitizer for the furo specs.
 Read more about the single commands in the see also section below.
 
-Calling spectools without any arguments and flags will run the flow runner with the default flow. 
+Calling furo without any arguments and flags will run the flow runner with the default flow. 
 Modify your default flow in the .furo config file to your needs. You can set any of the sub commands as default.
 
 > Note: Environment variables are prefixed with **FST**. 
@@ -50,7 +50,7 @@ Modify your default flow in the .furo config file to your needs. You can set any
 	Run: func(cmd *cobra.Command, args []string) {
 		runner.Run(cmd, args)
 	},
-	Version: "1.26.1",
+	Version: "1.27.1",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -97,11 +97,12 @@ func initConfig() {
 		fmt.Println(err)
 	}
 
-	// read the spectools version, abort if the project version is higher
-	projectVersion := ("v" + viper.GetString("spectools"))
+	// read the furo version, abort if the project version is higher
+	projectVersion := ("v" + viper.GetString("furo"))
+
 	toolVersion := ("v" + rootCmd.Version)
 	if semver.Max(projectVersion, toolVersion) != toolVersion {
-		log.Fatal("The project requires a newer version of spectools. \n Spectools ", toolVersion, " is installed, ", projectVersion, " is required")
+		log.Fatal("The project requires a newer version of furo. \n Furo ", toolVersion, " is installed, ", projectVersion, " is required")
 	}
 
 }
