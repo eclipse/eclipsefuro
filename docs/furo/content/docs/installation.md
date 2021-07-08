@@ -14,7 +14,7 @@ docker image which has nearly all dependencies already installed to generate all
     brew install furo
 
 ## Installation with go
-    GO111MODULE=on go get github.com/eclipse/eclipsefuro/furo@v1.xx.xx
+    GO111MODULE=on go get github.com/eclipse/eclipsefuro/furo@v1.27.2
 
 ## Installation from sources
     git clone git@github.com:eclipse/eclipsefuro.git
