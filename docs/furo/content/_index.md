@@ -35,21 +35,6 @@ The furo interface definition language ([FIDL](https://fidl.furo.pro)) makes it 
     name: '- string:2 #This one is readonly (-).'
     tags: '[] string:3 #This one is repeated ([]).'
 ```
-```yaml
-# This is an example µSpec for a service
-- name: PersonService
-  description: service specs for the person api
-  package: personservice
-  target: personservice.proto
-  methods:
-    - md: 'List: GET /persons type.Request, type.Response #The List method takes zero or more parameters as input, and returns a type.Response that match the input parameters.'
-      qp:
-        filter: 'string #Use this to define filters for the list.'
-        order_by: 'string #Use this to specify the ordering.'
-        page_size: 'uint32 #Set the size of the pages (elements per page).'
-        page: 'uint32 #Use this field to specify the page to display.'
-        q: 'string #query string.'
-```
 {{< /columns >}}
 
 
