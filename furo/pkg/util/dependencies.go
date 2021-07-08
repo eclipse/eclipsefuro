@@ -18,10 +18,10 @@ func GetDependencyList() []string {
 		// should only have 2 parts (repo, version)
 		if dep.Kind == UNKNOWN {
 			fmt.Println(ScanForStringPosition(d, "./.furo"), "Config Error")
-			log.Fatal("Config error or dependency not installed. Maybe you should run spectools install")
+			log.Fatal("Config error or dependency not installed. Maybe you should run furo install")
 		}
 
-		// todo check for existence of p and give spectools install hint
+		// todo check for existence of p and give furo install hint
 
 		// load config to resolve Message and Service dirs
 		depconf := viper.New()

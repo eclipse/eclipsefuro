@@ -29,8 +29,8 @@ import (
 // initCmd represents the Init command
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "planed feature: Creates a initial spectools config",
-	Long:  `Init creates a initial spectools config with defaults.`,
+	Short: "planed feature: Creates a initial furo config",
+	Long:  `Init creates a initial furo config with defaults.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("This feature is not available at the moment. Please create a .spectool config file by hand.")
 

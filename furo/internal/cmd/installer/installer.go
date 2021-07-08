@@ -75,11 +75,14 @@ func Run(cmd *cobra.Command, args []string) {
 			iconf := viper.New()
 			iconf.AddConfigPath(packageRepoDir)
 			iconf.SetConfigType("yaml") // REQUIRED if the config file does not have the extension in the name
+
+			// compatibility with old spectools projects
 			iconf.SetConfigName(".furo")
+
 			// If a config file is found, read it in.
 			if err := iconf.ReadInConfig(); err != nil {
 				fmt.Println(err)
-				// copy all files, because no spectools was found
+				// copy all files, because no .furo was found
 				copyAllfiles(packageRepoDir, dep)
 			} else {
 				// copy from packageRepoDir to dep.DependencyPath
@@ -87,7 +90,9 @@ func Run(cmd *cobra.Command, args []string) {
 
 				if len(filelist) > 0 {
 					// ensure that the .furo file is installed
-					filelist = append(filelist, ".furo")
+					// disabled for compatibility with old projects
+					// filelist = append(filelist, ".furo")
+
 					for _, fileOrDir := range filelist {
 						src := path.Join(packageRepoDir, fileOrDir)
 						target := path.Join(dep.DependencyPath, fileOrDir)

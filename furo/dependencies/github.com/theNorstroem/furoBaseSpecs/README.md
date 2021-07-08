@@ -2,6 +2,6 @@
 
 How to build:
 
-- run spectools
+- run furo
 - revert "dist/proto/google"
 - commit

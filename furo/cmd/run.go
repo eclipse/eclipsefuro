@@ -30,7 +30,7 @@ import (
 var runCmd = &cobra.Command{
 	Use:   "run",
 	Short: "Runs a configured flow.",
-	Long: `Runs a configured flow of spectools commands.
+	Long: `Runs a configured flow of furo commands.
 
 To configure a flow of commands just add a "flow" in the flows section of your .furo config.
 A flow is just a list of commands which gets executed in order
@@ -51,13 +51,13 @@ Command:
 
 This config will run "cleanTypeProtoDir",  muSpec2Spec"" and "TypeSpec2Proto" in sequence and calling the command publish_npm
 
-Tipp: If you need the types and services in your command, just call spectools again. 
+Tipp: If you need the types and services in your command, just call furo again. 
 
 Like:
     #!/bin/bash
 
     # generate the type documentation...
-    spectools exportAsYaml | simple-generator -t scripts/typedoc.tpl > dist/typedoc.md
+    furo exportAsYaml | simple-generator -t scripts/typedoc.tpl > dist/typedoc.md
 
 [example](../samples/typedoc/readme.md)
 `,

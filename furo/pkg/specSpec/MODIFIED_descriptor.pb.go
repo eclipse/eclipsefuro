@@ -981,7 +981,7 @@ type Type struct {
 	Type string `protobuf:"bytes,2,opt,name=type,proto3" json:"type" yaml:"type"`
 	// the type description
 	Description string `protobuf:"bytes,3,opt,name=description,proto3" json:"description" yaml:"description"`
-	// Type lifecycle information, setting deprecated to true will log a warning when running spectools
+	// Type lifecycle information, setting deprecated to true will log a warning when running furo
 	Lifecycle *Lifecycle `protobuf:"bytes,7,opt,name=lifecycle,proto3" json:"lifecycle" yaml:"lifecycle"`
 	// information for the proto generator, should be removed for the client spec
 	XProto *Typeproto `protobuf:"bytes,4,opt,name=__proto,json=Proto,proto3" json:"__proto" yaml:"__proto"`
