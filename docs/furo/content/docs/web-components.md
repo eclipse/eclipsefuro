@@ -22,7 +22,7 @@ They consume the same types which are defined with furo.
 The transparent data agents are responsible for the communication with the APIs and the adapters for the UI interaction.
 {{< mermaid >}}
 graph TD
-UI[UI elements]  --- agent[Data Agents]
+UI[UI elements]-- HTML ---agent[Data Agents]
 agent-- REST ---API
 {{< /mermaid >}}
 <--->
