@@ -43,6 +43,12 @@ Command mode
 - simple-generator
 - furo
 - furoc
+- buf
+- protoc-gen-buf-breaking
+- protoc-gen-buf-lint
+
+- [jq](https://stedolan.github.io/jq/)
+- [yq](https://mikefarah.gitbook.io/yq/commands/read)
 
 > No furoc generators are installed. Add the needed furoc-gen-XXX to the `.furobecrc` file.
 

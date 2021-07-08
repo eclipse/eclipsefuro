@@ -15,8 +15,6 @@ weight: 1
 
 This container contains all tools you need to work with a furo spec project.
 
-[furoBEC on github](https://github.com/theNorstroem/furoBEC)
-
 ## Usage
 ### Bash mode
 
@@ -46,6 +44,12 @@ This will run furo with the configured flow *build*.
 - simple-generator
 - furo
 - furoc
+- buf
+- protoc-gen-buf-breaking
+- protoc-gen-buf-lint
 
-> No furoc generators are installed. Add the needed furoc-gen-XXX to the `.furobecrc` file. Or build a image based on this one.
+- [jq](https://stedolan.github.io/jq/)
+- [yq](https://mikefarah.gitbook.io/yq/commands/read)
+
+> No furoc generators are installed. Add the needed furoc-gen-XXX to the `.furobecrc` file.
 
