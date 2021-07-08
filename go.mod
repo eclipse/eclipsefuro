@@ -1,4 +1,4 @@
-module github.com/eclipse/eclipsefuro/furo
+module github.com/eclipse/eclipsefuro
 
 go 1.14
 
