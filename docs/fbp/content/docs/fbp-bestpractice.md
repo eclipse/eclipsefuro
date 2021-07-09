@@ -1,8 +1,9 @@
 ---
 date: 2017-04-17T14:02:04+02:00
-title: Best practice
-weight: 600
+title: Best Practice
+weight: 60
 ---
+# Best Practice
 The best practices are a result from the feedback of our users, thanks to them.
 
 Feel free to give us your feedback.
@@ -10,12 +11,12 @@ Feel free to give us your feedback.
 ## Wire and event naming
  In fact you can use any string to name wires, but most of the users are using two dashes in front of the wire name and for the name they use camelCase notation.
  
-For the events they use the dashed-case notation, because the behavior does not convert the camelCase for the event to dash-case notation, which you will need to wire the event in another component.
+For the events they use the dashed-case notation, because you can not write `@-camelCase`.
 
 ```html
-<furo-button @-click="--buttonTapped, ^^fired-event"></furo-button>
+<furo-button @-click="--buttonClicked, ^^fired-event"></furo-button>
 ```
-With this notation they can see the difference between a **wire** to an **event** they fire directly.
+With this notation they can see the difference between a **--wire** to an **event** they fire directly.
 
 
 ## Use declarative wire names, don't be imperative
@@ -31,9 +32,9 @@ When you use declarative names, it would be easier to read and modify a wired pr
 
 **good example**
 ```html
-<furo-button @-click="--closeButtonTapped"></furo-button>
-<my-view ƒ-close="--closeButtonTapped"></my-view>
-<data-component ƒ-save="--closeButtonTapped"></data-component>
+<furo-button @-click="--closeButtonClicked"></furo-button>
+<my-view ƒ-close="--closeButtonClicked"></my-view>
+<data-component ƒ-save="--closeButtonClicked"></data-component>
 ```
 
 *It is a subtile but relevant difference between this two examles.*

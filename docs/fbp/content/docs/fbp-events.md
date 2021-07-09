@@ -1,10 +1,39 @@
-# Fireing events
+---
+title: Custom Events
+weight: 30
+---
+# Fireing custom events
 
 Web Components use events to communicate state changes up the DOM tree to parent elements. 
 
-Furo also provides a notation for events (bubbling [**^^e**] and non bubbling [**^e**]), which allow you to specify events  declaratively.
+Furo also provides a notation for events which allows you to specify events in a declarative manner.
+This is very useful when you want to trigger a event with a more specific name then the originating event has.
 
-On the first view, it does not make a lot sense to *rename* events. But imagine a simple controller component with 3 buttons labeled with play, pause and next. It is much easier to wire @-play, @-next and @-pause then just the @-click. The @-click can come from each button and you have to find out which button was pressed.   
+*On the first view, it does not make sense to *rename* events. Take a look at the example below to get a better understanding.
+**controller-component**
+
+<furo-demo-snippet no-demo source style="height:200px">
+<template>
+   <!-- The inner part of the controller is not accessible from outside -->
+    <button @-click="^^playClicked">play</button>
+    <button @-click="^^pauseClicked">pause</button>
+    <button @-click="^^stopClicked">stop</button> 
+</template>
+</furo-demo-snippet>
+
+**my-player**
+
+<furo-demo-snippet no-demo flow style="height:200px">
+<template>
+   <!-- The inner part of the controller is not accessible from outside -->
+    <controller-component @-play-clicked="--playClicked" @-pause-clicked="--pauseClicked"></controller-component>
+    <music-player ƒ-play="--playClicked" ƒ-pause="--pauseClicked"></music-player>
+</template>
+</furo-demo-snippet>
+
+*Imagine a simple controller component with some buttons.*
+*Each of them will dispatch a simple `click`.*
+*Using @-click on the controller inside of the my-player can not distinguish which button was pressed.*
 
 [learn more about events...](https://developer.mozilla.org/en-US/docs/Web/Events)
 
@@ -66,16 +95,8 @@ You can also send multiple events from a single source.
 *When the button is tapped,* ***some-event*** *and* ***other-event*** *will be fired and the wire* ***--checkTapped*** *will be triggered.* 
 
 ## Stop propagation
-To stop the event propagation to parent elements, add a **:STOP** to the event wires `@-error=":STOP, --errorOccured"`. 
+To stop the event propagation to parent elements, add a **:STOP** to the event wires `@-error="--errorOccured, :STOP"`. 
 The wires in this event-chain will be triggered. But the propagation will be stopped.
 
 ## Prevent Default
-Prevent default is not implemented, write an issue on the project page if you need it. 
-
-
-
-<furo-horizontal-flex>
-<a href="../fbp-wires/">Wireing</a>
-<furo-empty-spacer></furo-empty-spacer>
-<a href="../fbp-data/">Parking Data</a>
-</furo-horizontal-flex>
+Prevent default can be achieved by using **:PREVENTDEFAULT**. 

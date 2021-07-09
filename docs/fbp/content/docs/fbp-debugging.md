@@ -1,4 +1,9 @@
-# Debugging your fbp components
+---
+title: Debugging
+weight: 70
+---
+
+# Debugging strategies
 You can use the debugging tools you always used for web development. 
 The eventListeners from furo-fbp are the same eventListeners you have had before.
 

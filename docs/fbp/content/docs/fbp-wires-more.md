@@ -1,6 +1,6 @@
 ---
 title: Compatibility
-weight: 500
+weight: 20
 ---
 # Working with sub optimal components
 

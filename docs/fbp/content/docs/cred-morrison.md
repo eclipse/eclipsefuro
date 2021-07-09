@@ -2,6 +2,7 @@
 title: Credits
 type: docs
 weight: 1000
+bookToc: false
 ---
 
 # J. Paul Rodker Morrison

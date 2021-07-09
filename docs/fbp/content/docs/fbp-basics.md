@@ -1,10 +1,20 @@
 ---
-title: Basics
+title: Getting Started
 weight: 5
 ---
 
-# Basics
-With FBP you mostly connect the output of a component (from a dom event) with the methods of another element.
+# Getting Started
+Write your applications like you make the concept for your application. 
+Normaly you draw a few components and some arrows to connect the components, to describe your intention.
+Why you don’t do the same to write your app or component?
+Use existing web-components and wire them to build up your application.
+
+
+## Furo FBP 101
+
+In furo-FBP you connect events from one component to methods of anohter component. 
+If you get this simple concept, you have understand already 90% of the things you need to write a program.
+
 
 
 ## Connecting things
