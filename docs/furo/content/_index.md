@@ -9,6 +9,9 @@ description: フロー Furo provides simply enterprise-flavoured, language-agnos
 Furo provides simply enterprise-flavoured, language-agnostic API development.
 It comes with multiple sources of truth and generates border-crossing type and service definitions.
 
+{{< github_button button="star" repo="eclipsefuro" count="true" user="eclipse" >}}
+{{< github_button button="issue" repo="eclipsefuro" count="true" user="eclipse" >}}
+
 {{< columns >}}
 ## Enterprise ready
 Open for integrations, easy to expand, simple to automate, adapts to company processes and is technology independent.

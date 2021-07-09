@@ -9,6 +9,8 @@ description: フロー Furo FBP enables you to write your web applications follo
 enables you to write your web applications following [the flow based programming paradigm](https://en.wikipedia.org/wiki/Flow-based_programming).
 
 
+{{< github_button button="star" repo="eclipsefuro-web" count="true" user="eclipse" >}}
+
 
 {{< columns >}}
 ## Fully Declarative - No "Code" needed
