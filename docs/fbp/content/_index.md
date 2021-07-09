@@ -20,6 +20,7 @@ Instead of searching for HTML elements and attaching EventListeners simply do th
 <--->
 ## Flow Visualiser
 
+![viz](viz.png)
 {{< /columns >}}
 
 {{< columns >}}
