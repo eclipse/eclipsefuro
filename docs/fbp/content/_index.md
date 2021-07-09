@@ -45,16 +45,12 @@ And the visual representation makes it easier for a wide range of players to bui
 There is **no**  FBP only, furo-FBP comes with the bridges (hooks and triggers)
 to solve the problems in the place where it makes the most sense.  
 
-{{< /columns >}}
-
-{{< columns >}}
-## Programmable HTML
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
-
-<--->
 ## Framework agnostic
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetu 
+Furo-FBP works anywhere you use HTML, with any framework or none at all.
+
 {{< /columns >}}
+
+
 
 {{< columns >}}
 ## Reduced complexity
