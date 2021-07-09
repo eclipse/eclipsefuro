@@ -5,14 +5,28 @@ bookToc: false
 description: フロー Furo FBP
 ---
 
-# フロー Furo FBP
+# フロー Furo Flow Based Programming
 is...
 
 {{< columns >}}
-## Declarative
+## Fully Declarative - No Code
+Instead of searching for HTML elements and attaching EventListeners simply do this
+```html
+<furo-button @-click="--buttonTapped">
+  myButton
+</furo-button>
+```
 
 <--->
-## No
+## Flow Visualiser
+
+{{< /columns >}}
+
+{{< columns >}}
+## Debuggable
+
+<--->
+## Coexistence of flows and code - at any time
 
 {{< /columns >}}
 
