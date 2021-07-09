@@ -93,3 +93,12 @@ Furo Web Components provides an enterprise ready set of web components which pla
 Based on web standards and future proved. Compliant with any technology of choice. With minimal footprint it includes all enterprise standards, i18n, theming, etc
 [read more](/docs/web-components/)
 {{< /columns >}}
+
+{{< columns >}}
+## Programmable HTML
+[Furo-FBP](https://fbp.furo.pro) is like programmable HTML, no deep javascript knowledge is needed to write an application.
+![viz](/viz.png)
+*The flowbased programming paradigm results in less complex and more flexible code.*
+
+<--->
+{{< /columns >}}

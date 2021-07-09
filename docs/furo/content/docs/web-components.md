@@ -26,7 +26,7 @@ Many of the world's most forward-looking organizations are building with Lit. So
 <--->
 
 ## Programmable HTML
-Furo FBP is like programmable HTML, no deep javascript knowledge is needed to write an application.
+[Furo-FBP](https://fbp.furo.pro) is like programmable HTML, no deep javascript knowledge is needed to write an application.
 ![viz](/viz.png)
 *The flowbased programming paradigm results in less complex and more flexible code.* 
 {{< /columns >}}
