@@ -1,4 +1,4 @@
-# Fireing events
+# Fire events
 
 Web Components use events to communicate state changes up the DOM tree to parent elements. 
 

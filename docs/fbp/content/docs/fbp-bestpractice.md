@@ -3,6 +3,7 @@ date: 2017-04-17T14:02:04+02:00
 title: Best practice
 weight: 600
 ---
+# Best Practice
 The best practices are a result from the feedback of our users, thanks to them.
 
 Feel free to give us your feedback.
