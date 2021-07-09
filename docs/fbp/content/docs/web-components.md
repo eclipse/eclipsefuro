@@ -19,7 +19,7 @@ They consume the same types which are defined with furo.
 
 {{< columns >}}
 ## [Powered by lit](https://lit.dev/)
-Many of the world's most forward-looking organizations are building with Lit. So do we.
+Many of the world's most forward-looking organizations are building with Lit. We too.
 ![lit](https://lit.dev/images/logo.svg)
 
 *Most of our components are using lit or elsewhere native web components.*  

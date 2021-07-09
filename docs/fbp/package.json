@@ -1,0 +1,101 @@
+{
+  "name": "fbp-doc",
+  "version": "1.0.0",
+  "description": "Furo fbp components",
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "license": "MIT",
+  "author": {
+    "name": "",
+    "email": "",
+    "url": ""
+  },
+  "main": "",
+  "scripts": {
+    "start": "es-dev-server --open",
+    "start:build": "npm run build && es-dev-server --root-dir dist --config es-dev-server-build.config.js --app-index index.html --compatibility none",
+    "format": "npm run format:eslint && npm run format:prettier",
+    "lint": "npm run lint:eslint && npm run lint:prettier",
+    "test": "karma start --coverage",
+    "build": "rimraf dist && rollup -c rollup.config.js",
+    "test:watch": "karma start --auto-watch=true --single-run=false",
+    "lint:eslint-fix": "eslint --fix \"**/*.js\" --ignore-path .gitignore",
+    "format:eslint": "eslint \"**/*.js\" --fix --ignore-path .gitignore",
+    "format:prettier": "prettier \"**/*.js\" --write --ignore-path .gitignore",
+    "lint:eslint": "eslint \"**/*.js\" --ignore-path .gitignore",
+    "lint:prettier": "prettier \"**/*.js\" --check --ignore-path .gitignore"
+  },
+  "prettier": "@open-wc/prettier-config",
+  "eslintConfig": {
+    "env": {
+      "browser": true
+    },
+    "plugins": [
+      "lit"
+    ],
+    "extends": [
+      "@open-wc/eslint-config",
+      "eslint-config-prettier",
+      "plugin:lit/recommended"
+    ],
+    "rules": {
+      "import/no-cycle": 1,
+      "import/no-extraneous-dependencies": [
+        "error",
+        {
+          "devDependencies": true,
+          "optionalDependencies": true,
+          "peerDependencies": true,
+          "bundledDependencies": true,
+          "packageDir": [
+            "./",
+            "./node_modules/@furo/collection"
+          ]
+        }
+      ]
+    },
+    "globals": {
+      "assert": "writable"
+    }
+  },
+  "dependencies": {
+    "@furo/collection": "1.3.82",
+    "@furo/doc-helper": "1.6.29"
+  },
+  "devDependencies": {
+    "@open-wc/building-rollup": "^1.9.4",
+    "@open-wc/eslint-config": "^4.2.0",
+    "@open-wc/prettier-config": "^1.1.0",
+    "@open-wc/semantic-dom-diff": "^0.19.3",
+    "@open-wc/testing": "^2.5.32",
+    "@open-wc/testing-karma": "^4.0.9",
+    "@open-wc/testing-karma-bs": "^1.3.94",
+    "@webcomponents/webcomponentsjs": "^2.5.0",
+    "concurrently": "5.3.0",
+    "deepmerge": "^4.2.2",
+    "es-dev-server": "^2.0.2",
+    "eslint": "^7.18.0",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-lit": "^1.2.4",
+    "karma": "^5.2.3",
+    "karma-chai": "^0.1.0",
+    "karma-mocha": "^2.0.1",
+    "koa-proxies": "^0.11.0",
+    "lint-staged": "^10.5.2",
+    "mocha": "^8.2.1",
+    "prettier": "^2.2.1",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.34.0",
+    "rollup-plugin-copy": "^3.3.0",
+    "rollup-plugin-workbox": "^5.2.1"
+  },
+  "engines": {
+    "node": ">=10.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

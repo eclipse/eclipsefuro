@@ -1,0 +1,15 @@
+# Ignore Intellij Idea specific directories
+.idea
+*.iml
+*.iws
+*.ipr
+*.DS_Store
+
+# Ignore web-specific directories and files
+.furo
+coverage
+dist
+node_modules/
+
+# Ignore npm debug log
+npm-debug.log
