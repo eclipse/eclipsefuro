@@ -5,7 +5,7 @@ bookToc: false
 description: フロー Furo FBP
 ---
 
-# フロー Furo FBP
+# フロー Furo Flow Based Programming
 is...
 
 {{< columns >}}
