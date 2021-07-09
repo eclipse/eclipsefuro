@@ -58,7 +58,9 @@ Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
 
 {{< columns >}}
 ## Reduced complexity
-UIs are far too complex to write and maintain them imperatively.
+UIs are far too complex to write and maintain them imperatively. 
+The same methodology is used by some of the most successful game engines to cope with complexity.
+
 The flow based approach is different, but the result is similar to when a programmer 
 tells the machine what he wants to do, and the computer takes those instructions 
 and executes them just as it would with text-based code.
