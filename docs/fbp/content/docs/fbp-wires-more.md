@@ -1,36 +1,33 @@
 ---
-title: Advanced topics
+title: Compatibility
 weight: 500
 ---
-# Advanced topics
-Advanced topics sounds better then misc.    
+# Working with sub optimal components
+
+Some components that you may want or have to use are not dispatching events.
+Therefore, furo FBP has some features to work with them too.
+
+## Wireing responses from method calls
+
+When the method that you have wired only returns data that you want to use, 
+you can wire the response with **@-ƒ-methodname**.
 
 
-## Wireing responses from ƒ-xxx
-When you wire a ƒ-methodname, a non bubbling event *ƒ-methodname* with the response value in event.detail will be fired. 
-Use the response by adding a `@-ƒ-methodname`. 
+<furo-demo-snippet no-demo flow style="height:200px">
+<template>
+   <!-- we put the value of number on the wire --calcClicked -->
+   <furo-button @-click="--calcClicked(number)"> calculate sqrt </furo-button>
+   <!-- The response of the calculate method is dispatched on @-ƒ-calculate -->    
+   <square-root ƒ-calculate="--calcClicked" @-ƒ-calculate="--calculatedSqrRoot"></square-root>
+  <display-result ƒ-show="--calculatedSqrRoot"></display-result>
+</template>
+</furo-demo-snippet>
 
-There is no difference to another fired event. You can fire another event, which eventually bubbles, park the response to a property, wire it,...   
-  
-You can receive and rewire the response from a methodname with **@-ƒ-methodnamename="--wire""**. 
-```html
-
-   <furo-button @-click="--calcNumber(_number)"> calculate sqrt </furo-button>
-   <!-- root calculator -->    
-   <square-root ƒ-calculate="--calcNumber" @-ƒ-calculate="--calculatedSqrRoot"></square-root>
-   
-   <display-result ƒ-show="--calculatedSqrRoot"></display-result>
-```
-
+*The response of the `calculate(n)` method is avaliable on the wire `--calculatedSqrRoot`.*
 
 ## Spread arguments
-//Todo @veith write documentation asap.
+When a receiver mehtod accepts multiple arguments or is a spread operator and the data on the wire is spreadable, 
+furo FBP will handle this for you correctly.
 
 
 
-
-<furo-horizontal-flex>
-<a href="../fbp-data/">Parking Data</a>
-<furo-empty-spacer></furo-empty-spacer>
-<a href="../fbp-scripting/">Scripting</a>
-</furo-horizontal-flex>

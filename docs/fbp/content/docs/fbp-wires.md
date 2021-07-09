@@ -1,9 +1,9 @@
 ---
-title: Wires
+title: Basics
 weight: 5
 ---
 
-# Base concept
+# Basics
 With FBP you mostly connect the output of a component (from a dom event) with the methods of another element.
 
 
