@@ -18,9 +18,12 @@ Instead of searching for HTML elements and attaching EventListeners simply do th
 ```
 
 <--->
-## Flow Visualiser
+## Visual application analysis
+Inspect your application logic visually.
 
 ![viz](viz.png)
+
+*currently in closed beta, will be opened soon*
 {{< /columns >}}
 
 {{< columns >}}
