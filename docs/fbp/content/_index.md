@@ -2,7 +2,7 @@
 title: Furo FBP
 type: docs
 bookToc: false
-description: フロー Furo FBP
+description: フロー Furo FBP enables you to write your web applications following the flow based programming paradigm.
 ---
 
 # フロー Furo Flow Based Programming
