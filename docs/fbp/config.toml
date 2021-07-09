@@ -52,6 +52,11 @@ enableGitInfo = true
 
 [menu]
 # [[menu.before]]
+[[menu.after]]
+name = "フロー Furo"
+url = "https://furo.pro"
+weight = 10
+
 
 
 [params]
