@@ -47,7 +47,7 @@ window.customElements.define('my-component', MyComponent);
 
 ## FBP within HTML
 You can use furo FBP inside your HTML by using `furo-fbp`. Make sure that you have 
-imported the components that you want to use.
+imported the components that you want to use. 
 
 You can import furo-fbp from the CDN or npm. Note the **type="module"**
 
@@ -66,15 +66,19 @@ You can import furo-fbp from the CDN or npm. Note the **type="module"**
 </head>
 <body>
   <!-- use the component as many times you want, even before the definition-->
-  <my-component></my-component>
+  <language-sample></language-sample>
   <hey-component></hey-component>
-  <my-component></my-component>
   
   
   <!-- define the component -->
-  <furo-fbp name="my-component">
+  <furo-fbp name="language-sample">
     <template>
-      <button @-click="--xClicked" ƒ-remove="--xClicked">Self destruct</button>
+      <button @-click="--playClicked">play</button>
+      <button @-click="--pauseClicked">pause</button>
+      <audio ƒ-play="--playClicked" 
+             ƒ-pause="--pauseClicked" 
+             src="https://upload.wikimedia.org/wikipedia/commons/9/92/German_alphabet-2.ogg"></audio>
+      
       <!-- use other components that you have defined -->
       <hey-component></hey-component>
     </template>
