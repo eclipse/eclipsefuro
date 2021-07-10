@@ -46,7 +46,7 @@ When you use a set of components, you don't have to wire every single component 
 
  
 **without event delegation**
-![without event delegation](/_doc/images/withoutEventDelegation.png)
+
 ```html
     <div >
       <mole-hole key="a" @-closed="--moleClosed" @-continue="--continue" @-miss="--missed" @-whack="--whacked"></mole-hole>
@@ -57,9 +57,10 @@ When you use a set of components, you don't have to wire every single component 
       <mole-hole key="w" @-closed="--moleClosed" @-continue="--continue" @-miss="--missed" @-whack="--whacked"></mole-hole>
     </div>
 ```
- 
+![without event delegation](/withoutEventDelegation.png)
+
+
 **with event delegation**
-![with event delegation](/_doc/images/eventDelegation.png)
 ```html
     <div @-closed="--moleClosed" @-continue="--continue" @-miss="--missed" @-whack="--whacked">
       <mole-hole key="a"></mole-hole>
@@ -70,7 +71,7 @@ When you use a set of components, you don't have to wire every single component 
       <mole-hole key="w"></mole-hole>
     </div>
 ```
-
+![with event delegation](/eventDelegation.png)
 
 
 
