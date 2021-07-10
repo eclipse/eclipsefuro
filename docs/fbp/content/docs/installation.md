@@ -46,17 +46,49 @@ window.customElements.define('my-component', MyComponent);
 ```
 
 ## FBP within HTML
-You can use furo FBP inside your HTML by using `flow-bind`. Make sure that you have 
-imported the component that you want to use.
+You can use furo FBP inside your HTML by using `furo-fbp`. Make sure that you have 
+imported the components that you want to use.
+
+You can import furo-fbp from the CDN or npm. Note the **type="module"**
+
+**CDN**
+
+`<script type="module" src="https://cdn.jsdelivr.net/npm/@furo/fbp@5.8.1/assets/furo-fbp.js"></script>`
+
+**npm**
+
+`<script type="module" src="/node_modules/@furo/fbp/src/furo-fbp.js"></script>`
+
 
 ```html
+<head>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@furo/fbp@5.8.1/assets/furo-fbp.js"></script>
+</head>
+<body>
+  <!-- use the component as many times you want, even before the definition-->
+  <my-component></my-component>
+  <hey-component></hey-component>
+  <my-component></my-component>
+  
+  
+  <!-- define the component -->
+  <furo-fbp name="my-component">
+    <template>
+      <button @-click="--xClicked" ƒ-remove="--xClicked">Self destruct</button>
+      <!-- use other components that you have defined -->
+      <hey-component></hey-component>
+    </template>
+  </furo-fbp>
+  
+  
+  <!-- define the component -->
+  <furo-fbp name="hey-component">
+    <template>
+      <div>Hej</div>
+    </template>
+  </furo-fbp>
+</body>
 
-<flow-bind>
-  <template>
-    <button @-click="--btnClicked">sender</button>
-    <div ƒ-remove="--btnClicked">receiver</div>
-  </template>
-</flow-bind>
 ```
 
 
