@@ -88,13 +88,37 @@ You can import furo-fbp from the CDN or npm. Note the **type="module"**
   <!-- define the component -->
   <furo-fbp name="hey-component">
     <template>
-      <div>Hej</div>
+      <span>Hej</span>
     </template>
   </furo-fbp>
 </body>
 
 ```
 
+ <script type="module" src="https://cdn.jsdelivr.net/npm/@furo/fbp@5.8.1/assets/furo-fbp.js"></script>
+
+**The result of the example from above:**
+<div style="border:2px solid rebeccapurple; padding:10px">
+<language-sample></language-sample>
+<hey-component></hey-component>
+</div>
+
+  <!-- define the component -->
+  <furo-fbp name="language-sample">
+    <template>
+      <button @-click="--playClicked">play</button>
+      <button @-click="--pauseClicked">pause</button>
+      <audio ƒ-play="--playClicked" 
+             ƒ-pause="--pauseClicked" 
+             src="https://upload.wikimedia.org/wikipedia/commons/9/92/German_alphabet-2.ogg"></audio>
+    </template>
+  </furo-fbp>
+
+  <furo-fbp name="hey-component">
+    <template>
+      <span>Hej</span>
+    </template>
+  </furo-fbp>
 
 ## FBP with polymer
 To use FBP with polymer, just extend your class.
