@@ -15,7 +15,7 @@ npm i -S @furo/fbp
 ## FBP with lit-element
 To use FBP with lit, just extend your class.
 
-```javascript
+```javascript {linenos=table,hl_lines=[1],linenostart=1}
 class MyComponent extends FBP(LitElement) {
   
 }
@@ -27,7 +27,7 @@ window.customElements.define('my-component', MyComponent);
 ## FBP with native web-components
 To use furo-fbp with native components, call `this._appendFBP(this.shadowRoot);` to enable fbp.
 
-```javascript
+```javascript {linenos=table,hl_lines=[8,9],linenostart=1}
 class MyComponent extends FBP(HTMLElement) {
 
   constructor() {
@@ -51,16 +51,20 @@ imported the components that you want to use.
 
 You can import furo-fbp from the CDN or npm. Note the **type="module"**
 
-**CDN**
+**With CDN**
 
-`<script type="module" src="https://cdn.jsdelivr.net/npm/@furo/fbp@5.8.1/assets/furo-fbp.js"></script>`
+```html 
+<script type="module" src="https://cdn.jsdelivr.net/npm/@furo/fbp@5.8.1/assets/furo-fbp.js"></script> 
+```
 
-**npm**
+**With npm**
 
-`<script type="module" src="/node_modules/@furo/fbp/src/furo-fbp.js"></script>`
+```html 
+<script type="module" src="/node_modules/@furo/fbp/src/furo-fbp.js"></script>
+```
 
-
-```html
+*index.html with cdn example*
+```html {linenos=table,hl_lines=[2 7 20 26 27 28 29 30 ],linenostart=1}
 <head>
     <script type="module" src="https://cdn.jsdelivr.net/npm/@furo/fbp@5.8.1/assets/furo-fbp.js"></script>
 </head>
@@ -95,6 +99,10 @@ You can import furo-fbp from the CDN or npm. Note the **type="module"**
 
 ```
 
+- line 2: load furo-fbp via cdn
+- line 7: use the `hey-component`
+- line 26-30: define the `hey-component`
+
  <script type="module" src="https://cdn.jsdelivr.net/npm/@furo/fbp@5.8.1/assets/furo-fbp.js"></script>
 
 **The result of the example from above:**
@@ -122,18 +130,9 @@ You can import furo-fbp from the CDN or npm. Note the **type="module"**
 
 ## FBP with polymer
 To use FBP with polymer, just extend your class.
-```javascript
+```javascript {linenos=table,hl_lines=[1 ],linenostart=1}
 class MyComponent extends FBP(PolymerElement) {
   
 }
 window.customElements.define('my-component', MyComponent);
-```
-
-The appender is automatically triggered from FBP via the _attachDom method.
-```javascript
-// you dont have to write this, its already done in furo-fbp
-_attachDom(dom) {
-    this._appendFBP(dom);
-    super._attachDom(dom);
-}
 ```
