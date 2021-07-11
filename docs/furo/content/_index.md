@@ -84,24 +84,23 @@ Protoc --> Publish(publish)
 
 {{< /columns >}}
 
+# Browser integration
+In addition to a set of web components, Furo Web also offers JavaScript modules for integration.
+Any web framework can be connected using the JavaScript integration modules. Or simply integrate your favourite
+web component library such as Carbon Web Components, Spectrum Web Components, Momentum UI or many others.
 
 {{< columns >}}
-## Browser integration
-In addition to a set of web components, Furo Web also offers JavaScript modules for integration.
-Any web framework can be connected using the JavaScript integration modules. Or simply integrate your favourite 
-web component library such as Carbon Web Components, Spectrum Web Components, Momentum UI or many others.
-<--->
+
 ## Web Components
 Furo Web Components provides an enterprise ready set of web components which play seamlessly with Furo. 
 Based on web standards and future proved. Compliant with any technology of choice. With minimal footprint it includes all enterprise standards, i18n, theming, etc
 [read more](/docs/web-components/)
-{{< /columns >}}
 
-{{< columns >}}
+<--->
+
 ## Programmable HTML
 [Furo-FBP](https://fbp.furo.pro) is like programmable HTML, no deep javascript knowledge is needed to write an application.
 ![viz](/viz.png)
 *The flowbased programming paradigm results in less complex and more flexible code.*
 
-<--->
 {{< /columns >}}

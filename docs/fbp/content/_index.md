@@ -40,7 +40,7 @@ Inspect your application logic visually.
 With this type of programming, you can add or remove different components 
 and chain them together to get different results or functionalities.
 
-And the visual representation makes it easier for a wide range of players to build applications without having to write multiple lines of code.
+And the visualisation makes it easier for a wide range of players to build applications without having to write multiple lines of code.
 <--->
 ## Coexistence of flows and code - <small>at any time</small>
 
