@@ -5,51 +5,19 @@ title: "Installlation"
 
 # Installation
 
-First of all you need the npm module **@furo/fbp**.
+You can use furo FBP directly in your HTML documents or within your own web-components.
 
-```bash
-npm i -S @furo/fbp
-```
-
-
-## FBP with lit-element
-To use FBP with lit, just extend your class.
-
-```javascript {linenos=table,hl_lines=[1],linenostart=1}
-class MyComponent extends FBP(LitElement) {
-  
-}
-window.customElements.define('my-component', MyComponent);
-```
-
-
-
-## FBP with native web-components
-To use furo-fbp with native components, call `this._appendFBP(this.shadowRoot);` to enable fbp.
-
-```javascript {linenos=table,hl_lines=[8,9],linenostart=1}
-class MyComponent extends FBP(HTMLElement) {
-
-  constructor() {
-    super();
-    // Create a shadow root to the element.
-    this.attachShadow({mode: 'open'});
-    this.shadowRoot.appendChild(template.content.cloneNode(true));
-    // Append FBP to my-component
-    this._appendFBP(this.shadowRoot);
-  }
- 
-}
-
-window.customElements.define('my-component', MyComponent);
-
-```
 
 ## FBP within HTML
-You can use furo FBP inside your HTML by using `furo-fbp`. Make sure that you have 
-imported the components that you want to use. 
+You can use furo FBP inside your HTML by using `furo-fbp`. Make sure that you have
+imported the components that you want to use.
 
-You can import furo-fbp from the CDN or npm. Note the **type="module"**
+{{< hint >}}
+`furo-fbp` is a web-component which will generate and register the defined component. These components can be directly used in 
+your HTML documents.
+{{< /hint >}}
+
+You can import `furo-fbp` from the CDN or npm. Note the **type="module"**
 
 **With CDN**
 
@@ -100,7 +68,8 @@ You can import furo-fbp from the CDN or npm. Note the **type="module"**
 ```
 
 - line 2: load furo-fbp via cdn
-- line 7: use the `hey-component`
+- line 7: use the `hey-component` directly
+- line 7: use the `hey-component` inside of the language-sample component 
 - line 26-30: define the `hey-component`
 
  <script type="module" src="https://cdn.jsdelivr.net/npm/@furo/fbp@5.8.1/assets/furo-fbp.js"></script>
@@ -119,6 +88,7 @@ You can import furo-fbp from the CDN or npm. Note the **type="module"**
       <audio ƒ-play="--playClicked" 
              ƒ-pause="--pauseClicked" 
              src="https://upload.wikimedia.org/wikipedia/commons/9/92/German_alphabet-2.ogg"></audio>
+    <hey-component></hey-component>
     </template>
   </furo-fbp>
 
@@ -127,6 +97,48 @@ You can import furo-fbp from the CDN or npm. Note the **type="module"**
       <span>Hej</span>
     </template>
   </furo-fbp>
+
+## Install the npm module
+
+To work with lit or native web components you need the npm module **@furo/fbp**.
+
+```bash
+npm i -S @furo/fbp
+```
+
+## FBP with lit-element
+To use FBP with lit, just extend your class.
+
+```javascript {linenos=table,hl_lines=[1],linenostart=1}
+class MyComponent extends FBP(LitElement) {
+  
+}
+window.customElements.define('my-component', MyComponent);
+```
+
+
+
+## FBP with native web-components
+To use furo-fbp with native components, call `this._appendFBP(this.shadowRoot);` to enable fbp.
+
+```javascript {linenos=table,hl_lines=[8,9],linenostart=1}
+class MyComponent extends FBP(HTMLElement) {
+
+  constructor() {
+    super();
+    // Create a shadow root to the element.
+    this.attachShadow({mode: 'open'});
+    this.shadowRoot.appendChild(template.content.cloneNode(true));
+    // Append FBP to my-component
+    this._appendFBP(this.shadowRoot);
+  }
+ 
+}
+
+window.customElements.define('my-component', MyComponent);
+
+```
+
 
 ## FBP with polymer
 To use FBP with polymer, just extend your class.
