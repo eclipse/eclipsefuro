@@ -2,10 +2,29 @@
 title: Compatibility
 weight: 20
 ---
-# Working with sub optimal components
+# Working with suboptimal components
 
-Some components that you may want or have to use are not dispatching events.
+Some components that you may want or have to use are not dispatching events or receiving data by methods.
 Therefore, furo FBP has some features to work with them too.
+
+
+## Setting a member value
+To set a value of a component you use can be done with the **ƒ-.property**.
+
+<furo-demo-snippet  flow style="height:150px">
+<template>
+  <button @-click="--bntClicked">A</button>
+  <span ƒ-.inner-text="--bntClicked">click counter</span>
+</template>
+</furo-demo-snippet>
+
+{{< hint info >}}
+**Note, a property is not an attribute.**
+
+You have to know what you do. This is a direct manipulation of a component and maybe there is some reason
+why it does not expose the property.
+ 
+{{< /hint >}}
 
 ## Wireing responses from method calls
 
