@@ -46,4 +46,4 @@ To trace all wires in a host use `$0._FBPTraceWires()`.
 ![debug](/fbpTrace.png#max)
 
 > This will log every triggering wire to the console.
-In most of the cases, the problems you have solve, are typos in wire names.
+In most of the cases, the problems you have to solve, are caused by typos in wire names.
