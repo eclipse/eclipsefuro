@@ -10,7 +10,7 @@ You can use furo FBP directly in your HTML documents or within your own web-comp
 
 ## FBP within HTML
 You can use furo FBP inside your HTML by using `furo-fbp`. Make sure that you have
-imported the components that you want to use.
+imported the web-components that you want to use correctly.
 
 {{< hint >}}
 `furo-fbp` is a web-component which will generate and register the defined component. These components can be directly used in 
@@ -97,6 +97,17 @@ You can import `furo-fbp` from the CDN or npm. Note the **type="module"**
       <span>Hej</span>
     </template>
   </furo-fbp>
+
+
+{{< hint warning >}}
+**HINT**
+
+Due to the fact that most of the components are available via **npm** and are not installable via a simple `script` tag , 
+the usefulness in static HTML limited to the components that you can import. 
+
+By using a development server like [Web Dev Server](https://modern-web.dev/docs/dev-server/overview/) and introducing a build step, 
+you will be able to use a enormous amount of very good components.
+{{< /hint >}}
 
 ## Install the npm module
 
