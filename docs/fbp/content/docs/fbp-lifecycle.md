@@ -12,8 +12,8 @@ This is also the earliest point to enable the tracing.
 class MyComponent extends FBP(LitElement) {  
   // trace all wires
   _FBPReady(){
-    super._FBPReady();
     this._FBPTraceWires();
+    super._FBPReady();
   }
 }
 window.customElements.define('my-component', MyComponent);
@@ -21,4 +21,4 @@ window.customElements.define('my-component', MyComponent);
 ```
 
 ## The **--FBPready** *magic* wire
-The wire --FBPready is also triggered when your component is ready.
+The wire `--FBPready` is also triggered when your component is ready.
