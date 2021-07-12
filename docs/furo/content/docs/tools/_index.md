@@ -34,8 +34,11 @@ This tool generates Go language bindings of services in protobuf definition file
 Very simple golang template engine for cli usage, using the golang template package and the template functions from sprig.
 
 ## furoc
-The furoc "compiler" is a generator tool similar to protoc.
-There are no official plugins available at the moment. But furoc-gen-u33e will come in near future.
+The furoc "compiler" is a generator tool similar to protoc, it can be used to write your custom generators.
+
+There are no official plugins available at the moment.
+
+
 
 ### furoc-gen-xxx
 Is a placeholder for all furoc plugins that will come.
