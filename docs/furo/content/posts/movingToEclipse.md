@@ -3,13 +3,16 @@ title: "Moving to eclipse"
 date: 2021-07-12T21:22:22+01:00
 ---
 
-# Moving to eclipse
-
 We started to move the many parts of the furo project from theNorstroem to eclipse last month. 
+
 This forced us to restructure the individual parts of *furo*. 
-The restructuring definitely brings us advantages and a simpler view of the big picture.
+The restructuring definitely brings us some advantages for the project itself. 
 
+For the consumers, the sharp separation of the involved components,  a cleaner naming and improved documentation will 
+give them a better view of the big picture.
 
+We kept the changes that you have to made as low as possible. 
+Please read in the guide below, what you have to do, to migrate your project.
 
 ## Migration guide: 
 
@@ -31,6 +34,7 @@ All you have to do is
 If you have dependenies which are not already switched from spectools to furo, you have to rename the `.spectools` 
 file to `.furo` in your dependency folder.   
 {{< /hint >}}
+
 
 ### Custom generators
 If you have built custom generators for `furoc`, 
