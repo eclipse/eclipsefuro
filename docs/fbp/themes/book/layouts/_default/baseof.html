@@ -2,7 +2,8 @@
 <html lang="{{ .Site.Language.Lang }}" dir={{ .Site.Language.LanguageDirection }}>
 
 <head>
-  <script type="module" src="/components.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@furo/precompiled@1.4.3/dist/input.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@furo/precompiled@1.4.3/dist/doc-helper.js"></script>
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   {{ partial "docs/html-head" . }}
   {{ partial "docs/inject/head" . }}
