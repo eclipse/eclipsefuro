@@ -32,7 +32,7 @@ Inspect your application logic visually.
 
 ![viz](viz.png)
 
-*currently in closed beta, will be opened soon*
+*[read more here](/docs/visual-analysis/)*
 {{< /columns >}}
 
 {{< columns >}}
