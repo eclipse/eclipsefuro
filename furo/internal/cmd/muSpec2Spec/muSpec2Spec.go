@@ -22,6 +22,10 @@ func Run(cmd *cobra.Command, args []string) {
 		deleteSpecs = f.Value.String() == "true"
 	}
 
+	if viper.GetBool("muSpec.forceSync") {
+		deleteSpecs = true
+	}
+
 	fmt.Println("running muSpec2Spec")
 
 	microList := &microtypes.MicroTypelist{

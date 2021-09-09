@@ -22,7 +22,7 @@ THE SOFTWARE.
 package cmd
 
 import (
-	"fmt"
+	"github.com/eclipse/eclipsefuro/furo/internal/cmd/initfuro"
 	"github.com/spf13/cobra"
 )
 
@@ -31,10 +31,7 @@ var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "planed feature: Creates a initial furo config",
 	Long:  `Init creates a initial furo config with defaults.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("This feature is not available at the moment. Please create a .spectool config file by hand.")
-
-	},
+	Run:   initfuro.Run,
 }
 
 // needed for the documentation generator
@@ -47,7 +44,7 @@ func init() {
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// initCmd.PersistentFlags().String("foo", "", "A help for foo")
+	initCmd.PersistentFlags().String("version", rootCmd.Version, "furo version")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
