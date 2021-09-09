@@ -28,7 +28,7 @@ func Run(cmd *cobra.Command, args []string) {
 
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Println("Furo spec project init")
-	fmt.Println("---------------------")
+	fmt.Println("-----------------------")
 	fmt.Println("Please enter your repository name:")
 	fmt.Println("This is mostly something like github.com/yourname/sample-specs")
 
@@ -117,4 +117,7 @@ func Run(cmd *cobra.Command, args []string) {
 	}
 
 	fmt.Println("Init completed")
+	fmt.Println("--------------")
+	fmt.Println("")
+	fmt.Println("Do not forget to run a furo install to get the correct spec dependencies.")
 }
