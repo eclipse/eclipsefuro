@@ -24,12 +24,12 @@ commands: #camelCase is not allowed, command scripts can only be executed from a
   clean_dist : "./scripts/cleanUpDist.sh" #
 flows:
   default: #we choose µSpec as source https://fidl.furo.pro/docs/sourceoftruth/#%C2%B5spec-as-source
-    - checkImports
     - deprecated
     - muSpec2Spec
     - clean_dist
-    - genServiceProtos
+    - checkImports
     - genMessageProtos
+    - genServiceProtos
     - buf_generate
     - gen_transcoder
     - genEsModule
