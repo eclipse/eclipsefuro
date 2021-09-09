@@ -2,7 +2,6 @@ package microtypes
 
 import (
 	"fmt"
-	"github.com/eclipse/eclipsefuro/furo/pkg/orderedmap"
 	"gopkg.in/yaml.v3"
 	"log"
 	"regexp"
@@ -24,16 +23,6 @@ func (l *MicroTypelist) Unmarshal(data []byte) {
 		if len(matches) == 0 {
 			fmt.Println("typeline not parseable", t.Type)
 		}
-		makeEntity := false
-		makeCollection := false
-		if matches[2] != "" {
-			if strings.Contains(matches[2], "c") {
-				makeCollection = true
-			}
-			if strings.Contains(matches[2], "e") {
-				makeEntity = true
-			}
-		}
 
 		typeName := strings.TrimSpace(matches[1])
 		l.MicroTypesByName[typeName] = t
@@ -45,32 +34,6 @@ func (l *MicroTypelist) Unmarshal(data []byte) {
 			t.Fields.Set(iKey.(string), fieldstr)
 		})
 		l.MicroTypesASTByName[typeName] = t.ToMicroTypeAst()
-
-		if makeEntity {
-
-			fields := orderedmap.New()
-			fields.Set("data", typeName+":1 #the data contains a "+typeName)
-			fields.Set("links", "[]furo.Link:2 #the Hateoas links")
-			fields.Set("meta", "furo.Meta:3 #Meta for the response")
-			entity := &MicroType{
-				Type:   typeName + "Entity #Entitycontainer which holds a " + typeName,
-				Fields: fields,
-				Target: "",
-			}
-			l.MicroTypes = append(l.MicroTypes, entity)
-		}
-		if makeCollection {
-			fields := orderedmap.New()
-			fields.Set("entities", "[]"+typeName+"Entity:1 #the data contains a "+typeName)
-			fields.Set("links", "[]furo.Link:2 #the Hateoas links")
-			fields.Set("meta", "furo.Meta:3 #Meta for the response")
-			collection := &MicroType{
-				Type:   typeName + "Collection #Collectioncontainer which holds a " + typeName,
-				Fields: fields,
-				Target: "",
-			}
-			l.MicroTypes = append(l.MicroTypes, collection)
-		}
 
 	}
 }

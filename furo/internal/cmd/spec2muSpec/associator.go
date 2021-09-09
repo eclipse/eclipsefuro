@@ -38,14 +38,6 @@ func NewUTShadowList() UTShadowList {
 }
 
 func (s *UTShadowList) AddTypeNode(fullTypeName string, ast *typeAst.TypeAst) *UTshadowNode {
-	// Triage -> regular | entity | collection | request
-	if strings.HasSuffix(fullTypeName, "Entity") {
-		return s.AddEntityTypeNode(fullTypeName[0:len(fullTypeName)-6], ast)
-	}
-
-	if strings.HasSuffix(fullTypeName, "Collection") {
-		return s.AddCollectionTypeNode(fullTypeName[0:len(fullTypeName)-10], ast)
-	}
 
 	if strings.HasSuffix(fullTypeName, "Request") {
 		return s.AddRequestTypeNode(ast)
@@ -65,29 +57,7 @@ func (s *UTShadowList) AddRegularTypeNode(fullTypeName string, ast *typeAst.Type
 	node.edgeTypeNode = ast
 	return node
 }
-func (s *UTShadowList) AddEntityTypeNode(fullTypeName string, ast *typeAst.TypeAst) *UTshadowNode {
-	var node *UTshadowNode
-	// find item by name, nok => create
-	if s.TypeItemsByName[fullTypeName] == nil {
-		node = s.CreateShadowTypeItem(fullTypeName)
-	} else {
-		node = s.TypeItemsByName[fullTypeName]
-	}
-	node.edgeEntityTypeNode = ast
-	return node
-}
-func (s *UTShadowList) AddCollectionTypeNode(fullTypeName string, ast *typeAst.TypeAst) *UTshadowNode {
-	var node *UTshadowNode
-	// find item by name, nok => create
-	if s.TypeItemsByName[fullTypeName] == nil {
-		node = s.CreateShadowTypeItem(fullTypeName)
-	} else {
-		node = s.TypeItemsByName[fullTypeName]
-	}
-	node.edgeCollectionTypeNode = ast
-	return node
 
-}
 func (s *UTShadowList) AddRequestTypeNode(ast *typeAst.TypeAst) *UTshadowNode {
 	fullTypeName := ast.TypeSpec.XProto.Package + "." + ast.TypeSpec.Name[0:len(ast.TypeSpec.Name)-7]
 
@@ -96,6 +66,12 @@ func (s *UTShadowList) AddRequestTypeNode(ast *typeAst.TypeAst) *UTshadowNode {
 
 	node = s.ServiceRequestsByName[fullTypeName]
 
+	if node == nil {
+		node = &UTshadowNode{
+
+			edgeRequestTypeNode: []*typeAst.TypeAst{},
+		}
+	}
 	node.edgeRequestTypeNode = append(node.edgeRequestTypeNode, ast)
 	return node
 }
