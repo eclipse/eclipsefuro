@@ -1,0 +1,51 @@
+furo: "{{.FuroVersion}}" # the minimal version of furo
+module: "{{.RepositoryName}}"
+version: "v1.0.0"
+specDir: "./specs"
+specFormat: "yaml" #set to yaml or json
+dependencies:
+  - "git@github.com:theNorstroem/furoBaseSpecs.git v1.27.1" # The importer looks for all **/*.type.spec files recursive The importer looks for all **/*.service.spec files recursive
+  #- "git@github.com:veith/core-specs.git v0.1.3" #todo: move core types and services to this spec
+dependenciesDir: dependencies
+muSpec:
+  types:
+    - "./muspecs/**/*types.yaml"
+    - "./muspecs/*types.yaml"
+  services:
+    - "./muspecs/**/*services.yaml"
+    - "./muspecs/*services.yaml"
+  goPackageBase: "{{.RepositoryName}}/dist/pb/" #this is used to prefix the go package option
+  javaPackagePrefix: "com.example.tutorial."
+  dir: "muspecs"
+  forceSync: true #This will delete specs which are deleted in muSpec, this is very useful during prototyping
+commands: #camelCase is not allowed, command scripts can only be executed from a flow
+  gen_transcoder: "./scripts/gprcgateway/generate.sh"
+  buf_generate: "./scripts/buf_generate.sh"
+  buf_braking: "./scripts/buf_breaking.sh"
+  clean_dist : "./scripts/cleanUpDist.sh" #
+flows:
+  default: #we choose µSpec as source https://fidl.furo.pro/docs/sourceoftruth/#%C2%B5spec-as-source
+    - checkImports
+    - deprecated
+    - muSpec2Spec
+    - clean_dist
+    - genServiceProtos
+    - genMessageProtos
+    - buf_generate
+    - gen_transcoder
+    - genEsModule
+build:
+  proto:
+    targetDir: "dist/protos/" #Hint: add this to your proto include path
+  esModule:
+    targetFile: "dist/env.js"
+dist:
+  files: # enter a list of files and directories which should be installed by other projects
+    - dist/protos
+    - specs
+    - README.md
+    - .furo
+extensions:
+  gen_transcoder:
+    additional_imports: # if you use any any type, you need to import them for the gateway
+      - {{.RepositoryName}}/dist/pb/parameter

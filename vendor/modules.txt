@@ -12,8 +12,8 @@ github.com/cpuguy83/go-md2man/v2/md2man
 # github.com/fsnotify/fsnotify v1.4.7
 ## explicit
 github.com/fsnotify/fsnotify
-# github.com/ghodss/yaml v1.0.0
-## explicit
+# github.com/gobuffalo/here v0.6.0
+github.com/gobuffalo/here
 # github.com/google/uuid v1.1.2
 ## explicit
 github.com/google/uuid
@@ -40,6 +40,15 @@ github.com/inconshreveable/mousetrap
 ## explicit
 # github.com/magiconair/properties v1.8.1
 github.com/magiconair/properties
+# github.com/markbates/pkger v0.17.1
+## explicit
+github.com/markbates/pkger
+github.com/markbates/pkger/here
+github.com/markbates/pkger/internal/maps
+github.com/markbates/pkger/pkging
+github.com/markbates/pkger/pkging/embed
+github.com/markbates/pkger/pkging/mem
+github.com/markbates/pkger/pkging/stdos
 # github.com/mitchellh/copystructure v1.0.0
 ## explicit
 github.com/mitchellh/copystructure
@@ -74,8 +83,6 @@ github.com/spf13/pflag
 # github.com/spf13/viper v1.7.1
 ## explicit
 github.com/spf13/viper
-# github.com/stretchr/testify v1.4.0
-## explicit
 # github.com/subosito/gotenv v1.2.0
 github.com/subosito/gotenv
 # golang.org/x/crypto v0.0.0-20200302210943-78000ba7a073

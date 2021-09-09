@@ -1,7 +1,7 @@
 version: v1beta1
 build:
   roots:
-    - pkg/descriptor
+    - dist/protos
     - dependencies/github.com/theNorstroem/furoBaseSpecs/dist/proto
 lint:
   use:
