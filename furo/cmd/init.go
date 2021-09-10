@@ -29,8 +29,8 @@ import (
 // initCmd represents the Init command
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "planed feature: Creates a initial furo config",
-	Long:  `Init creates a initial furo config with defaults.`,
+	Short: "Init creates a initial furo spec project",
+	Long:  `Init creates a initial furo spec project.`,
 	Run:   initfuro.Run,
 }
 

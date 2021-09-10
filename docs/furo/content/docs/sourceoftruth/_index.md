@@ -5,7 +5,7 @@ title: "Source of Truth"
 ---
 
 # Source of Truth
-The different specification formats can be used as a source or a sink or both of them, but never use sources as source of the specs. 
+The different specification formats can be used as a source or used a sink (receiver) or can be both of them.
 
 {{< mermaid >}}
 graph LR
@@ -15,18 +15,8 @@ Proto --> µSpec
 Spec --> µSpec
 {{< /mermaid >}}
 
-Some transitions will loose information 
-- `Spec --> *`
-  
-some transitions are destructive 
-- `Proto -> µSpec`
-- `Spec -> Proto`
 
-and some are updating the sinks 
-- `µSpec -> Spec`
-- `Spec -> µSpec`
-
-You should choose **one** source of truth and stick to it when possible. It is always possible to change.
+You should choose **one** source of truth and stick to it when possible. *But it is always possible to change your decision.*
 
 ### Sources AND Sink
 - Spec
