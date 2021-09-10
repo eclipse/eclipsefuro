@@ -33,14 +33,13 @@ You can have as many type definitions per file as you want. It makes sense that 
 ## The type line
 
 ```yaml
-- type: 'sample.Sample (ce) #A sample type'
-  !___!  !___________! !__! !____________!
-    |          |         |       |
-    |      type name     |       |
-    |                    |       |
-    |                    |   description (recomended) begins with a #
-    |                    |
-    |   indicator to create a collection and or a entity for the type (optional)
+- type: 'sample.Sample  #A sample type'
+  !___!  !___________!  !____________!
+    |          |             |
+    |      type name         |
+    |                        |
+    |                    description (recomended) begins with a #
+    |                  
     | 
     | 
 field name of the type
@@ -50,14 +49,6 @@ field name of the type
 ### type name
 is defined by package.Type
 
-### Auto entity and collection generator
-**(ce)** write a **c** to autogenerate the collection type and/or **e** to generate the entity type for this type.
-
-Furo can generate specs for entities and collections. Entities and collections are usualy used in services as a response.
-If the generated specs are not suitable enough for you, you always have the possibility to write response by yourself.
-
-The generated specs are optimized for the usage with the furo client framework. Atain, you do not have to use the furo
-client framework to work with furo fidls.
 
 ### description
 It is a good practice to give a good description of the type. This description will go to the generated protos and other generates.

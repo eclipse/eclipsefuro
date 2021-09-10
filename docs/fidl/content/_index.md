@@ -12,7 +12,7 @@ The **F**uro **I**nterface **D**efinition **L**anguage
 ## What are FIDLs?
 ```yaml
 # This is a µSpec for a type
-- type: 'person.Client (ce) #A generic client.'
+- type: 'person.Client #A generic client.'
   fields:
     id: '*string:1 # The id is required (*).'
     display_name: '-string:2 # The display_name is readonly (-).'

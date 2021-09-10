@@ -97,7 +97,7 @@ On the other verbs, set the type to one of the types in your project specs or in
 ### The Response Type
 Usualy you should use a entity or collection type as response (this is what the client libs loves to work with). 
 But you are free to define any response type as long all participants on client and server side know it. 
-You will get the entity and collection types nearly for free, by adding *(ce)* in the type line of the µType specs. 
+ 
 
 ### Description
 Again, descriptions are always optional, but strongly recomended to fill in. They will apear in every generate and can
