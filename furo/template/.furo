@@ -47,4 +47,4 @@ dist:
 extensions: # Add configurations for your private builders and generators here.
   gen_transcoder:
     additional_imports: # if you use any any type, you need to import them for the gateway
-      - {{.RepositoryName}}/dist/pb/parameter
+      - {{.RepositoryName}}/dist/pb/sample

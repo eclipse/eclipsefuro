@@ -35,10 +35,39 @@ github.com/yourname/sample-specs
 # 6 Install the dependencies
 furo install
 
-# Edit your specs
+# Edit your muspecs and or specs
 
 # 7 Start the default flow
 furo
 
 # Commit your changes
+```
+
+
+### Project structure after running furo init
+The project have a
+- [.furoc](/docs/configuration/) file which contains the project configuration
+- muspec folder with some examples
+- empty specs folder
+- some example scripts to use in your flows
+
+*initial project*
+```
+.
+├── buf.gen.yaml
+├── buf.yaml
+├── go.mod
+├── muspecs
+│   └── sample
+│       ├── Sample.services.yaml
+│       └── sample.types.yaml
+├── scripts
+│   ├── buf_breaking.sh
+│   ├── buf_generate.sh
+│   ├── cleanUpDist.sh
+│   └── gprcgateway
+│       ├── autoregister.go.tpl
+│       └── generate.sh
+└── specs
+
 ```
