@@ -15,6 +15,7 @@ The container brings all the additional tools you need to generate the grpc stub
 In this guide we will setup a furo spec project with the `furo init` command. 
 The furo cli will then create the needed files to have a working project with a sample µType and µService definition.  
 
+### Steps
 
 ```bash
 # 1 Create the project folder
