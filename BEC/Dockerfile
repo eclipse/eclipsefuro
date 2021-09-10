@@ -1,12 +1,12 @@
 FROM golang:1.16.5-alpine3.14
 
 ENV SIMPLEGENEREATOR_VERSION=1.0.1
-ENV FURO_VERSION=1.27.3
-ENV GATEWAY_VERSION=2.5.0
-ENV GEN_GO_VERSION="1.26.1-0.20210520194023-50a85913fbce"
-ENV GEN_GO_GRPC_VERSION=1.0.0
-ENV YQ_VERSION=3.4.1
-ENV BUF_VERSION=0.43.2
+ENV FURO_VERSION=1.28.4
+ENV GATEWAY_VERSION=2.6.0
+ENV GEN_GO_VERSION=1.27.1
+ENV GEN_GO_GRPC_VERSION=1.1.0
+ENV YQ_VERSION=4.12.2
+ENV BUF_VERSION=0.56.0
 ENV GOBIN $GOPATH/bin
 ENV PATH="$PATH:$GOPATH/bin"
 ENV PATH="/usr/local/sbin:$PATH"
@@ -39,7 +39,7 @@ RUN set -eux; \
        github.com/theNorstroem/simple-generator@v$SIMPLEGENEREATOR_VERSION \
        github.com/eclipse/eclipsefuro/furo@v$FURO_VERSION \
        github.com/eclipse/eclipsefuro/furoc@v$FURO_VERSION \
-       github.com/mikefarah/yq/v3@$YQ_VERSION; \
+       github.com/mikefarah/yq/v4@v$YQ_VERSION; \
     rm -rf /go/pkg; \
     rm -rf /root/.cache/*
 
