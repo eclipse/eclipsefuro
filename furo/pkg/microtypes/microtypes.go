@@ -254,16 +254,14 @@ func NewFieldMap() FieldMap {
 }
 
 type MicroTypeAst struct {
-	Type           string                 `yaml:"type"`
-	ProtoImports   []string               `yaml:"imports"`
-	Package        string                 `yaml:"package,omitempty"`
-	TargetPath     string                 // to find out the file to write
-	Description    string                 `yaml:"description"`
-	Fields         *orderedmap.OrderedMap `yaml:"fields,omitempty"`
-	Target         string                 `yaml:"target,omitempty"`
-	MakeEntity     bool
-	makeCollection bool
-	SourceFile     string
+	Type         string                 `yaml:"type"`
+	ProtoImports []string               `yaml:"imports"`
+	Package      string                 `yaml:"package,omitempty"`
+	TargetPath   string                 // to find out the file to write
+	Description  string                 `yaml:"description"`
+	Fields       *orderedmap.OrderedMap `yaml:"fields,omitempty"`
+	Target       string                 `yaml:"target,omitempty"`
+	SourceFile   string
 }
 
 // updates a type ast

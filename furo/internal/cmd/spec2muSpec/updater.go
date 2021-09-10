@@ -60,7 +60,7 @@ func updateAndStoreMicroTypes(typeItems map[string]*UTshadowNode) {
 			})
 
 			muType := &microtypes.MicroType{
-				Type:   strings.Join(typeLine, " "), //type: "sample.Sample (ce) #Sample with auto Collection and Entity (ce)"
+				Type:   strings.Join(typeLine, " "), //type: "sample.Sample  #Sample"
 				Fields: fields,
 				Target: shadowNode.edgeMicroTypeNode.Target,
 			}
