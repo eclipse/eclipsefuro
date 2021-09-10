@@ -10,15 +10,13 @@ import (
 )
 
 type UTshadowNode struct {
-	IdentifierP            string // package part used to idenitify all edges
-	IdentifierT            string // typename part used to idenitify all edges
-	edgeEntityTypeNode     *typeAst.TypeAst
-	edgeCollectionTypeNode *typeAst.TypeAst
-	edgeRequestTypeNode    []*typeAst.TypeAst
-	edgeTypeNode           *typeAst.TypeAst
-	edgeServiceNode        *serviceAst.ServiceAst
-	edgeMicroTypeNode      *microtypes.MicroTypeAst
-	edgeMicroServiceNode   *microservices.MicroServiceAst
+	IdentifierP          string // package part used to idenitify all edges
+	IdentifierT          string // typename part used to idenitify all edges
+	edgeRequestTypeNode  []*typeAst.TypeAst
+	edgeTypeNode         *typeAst.TypeAst
+	edgeServiceNode      *serviceAst.ServiceAst
+	edgeMicroTypeNode    *microtypes.MicroTypeAst
+	edgeMicroServiceNode *microservices.MicroServiceAst
 }
 
 type UTShadowList struct {
@@ -80,13 +78,6 @@ func (s *UTShadowList) AddMicroTypeNode(ast *microtypes.MicroTypeAst) *UTshadowN
 
 	fullTypeName := ast.Package + "." + ast.Type
 
-	if strings.HasSuffix(fullTypeName, "Entity") {
-		return nil
-	}
-	if strings.HasSuffix(fullTypeName, "Collection") {
-		return nil
-	}
-
 	var node *UTshadowNode
 	// find item by name, nok => create
 	if s.TypeItemsByName[fullTypeName] == nil {
@@ -137,8 +128,6 @@ func (s *UTShadowList) GetUnconnectedMicroTypes() []*microtypes.MicroTypeAst {
 	for _, item := range s.Items {
 		if item.edgeMicroTypeNode != nil &&
 			item.edgeTypeNode == nil &&
-			item.edgeEntityTypeNode == nil &&
-			item.edgeCollectionTypeNode == nil &&
 			item.edgeServiceNode == nil &&
 			item.edgeRequestTypeNode == nil {
 			l = append(l, item.edgeMicroTypeNode)
