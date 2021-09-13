@@ -4,14 +4,36 @@ title: "muSrvSanitize"
 ---
 ## furo muSrvSanitize
 
-Sanitize muServices
-
-### Synopsis
+Sanitize the muServices.
 
 Sanitizing includes:
 
 - Adding of query params which are part of the url.
 
+A method definition like:
+```yaml
+    - md: 'Get: GET /sample/{smp} google.protobuf.Empty , sample.SampleEntity #Returns a single Sample.'
+
+```
+
+will become to 
+```yaml
+    - md: 'Get: GET /sample/{smp} google.protobuf.Empty , sample.SampleEntity #Returns a single Sample.'
+      qp:
+        smp: 'string #The query param smp stands for XXX id.'
+```
+
+and you can change it to
+```yaml
+    - md: 'Get: GET /sample/{smp} google.protobuf.Empty , sample.SampleEntity #Returns a single Sample.'
+      qp:
+        smp: 'string #The query param smp stands for a sample id.'
+```
+
+
+{{< hint info >}}
+**Notice:** A existing query param will not be touched or modified.
+{{< /hint >}}
 
 
 ```

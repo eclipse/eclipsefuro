@@ -16,6 +16,12 @@ forward them to the input components like the ones from `@furo/ui5` with data bi
 
 {{< /hint >}}
 
+### Config
+```yaml
+build:
+  esModule:
+    targetFile: "dist/env.js" # The environment file to register in eclipsefuro-web
+```
 
 ```
 furo genEsModule [flags]
