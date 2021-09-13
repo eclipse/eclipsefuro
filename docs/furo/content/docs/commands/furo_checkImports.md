@@ -5,7 +5,7 @@ title: "checkImports"
 
 ## furo checkImports
 
-This command will check and correct all the needed imports in the specs.
+This command will check and correct all the needed imports in the specs. These imports are needed for creating proper proto files.
 
 If a import can not be resolved, you will get a error message which tells you the file and the field which is causing the problem.
 
