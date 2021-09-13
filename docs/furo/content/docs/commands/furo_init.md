@@ -5,8 +5,6 @@ title: "init"
 
 ## furo init
 
-Initialize a project structure to begin with.
+Initializes a furo spec project structure with good defaults and some example files to begin with.
 
-### Synopsis
-
-The configuration is set up to use µSpecs as [source of truth](/docs/sourceoftruth/#µspec-as-source).
+Please read more about `furo init` in the [quickstart guide](/docs/quickstart/).

@@ -116,12 +116,14 @@ func readAndUnmarshalSpec(fpath string) (s specSpec.Type) {
 		log.Fatal(parseError)
 	}
 
-	// convert fields from yaml.Node to Field type
-	for pair := s.Fields.Oldest(); pair != nil; pair = pair.Next() {
-		fieldYamlNode := pair.Value.(*yaml.Node)
-		var AstField *specSpec.Field
-		fieldYamlNode.Decode(&AstField)
-		pair.Value = AstField
+	if s.Fields != nil {
+		// convert fields from yaml.Node to Field type
+		for pair := s.Fields.Oldest(); pair != nil; pair = pair.Next() {
+			fieldYamlNode := pair.Value.(*yaml.Node)
+			var AstField *specSpec.Field
+			fieldYamlNode.Decode(&AstField)
+			pair.Value = AstField
+		}
 	}
 
 	return s

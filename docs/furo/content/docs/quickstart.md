@@ -76,7 +76,7 @@ The example is configured to do the following flow steps:
 - `genEsModule` : Generates a es module with the specs which is used by [eclipsefuro-web](/docs/web-components/).
 
 ### Project structure after running furo init
-The project have a
+The initialized project will have a
 - [.furoc](/docs/configuration/) file which contains the project configuration
 - muspec folder with some examples
 - empty specs folder

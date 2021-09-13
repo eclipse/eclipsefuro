@@ -3,36 +3,22 @@ weight: 22
 title: "Commands"
 bookCollapseSection: true
 ---
-## furo
-
-The furo spec toolkit 1.21.2
-
-### Synopsis
-
-Furo contains helpful generators, converters, sanitizer for the furo specs.
-Read more about the single commands in the see also section below.
+## Furo commands
 
 Calling furo without any arguments and flags will run the flow runner with the default flow.
-Modify your default flow in the .furo config file to your needs. You can set any of the sub commands as default.
 
-> Note: Environment variables are prefixed with **FST**.
->
-> To set the specformat with the environment variable use **FST_SPECFORMAT=value**
-
-
-```
-furo [flags]
-```
 
 ### Options
 
 ```
-      --config string   config file (default is CWD/.furo.yaml)
+      --config string   config file (default is CWD/.furo)
   -h, --help            help for furo
+      --version         shows the version number of the current installation
 ```
 
 ### SEE ALSO
 
+* [furo init](furo_init.md)	 - Initializes a furo spec project
 * [furo checkImports](furo_checkImports.md)	 - Checks and correct the imports
 * [furo exportAsYaml](furo_exportAsYaml.md)	 - Exports all specs and the current config in one yaml file to stdout
 * [furo genEsModule](furo_genEsModule.md)	 - generate es6 spec module
