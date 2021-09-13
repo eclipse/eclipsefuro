@@ -7,6 +7,7 @@ title: "exportAsYaml"
 
 Exports all specs for types and services and also the current config in one big yaml file to stdout.
 
+This comes very handy in custom generators which are ok with the yaml file structure.
 
 Feel free to add custom sections in the config to use them in your own scripts.
 
@@ -31,7 +32,7 @@ You will notice that the output structure of running `furo exportAsYaml` does ha
         specdir: dependencies/github.com/theNorstroem/furoBaseSpecs/specs
         path: furo
         filename: big_decimal.type.spec
-        typespec: ...
+        typespec: ... # the spec is available under this property
 ```
 
 ```

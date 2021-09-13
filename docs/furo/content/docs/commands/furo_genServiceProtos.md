@@ -5,18 +5,26 @@ title: "genServiceProtos"
 
 ## furo genServiceProtos
 
-Generate service protos from the specs
-
-### Synopsis
+Generate the service protos from the service specs.
 
 The generated proto services will be generated to the configured path.
 
-*.furo config example*
+> As you may have noticed the specs have a attribute `targetfile` (`target` in µServices, sorry). 
+> Service specs with the same `targetfile` or `target` value will be generated in to the same proto file.
 
-	build:
-	  proto:
-		targetDir: "./dist/proto" #Hint: add this to your proto include path	
-		
+
+{{< hint danger >}}
+**Attention:** You can not target Services and Messages to the same file, because for furo, the generating of types/messages and the generation of services are two different tasks.
+{{< /hint >}}
+
+
+*.furo config example*
+````yaml
+build:
+  proto:
+    targetDir: "./dist/protos" #Hint: add this to your proto include path
+````
+
 
 
 ```
