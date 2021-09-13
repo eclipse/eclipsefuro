@@ -12,7 +12,7 @@ The container brings all the additional tools you need to generate the grpc stub
 In this guide we will setup a furo spec project with the `furo init` command. 
 The furo cli will then create the needed files to have a working project with a sample µType and µService definition.  
 
-### Steps to setup a spec project.
+### Steps to setup a spec project
 
 ```bash
 # 1 Create the project folder
@@ -41,6 +41,8 @@ furo
 # Commit your changes
 ```
 
+### Detailed explanation of the steps
+
 #### Step 1 
 This folder must be under version control with git to make your specs installable by other spec projects.
 
@@ -49,7 +51,7 @@ If you already have an environment for proto and grpc development, you can [inst
 and all the other required commands locally. The [furo-BEC](/docs/tools/BEC/) comes with a set of needed or useful tools.
 
 #### Step 4 + 5 Run furo init
-This command will create a [project structure](#project-structure-after-running-furo-init) with good default settings to begin with.
+This command will create a [project structure](/docs/quickstart/#project-structure-after-running-furo-init) with good default settings to begin with.
 All you have to enter is the repository name for your project.
 
 > If there is already a `.furo` file in the folder, the init command will abort. 
@@ -61,12 +63,12 @@ additional types to use (the google WellKnownTypes , google.protobuf.Any and man
 #### Step 8 Start the default flow
 By running `furo` the configured default flow will be executed. This command is similar to [`furo run default`](/docs/commands/furo_run/).
 
-The example is configured to do the following:
+The example is configured to do the following flow steps:
 
 - `deprecated` : Check for used types which are declared as deprecated.
 - `muSpec2Spec` : Create / Update the specs using the muSpecs as input.
 - `clean_dist` : Configured command which starts a script to delete the dist folder.
-- `checkImports` : Check for types which are not imported, adds the import when it can resolve it.
+- `checkImports` : Check for types which are not imported, add the imports when furo can resolve it.
 - `genMessageProtos` : Create the protos for the messages.
 - `genServiceProtos` : Create the protos for the services.
 - `buf_generate` : Configured command which starts the buf generator.
