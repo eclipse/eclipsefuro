@@ -4,26 +4,26 @@ title: "muSrvSanitize"
 ---
 ## furo muSrvSanitize
 
-Sanitize the muServices.
+Sanitize the muServices, to avoid errors in your protos or es6 services.
 
-Sanitizing includes:
+Sanitizing includes at the moment:
 
-- Adding of query params which are part of the url.
+- Adding of query params which are part of the url and needs to be listed as qp's for the request body.
 
-A method definition like:
+*A method definition like:*
 ```yaml
     - md: 'Get: GET /sample/{smp} google.protobuf.Empty , sample.SampleEntity #Returns a single Sample.'
 
 ```
 
-will become to 
+*will become to* 
 ```yaml
     - md: 'Get: GET /sample/{smp} google.protobuf.Empty , sample.SampleEntity #Returns a single Sample.'
       qp:
         smp: 'string #The query param smp stands for XXX id.'
 ```
 
-and you can change it to
+*and you can change it to*
 ```yaml
     - md: 'Get: GET /sample/{smp} google.protobuf.Empty , sample.SampleEntity #Returns a single Sample.'
       qp:
