@@ -114,7 +114,7 @@ func rpcRequest(method *specSpec.Rpc) string {
 	if strings.HasPrefix(method.Data.Request, "stream ") {
 		return method.Data.Request
 	}
-	return method.RpcName + "Request"
+	return method.RpcName + "FuroGrpcRqst"
 }
 
 func isNotStream(method *specSpec.Rpc) bool {

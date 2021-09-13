@@ -94,7 +94,7 @@ func Run(cmd *cobra.Command, args []string) {
 			r, found := s.Services.Get("Update")
 			if found {
 				rpc := r.(*specSpec.Rpc)
-				reqType := protoTplData[filepath].Package + "." + rpc.RpcName + "Request"
+				reqType := protoTplData[filepath].Package + "." + rpc.RpcName + "FuroGrpcRqst"
 				// Services.sampleservice.UpdateSampleRequest
 				_, ok := Typelist.AllAvailabeTypes[reqType].TypeSpec.Fields.Get("update_mask")
 				if ok {

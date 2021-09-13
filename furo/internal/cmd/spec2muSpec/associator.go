@@ -37,7 +37,7 @@ func NewUTShadowList() UTShadowList {
 
 func (s *UTShadowList) AddTypeNode(fullTypeName string, ast *typeAst.TypeAst) *UTshadowNode {
 
-	if strings.HasSuffix(fullTypeName, "Request") {
+	if strings.HasSuffix(fullTypeName, "FuroGrpcRqst") {
 		return s.AddRequestTypeNode(ast)
 	}
 
