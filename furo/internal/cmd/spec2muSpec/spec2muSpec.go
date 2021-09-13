@@ -24,6 +24,10 @@ func Run(cmd *cobra.Command, args []string) {
 		deleteMuSpecs = f.Value.String() == "true"
 	}
 
+	if viper.GetBool("muSpec.forceSync") {
+		deleteMuSpecs = true
+	}
+
 	fmt.Println("running spec2muSpec")
 	assocList := NewUTShadowList()
 
@@ -103,5 +107,8 @@ func Run(cmd *cobra.Command, args []string) {
 	updateAndStoreMicroServices(assocList.ServiceItemsByName)
 
 	e := assocList.GetUnconnectedMicroTypes()
-	fmt.Println(e, deleteMuSpecs)
+	if deleteMuSpecs && len(e) > 0 {
+		fmt.Println(len(e), "muSpecs deleted")
+	}
+
 }

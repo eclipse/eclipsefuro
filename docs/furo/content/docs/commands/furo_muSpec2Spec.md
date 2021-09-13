@@ -7,7 +7,8 @@ title: "muSpec2Spec"
 
 Updates or creates the specs with the definitions from the µSpecs.
 
-Renaming and restructuring your spec folder is ok, furo will always update the correct file.
+Renaming and restructuring your spec folder is ok, furo will always update the correct file. Also a reordering of the fields in your spec,
+to get nicer protos of for other reasons, is also ok. Furo works with a internal AST and is not interested in order or file names.
 
 > if you have set the config option `muSpec.forceSync: true` in your furo config,
 > the command will always enable the `-d` option.

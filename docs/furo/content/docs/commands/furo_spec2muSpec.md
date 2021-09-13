@@ -5,16 +5,19 @@ title: "spec2muSpec"
 
 ## furo spec2muSpec
 
-A brief description of your command
 
-### Synopsis
+Updates or creates the µSpecs with the definitions from the specs.
 
-A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.
+> if you have set the config option `muSpec.forceSync: true` in your furo config,
+> the command will always enable the `-d` option.
+
+Because the specs have a higher information density then the µSpecs this step will *loose* information.
+
+This command is useful if you want to switch your source of truth from [spec](/docs/sourceoftruth/#spec-as-source) to [µSpec](/docs/sourceoftruth/#µspec-as-source).
+
+This command is useful if you want to discuss your services and types without having unneeded details.
+
 
 ```
 furo spec2muSpec [flags]
