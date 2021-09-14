@@ -179,7 +179,7 @@ func (l *MicroServiceList) UpateServicelist(servicelist *serviceAst.Servicelist,
 			// maybe this is incorrect, if someone needs streams with query params
 			if !strings.HasPrefix(targetRPC.Data.Request, "stream ") {
 				requestType := &microtypes.MicroType{
-					Type:   microServiceAst.Package + "." + targetRPC.RpcName + "FuroGrpcRqst #request message for " + targetRPC.RpcName,
+					Type:   microServiceAst.Package + "." + targetRPC.RpcName + viper.GetString("muSpec.requestTypeSuffix") + " #request message for " + targetRPC.RpcName,
 					Fields: fields,
 					Target: "reqmsgs.proto",
 				}

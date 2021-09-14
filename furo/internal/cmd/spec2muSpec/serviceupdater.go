@@ -124,7 +124,7 @@ func updateAndStoreMicroServices(serviceItems map[string]*UTshadowNode) {
 func findRequestType(rpcName string, node *UTshadowNode) *typeAst.TypeAst {
 	// node is in node.edgeRequestTypeNode array
 	for _, n := range node.edgeRequestTypeNode {
-		if n.TypeSpec.Name == rpcName+"FuroGrpcRqst" {
+		if n.TypeSpec.Name == rpcName+viper.GetString("muSpec.requestTypeSuffix") {
 			return n
 		}
 	}
