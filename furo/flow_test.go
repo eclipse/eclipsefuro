@@ -1,7 +1,6 @@
 package main_test
 
 import (
-	"fmt"
 	"github.com/eclipse/eclipsefuro/furo/cmd"
 	"github.com/eclipse/eclipsefuro/furo/test"
 	"github.com/stretchr/testify/require"
@@ -12,8 +11,8 @@ import (
 
 func TestRunCommand(t *testing.T) {
 	dir, _ := test.CwdTestDir()
-	// defer test.RemoveTestDir(dir)
-	fmt.Println(dir)
+	defer test.RemoveTestDir(dir)
+
 	os.Args = []string{"cmd", "init", "--repository=github.com/yourname/furo-test"}
 	rco := cmd.RootCmd
 	rco.Execute()
