@@ -4,6 +4,7 @@ import (
 	"github.com/Masterminds/sprig"
 	"github.com/eclipse/eclipsefuro/furo/pkg/orderedmap"
 	"github.com/eclipse/eclipsefuro/furo/pkg/specSpec"
+	"github.com/spf13/viper"
 	"html/template"
 	"regexp"
 	"strings"
@@ -114,7 +115,7 @@ func rpcRequest(method *specSpec.Rpc) string {
 	if strings.HasPrefix(method.Data.Request, "stream ") {
 		return method.Data.Request
 	}
-	return method.RpcName + "FuroGrpcRqst"
+	return method.RpcName + viper.GetString("muSpec.requestTypeSuffix")
 }
 
 func isNotStream(method *specSpec.Rpc) bool {

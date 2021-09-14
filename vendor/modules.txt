@@ -12,7 +12,6 @@ github.com/cpuguy83/go-md2man/v2/md2man
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
 # github.com/fsnotify/fsnotify v1.4.7
-## explicit
 github.com/fsnotify/fsnotify
 # github.com/gobuffalo/here v0.6.0
 github.com/gobuffalo/here

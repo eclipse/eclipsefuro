@@ -18,6 +18,6 @@ func TestInitCommand(t *testing.T) {
 	rco.Execute()
 
 	require.Equal(t, true, test.FileExist(path.Join(dir, ".furo")))
-	require.Equal(t, "f4ba32ae7424570c4b7520432ce89e94", test.MustMd5Sum(path.Join(dir, ".furo")))
+	require.Equal(t, "d8a9dbdca98179d9a7d3ebbdcb2c3fa8", test.MustMd5Sum(path.Join(dir, ".furo")))
 
 }

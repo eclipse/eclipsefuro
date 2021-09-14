@@ -50,6 +50,6 @@ func TestSpec2muSpecCommand(t *testing.T) {
 	require.Equal(t, "83f97c7fd66d5b9fd34069e075810a80", test.MustMd5Sum(path.Join(dir, "muspecs", "sample", "Sample.types.yaml")))
 	require.Equal(t, "102b3562851cc4bac750b6d409344f6e", test.MustMd5Sum(path.Join(dir, "muspecs", "sample", "SampleCollection.types.yaml")))
 	require.Equal(t, "cecdceb48471dc1b2ebc958ce30e97bb", test.MustMd5Sum(path.Join(dir, "muspecs", "sample", "SampleEntity.types.yaml")))
-	require.Equal(t, "c7e54a185c29003ba0aad3ccd9bdb684", test.MustMd5Sum(path.Join(dir, "muspecs", "sample", "Samples.services.yaml")))
+	require.Equal(t, "32ab721229ebbea7fe4fc42bc4a34a1a", test.MustMd5Sum(path.Join(dir, "muspecs", "sample", "Samples.services.yaml")))
 
 }

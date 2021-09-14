@@ -6,6 +6,7 @@ import (
 	"github.com/eclipse/eclipsefuro/furo/pkg/microservices"
 	"github.com/eclipse/eclipsefuro/furo/pkg/microtypes"
 	"github.com/eclipse/eclipsefuro/furo/pkg/specSpec"
+	"github.com/spf13/viper"
 	"strings"
 )
 
@@ -37,7 +38,7 @@ func NewUTShadowList() UTShadowList {
 
 func (s *UTShadowList) AddTypeNode(fullTypeName string, ast *typeAst.TypeAst) *UTshadowNode {
 
-	if strings.HasSuffix(fullTypeName, "FuroGrpcRqst") {
+	if strings.HasSuffix(fullTypeName, viper.GetString("muSpec.requestTypeSuffix")) {
 		return s.AddRequestTypeNode(ast)
 	}
 
