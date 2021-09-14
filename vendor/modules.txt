@@ -9,6 +9,8 @@ github.com/Masterminds/semver
 github.com/Masterminds/sprig
 # github.com/cpuguy83/go-md2man/v2 v2.0.0
 github.com/cpuguy83/go-md2man/v2/md2man
+# github.com/davecgh/go-spew v1.1.1
+github.com/davecgh/go-spew/spew
 # github.com/fsnotify/fsnotify v1.4.7
 ## explicit
 github.com/fsnotify/fsnotify
@@ -63,6 +65,8 @@ github.com/mitchellh/reflectwalk
 github.com/otiai10/copy
 # github.com/pelletier/go-toml v1.2.0
 github.com/pelletier/go-toml
+# github.com/pmezard/go-difflib v1.0.0
+github.com/pmezard/go-difflib/difflib
 # github.com/russross/blackfriday/v2 v2.0.1
 github.com/russross/blackfriday/v2
 # github.com/shurcooL/sanitized_anchor_name v1.0.0
@@ -83,6 +87,10 @@ github.com/spf13/pflag
 # github.com/spf13/viper v1.7.1
 ## explicit
 github.com/spf13/viper
+# github.com/stretchr/testify v1.4.0
+## explicit
+github.com/stretchr/testify/assert
+github.com/stretchr/testify/require
 # github.com/subosito/gotenv v1.2.0
 github.com/subosito/gotenv
 # golang.org/x/crypto v0.0.0-20200302210943-78000ba7a073

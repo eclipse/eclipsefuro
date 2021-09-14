@@ -10,7 +10,6 @@ import (
 	"log"
 	"os"
 	"strings"
-	"text/tabwriter"
 	"text/template"
 )
 
@@ -37,34 +36,35 @@ func Run(cmd *cobra.Command, args []string) {
 		FuroVersion:    cmd.Flag("version").Value.String(),
 	}
 
-	for {
-		fmt.Print("-> ")
-		text, _ := reader.ReadString('\n')
-		// convert CRLF to LF
-		text = strings.Replace(text, "\n", "", -1)
+	tpldata.RepositoryName = cmd.Flag("repository").Value.String()
+	if tpldata.RepositoryName == "" {
+		// ask for a repository name
+		for {
+			fmt.Print("-> ")
+			text, _ := reader.ReadString('\n')
+			// convert CRLF to LF
+			text = strings.Replace(text, "\n", "", -1)
 
-		if strings.Compare("done", text) == 0 {
-			os.Exit(0)
+			if strings.Compare("done", text) == 0 {
+				os.Exit(0)
+			}
+
+			if strings.Compare("exit", text) == 0 {
+				os.Exit(0)
+			}
+
+			if strings.Compare("", text) == 0 {
+				fmt.Println("A empty string is not allowed.")
+				fmt.Println("Type done or exit to quit")
+			} else {
+				tpldata.RepositoryName = text
+				break
+			}
+
 		}
-
-		if strings.Compare("exit", text) == 0 {
-			os.Exit(0)
-		}
-
-		if strings.Compare("", text) == 0 {
-			fmt.Println("A empty string is not allowed.")
-			fmt.Println("Type done or exit to quit")
-		} else {
-			tpldata.RepositoryName = text
-			break
-		}
-
 	}
 
 	fmt.Println("Creating project for ", tpldata.RepositoryName)
-
-	w := tabwriter.NewWriter(os.Stdout, 0, 0, 0, ' ', tabwriter.Debug)
-	defer w.Flush()
 
 	pkger.Walk("/furo/template/", func(path string, info os.FileInfo, err error) error {
 		if err != nil {
