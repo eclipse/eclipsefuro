@@ -50,12 +50,4 @@ The `.furobecrc` is runned when you start the container.
     PS1="フロー my project#"
     GOPRIVATE=git.companybitbucket.com/projects
 
-
-## Builtin "commands" Arguments
-- noarg
-  > will start a bash
-
-- build
-  > Will start the `furo run build` command end exit.
-  > Make sure that you have a `build` flow in your `.furo` config
-  
+ 
