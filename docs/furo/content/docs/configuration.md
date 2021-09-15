@@ -11,9 +11,13 @@ weight: 10
 
 # Configuration
 
-Each spec project must have a *.furo* configuration file.
+Each spec project must have a configuration file. The furo cli tool will look up for *.furo* in the current working directory or can be called with the `--config` option.
 
-A fictive example of a furo config for a spec project.
+You can generate a config file with a inital project structure by calling `furo init`. 
+
+As you can see, the config file is a regular yaml file and is easy to edit in any text editor or IDE.
+
+*Example of a configuration file*
 ```yaml
 furo: "1.28.5" # the minimal version of furo
 module: "github.com/yourname/sample-specs"
