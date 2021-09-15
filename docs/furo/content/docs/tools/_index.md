@@ -7,8 +7,8 @@ bookCollapseSection: true
 # Useful tools to work with the furo FIDLs
 The furo cli can do a lot for you, but there is much more to do in a API work flow.
 
-If you do not want to install them (it is a lot of work) on your machine, you can
-simply use the docker image [thenorstroem/furo-bec](./BEC/). 
+If you do not want to install all the required programs with the correct versions (it is a lot of work) on your machine,
+you can use the  [furoBEC](./BEC/) docker image. 
  
 
  
