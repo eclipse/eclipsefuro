@@ -17,17 +17,19 @@ This container contains all tools you need to work with a furo spec project.
 
 ## Usage
 ### Bash mode
-
-    docker run -it --rm -v `pwd`:/specs thenorstroem/furo-bec
-    # do your stuff
-    # type exit to quit
-    exit
+```bash
+docker run -it --rm -v `pwd`:/specs thenorstroem/furo-bec
+# do your stuff
+# type exit to quit
+exit
+```
 
 ### Command mode
-Starting your container with an argument like "build" or "publish" will execute the corresponding flow.
+Starting your container with the arguments **build** or **publish** will execute the corresponding flow.
 
-    docker run -it --rm -v `pwd`:/specs thenorstroem/furo-bec build
-
+```bash
+docker run -it --rm -v `pwd`:/specs thenorstroem/furo-bec build
+```
 
 {{< hint Info >}}
 **Note:** Only the arguments **build** and **publish** are supported. 

@@ -5,14 +5,12 @@ date: 2020-11-11T19:37:46+01:00
 bookCollapseSection: true
 ---
 # Useful tools to work with the furo FIDLs
-There are a lot of tools, you have at your hand at your fingertips. If you do not want to install them (a lot of work), you can
-simply use the docker image [thenorstroem/furo-bec](./BEC/). It contains erery tool you need.
+The furo cli can do a lot for you, but there is much more to do in a API work flow.
+
+If you do not want to install them (it is a lot of work) on your machine, you can
+simply use the docker image [thenorstroem/furo-bec](./BEC/). 
  
-#### Installation
-```bash
-brew tap theNorstroem/tap
-brew install furo
-```
+
  
 ## [protoc](https://github.com/protocolbuffers/protobuf)
 The protocol buffer compiler, protoc, is used to compile .proto files, which contain service and message definitions. 
@@ -41,4 +39,4 @@ There are no official plugins available at the moment.
 
 
 ### furoc-gen-xxx
-Is a placeholder for all furoc plugins that will come.
+Is a placeholder for all furoc generator plugins.
