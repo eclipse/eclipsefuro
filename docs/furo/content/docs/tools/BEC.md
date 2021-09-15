@@ -24,15 +24,21 @@ This container contains all tools you need to work with a furo spec project.
     exit
 
 ### Command mode
-This will run furo with the configured flow *build*.
+Starting your container with an argument like "build" or "publish" will execute the corresponding flow.
 
     docker run -it --rm -v `pwd`:/specs thenorstroem/furo-bec build
 
 
-> TIPP: If your furo commands have to access different directories, do not forget to mount them.
+{{< hint Info >}}
+**Note:** Only the arguments **build** and **publish** are supported. 
+{{< /hint >}}
 
+{{< hint Info >}}
+**Tipp:** If your custom commands have to access different directories, do not forget to mount them.
+{{< /hint >}}
 
 ## Installed Tools
+To see the installed versions of the tools, please refer to the [Dockerfile](https://github.com/eclipse/eclipsefuro/blob/main/BEC/Dockerfile) of the version you use.
 
 - golang
 - git
@@ -44,12 +50,30 @@ This will run furo with the configured flow *build*.
 - simple-generator
 - furo
 - furoc
-- buf
+- [buf](https://docs.buf.build/introduction)
 - protoc-gen-buf-breaking
 - protoc-gen-buf-lint
-
 - [jq](https://stedolan.github.io/jq/)
 - [yq](https://mikefarah.gitbook.io/yq/commands/read)
 
 > No furoc generators are installed. Add the needed furoc-gen-XXX to the `.furobecrc` file.
 
+
+## Customizing the container with .furobecrc
+Make settings for your environment or project in this file. 
+
+Maybe you need a `$GOPRIVATE` or other Env vars.
+
+The `.furobecrc` is executed whenever you start the container.
+
+```bash
+
+# change the bash prompt
+PS1="フロー myProject#"
+GOPRIVATE="$GOPRIVATE,github.com/myprivaterepo"
+
+echo '[url "ssh://git@github.com/"]
+        insteadOf = https://github.com/' > ~/.gitconfig
+        
+```
+   
