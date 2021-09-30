@@ -20,10 +20,6 @@ func TestRunCommand(t *testing.T) {
 	require.Equal(t, true, test.FileExist(path.Join(dir, ".furo")))
 	require.Equal(t, "d8a9dbdca98179d9a7d3ebbdcb2c3fa8", test.MustMd5Sum(path.Join(dir, ".furo")))
 
-	err := test.CopyTestFile("test/testdata/.furo", path.Join(dir, ".furo"))
-	require.NoError(t, err, "Must Copy .furo file")
-	require.Equal(t, "8493075c067f312d3ffd760363e3e0f6", test.MustMd5Sum(path.Join(dir, ".furo")))
-
 	os.Args = []string{"cmd", "install"}
 	rco.Execute()
 
