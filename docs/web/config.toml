@@ -1,6 +1,6 @@
 baseURL = "http://web.furo.pro/"
 languageCode = "en-us"
-title = "フロー Web"
+title = "フロー Furo Web"
 theme = ["book"]
 
 # (Optional) Set Google Analytics if you use it to track your website.
