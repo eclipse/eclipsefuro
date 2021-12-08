@@ -5,12 +5,11 @@ bookToc: false
 description: フロー Furo provides simply enterprise-flavoured, language-agnostic API development.
 ---
 
-# フロー Furo
-Furo provides simply enterprise-flavoured, language-agnostic API development. 
-Our long-term goal is to enable Schema-Driven Development, without seeing us as the center of the world.
-We support multiple sources of truth, and we produce border-crossing type and service definitions.
+# フロー Eclipse Furo
+Eclipse Furo offers simple, enterprise-tailored, language-independent API development. 
+It comes with multiple sources of truth and generates border-crossing type and service definitions.
 
-By defining a clear API, the implementation becomes only a *detail* and  is completely under **your** control.
+Furo provides tools for quickly prototyping and building your API’s functionality.
 
 {{< github_button button="star" repo="eclipsefuro" count="true" user="eclipse" >}}
 {{< github_button button="issue" repo="eclipsefuro" count="true" user="eclipse" >}}
@@ -20,10 +19,12 @@ By defining a clear API, the implementation becomes only a *detail* and  is comp
 Open for integrations, easy to expand, simple to automate, adapts to company processes and technology independent.
 <--->
 ## API first
-Furo provides tools for quickly prototyping and building your API’s functionality. 
-We believe in the API first architecture principle. API First obviously is in conflict with the bad practice of 
-publishing API definition and asking for peer review after the service integration has started. With Furo you will
-get early feedback!
+API First is one of our engineering and architecture principles. By defining APIs outside the code, 
+we want to facilitate early review feedback and also a development discipline that focus service interface design on:
+- profound understanding of the domain and required functionality
+- generalized business entities / resources, i.e. avoidance of use case specific APIs
+- clear separation of WHAT vs. HOW concerns, i.e. abstraction from implementation aspects — APIs should be stable even if we replace complete service implementation including its underlying technology stack
+- single source of truth for the API specification
 {{< /columns >}}
 
 {{< columns >}}
@@ -48,7 +49,7 @@ The furo interface definition language ([FIDL](https://fidl.furo.pro)) makes it 
 ## Stay In Sync
 
 The different specification formats can be used as a source or a sink or both of them. Some have a higher information 
-density, furo can keep them in sync for you.
+density, Furo can keep them in sync for you.
 
 {{< mermaid >}}
 graph LR
@@ -74,7 +75,7 @@ This can be *.proto or one of the FIDLs (µSpec, spec).
 Furo comes with proto as default output, but is not limited to proto. With furoc you can write your own output formats.
 <--->
 ## Configurable Flows
-The commands of furo can be configured as **flows** (chain of commands). You can also add your custom commands and 
+The commands of Furo can be configured as **flows** (chain of commands). You can also add your custom commands and 
 add them at any point to your flow. 
 
 **furo run build**
@@ -87,22 +88,21 @@ Protoc --> Publish(publish)
 
 {{< /columns >}}
 
-# Browser integration
+# フロー Eclipse Furo Web
 In addition to a set of web components, Furo Web also offers JavaScript modules for integration.
 Any web framework can be connected using the JavaScript integration modules. Or simply integrate your favourite
 web component library such as Carbon Web Components, Spectrum Web Components, Momentum UI or many others.
 
 {{< columns >}}
 
-## Web Components
-Furo Web Components provides an enterprise ready set of web components which play seamlessly with Furo. 
+## [Core Web Components](https://web-components.furo.pro)
+Furo Core Web Components provides an enterprise ready set of web components which play seamlessly with Furo. 
 Based on web standards and future proved. Compliant with any technology of choice. With minimal footprint it includes all enterprise standards, i18n, theming, etc
-[read more](/docs/web-components/)
 
 <--->
 
-## Programmable HTML
-[Furo-FBP](https://fbp.furo.pro) is like programmable HTML, no deep javascript knowledge is needed to write an application.
+## [Flow Based Programming](https://fbp.furo.pro)
+Furo-FBP is like programmable HTML, no deep javascript knowledge is needed to write an application.
 ![viz](/viz.png)
 *The flowbased programming paradigm results in less complex and more flexible code.*
 
