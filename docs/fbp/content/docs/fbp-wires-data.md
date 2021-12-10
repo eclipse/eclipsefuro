@@ -19,7 +19,7 @@ receiver will get a `undefined`.
 
 <furo-demo-snippet flow>
 <template>
-  <furo-color-input label="choose a color"  @-value-changed="--newColor"></furo-color-input> 
+  <input type="color" label="choose a color"  @-input="--newColor(*.path.0.value)"></input> 
   <light-bulb on  ƒ-set-color="--newColor"></light-bulb>
 </template>
 </furo-demo-snippet>
@@ -64,7 +64,7 @@ Keep in mind that you will overwrite existing properties of your host. A name li
 <furo-demo-snippet flow style="height:200px">
 <template>
   <!-- the color input will store the value on the varable color -->
-  <furo-color-input label="choose color 1"  @-value-changed="((color))"></furo-color-input>
+  <input type="color" label="choose color 1" @-input="^color-changed(*.path.0.value)" @-value-changed="((color))"></input>
 </template>
 </furo-demo-snippet>
 
@@ -79,9 +79,9 @@ To send parked data, write the property name in brackets after the wire.
 <furo-demo-snippet flow style="height:300px">
 <template>
   <!-- the color input will store the value on the varable color -->
-  <furo-color-input label="choose color 1"  @-value-changed="((color))"></furo-color-input>
+  <input type="color" label="choose color 1" @-change="^color-changed(*.path.0.value)" @-color-changed="((color))"></input>
   <!-- the button will put the value of color on the wire --newColor -->
-  <furo-button @-click="--newColor(color)" label="setColor"></furo-button>
+  <button @-click="--newColor(color)">setColor</button>
   <light-bulb ƒ-set-color="--newColor" on></light-bulb>
 </template>
 </furo-demo-snippet>

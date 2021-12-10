@@ -38,7 +38,7 @@ Our ui5 components i.e. are just extending the excellent [UI5 Web Components](ht
 
 <--->
 
-## [Data Integration](https://components.furo.pro/?t=furo-data)
+## [Data Integration](/docs/modules/furo-data/)
 The transparent data agents are responsible for the communication with the APIs and the adapters for the UI interaction.
 {{< mermaid >}}
 graph TD

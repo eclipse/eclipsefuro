@@ -28,8 +28,8 @@ connected by the **wire** `--lightSwitchClicked`.
 <furo-demo-snippet flow>
 <template>
   <!-- This button acts as a light switch -->
-  <furo-button @-click="--lightSwitchClicked" label="i am a lightswitch"></furo-button>
   <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>  
+  <button @-click="--lightSwitchClicked">i am a lightswitch</button>
 </template>
 </furo-demo-snippet>
 
@@ -58,7 +58,7 @@ So the wire `--lightSwitchClicked` can trigger multiple targets if you want.
   <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>
   <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>
   <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>
-  <furo-button @-click="--lightSwitchClicked" label="i am a lightswitch"></furo-button> 
+  <button @-click="--lightSwitchClicked">i am a lightswitch</button> 
   <light-bulb ƒ-toggle="--noSource"></light-bulb>
 </template>
 </furo-demo-snippet>
@@ -101,9 +101,8 @@ A wire is not limited as a point to point connection and can have multiple sourc
 <furo-demo-snippet flow style="height:400px">
 <template>
   <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>
-  <furo-button @-click="--lightSwitchClicked" label="i am a light switch"></furo-button> 
-  <furo-button @-click="--lightSwitchClicked" label="i am a light switch too"></furo-button>  
- 
+  <button @-click="--lightSwitchClicked">lightswitch 1</button>
+  <button @-click="--lightSwitchClicked">lightswitch 2</button>
 </template>
 </furo-demo-snippet>
 
@@ -118,10 +117,10 @@ have multiple targets.
 <template>
   <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>
   <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>
-  <furo-button @-click="--lightSwitchClicked" label="i am a lightswitch"></furo-button> 
-  <furo-button @-click="--lightSwitchClicked" label="i am a lightswitch too"></furo-button>  
   <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>
   <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>
+  <button @-click="--lightSwitchClicked">lightswitch</button>
+  <button @-click="--lightSwitchClicked">lightswitch 2</button>  
 </template>
 </furo-demo-snippet>
 
@@ -139,9 +138,9 @@ You can do this by separating them with a comma.
   <light-bulb ƒ-toggle="--lightSwitchClicked, --intervallPulse"></light-bulb>  
   <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>
   <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>
-  <furo-button @-click="--lightSwitchClicked, --blinkerClicked" label="i am a lightswitch"></furo-button>   
-  <furo-interval-pulse ƒ-start="--blinkerClicked" ƒ-stop="--stopBlinkerClicked" @-tick="--intervallPulse" interval="500"></furo-interval-pulse>
-  <furo-button danger  @-click="--stopBlinkerClicked" label="Stop the blinking"></furo-button>   
+  <button @-click="--lightSwitchClicked,--blinkerClicked">lightswitch</button> 
+  <furo-interval-pulse ƒ-start="--blinkerClicked" ƒ-stop="--stopBlinkerClicked" @-tick="--intervallPulse" interval="500"></furo-interval-pulse> 
+  <button @-click="--stopBlinkerClicked">Stop the blinking</button>
 </template>
 </furo-demo-snippet>
 
@@ -152,12 +151,12 @@ You can receive from multiple wires by comma separating them.
 
 <furo-demo-snippet flow style="height:400px">
 <template>
-  <furo-button @-click="--lightSwitchClicked" label="i am a lightswitch"></furo-button>   
-  <furo-button @-click="--blinkerClicked" label="i am a blinkswitch"></furo-button>   
+<light-bulb ƒ-toggle="--lightSwitchClicked, --intervallPulse"></light-bulb>  
+  <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>
+  <button @-click="--lightSwitchClicked">i am a lightswitch</button>   
+<button @-click="--blinkerClicked">blinkswitch</button>
   <furo-interval-pulse ƒ-start="--blinkerClicked" ƒ-stop="--stopBlinkerClicked" @-tick="--intervallPulse" interval="500"></furo-interval-pulse>
-  <furo-button danger  @-click="--stopBlinkerClicked" label="Stop the blinking"></furo-button>   
-  <light-bulb ƒ-toggle="--lightSwitchClicked, --intervallPulse"></light-bulb>  
-  <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>  
+<button style="color:red" @-click="--stopBlinkerClicked">Stop the blinking</button>
 </template>
 </furo-demo-snippet>
 

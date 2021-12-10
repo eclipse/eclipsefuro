@@ -21,7 +21,7 @@ write another HTML element selector for calling a simple method, simply express 
 <furo-demo-snippet flow style="height: 150px">
 <template>
   <!-- This button acts as a light switch -->
-  <furo-button @-click="--lightSwitchClicked" label="i am a lightswitch"></furo-button>
+  <button @-click="--lightSwitchClicked">i am a lightswitch</button>
   <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>  
 </template>
 </furo-demo-snippet>
