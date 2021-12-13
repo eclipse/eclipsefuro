@@ -8,13 +8,23 @@ title: "Installlation"
 You can use furo FBP directly in your HTML documents or within your own web-components.
 
 
-## FBP and eclipsefuro-web in HTML without a *installation*
+## From CDN
+### FBP and eclipsefuro-web in HTML without installation
 You can use furo-fbp and the furo-web-components without a direct installation by using the
 precompiled variant of the furo web components.
 
 This is the simplest way to get up and running. 
-
-[Read more about that here](precompiled.md).
+```html
+ <script>
+    import("https://cdn.jsdelivr.net/npm/@furo/precompiled@2.0.0-rc.16/dist/DOMFBP.js").then(() => {
+      // activate FBP on body
+      const fbphandle = new DOMFBP(document.body);
+    });
+</script>
+```
+- [Read more about `@furo/precompiled` here](precompiled.md).
+- [open demo](https://kgjfw.csb.app/)
+- [open sandbox](https://codesandbox.io/s/hardcore-maxwell-kgjfw?from-embed)
 
 ## Install the npm module
 
