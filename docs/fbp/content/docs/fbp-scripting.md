@@ -9,8 +9,9 @@ This also comes very handy when you are writing tests.
 
 ## Trigger a wire imperatively
 
-To trigger a wire from the javascript part of your component or from a test, call the **_FBPTriggerWire** method.
-You can also trigger the wire in the constructor, then the wire will be queued until the flow is parsed and ready.
+To trigger a wire from the javascript part of your component, call the **_FBPTriggerWire** method.
+
+You can also trigger the wire in the constructor, in this case the wire will be queued until the flow is parsed and ready.
  
 ```js  {linenos=table,hl_lines=[6,14,22],linenostart=1}
 class TriggerSample extends FBP(LitElement) {
