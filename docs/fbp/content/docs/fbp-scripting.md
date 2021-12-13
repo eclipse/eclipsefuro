@@ -18,7 +18,7 @@ class TriggerSample extends FBP(LitElement) {
       super();
       this.data = "Test";
       // this wire will be queued
-      this._FBPTriggerWire("--wireName", this.data);
+      this._FBPTriggerWire("|--wireName", this.data);
     }
     
     /**
@@ -26,7 +26,7 @@ class TriggerSample extends FBP(LitElement) {
      */
     _FBPReady(){
       super._FBPReady();
-      this._FBPTriggerWire('--wireName', this.data);
+      this._FBPTriggerWire("|--wireName", this.data);
     }
     
     /**
@@ -34,7 +34,7 @@ class TriggerSample extends FBP(LitElement) {
      * 
      */
     fetchRecord(src){
-      this._FBPTriggerWire('--fetchRequested', src);
+      this._FBPTriggerWire("|--fetchRequested", src);
     }
 }
 ``` 
@@ -50,12 +50,12 @@ class HookSample extends FBP(LitElement) {
     constructor() {
         super();
         
-        this._FBPAddWireHook("--pathChanged",(d)=>{
-          // d contains the full content of the event, not only the d.detail        
+        this._FBPAddWireHook("--pathChanged",(e)=>{
+          // On hooks `e` contains the complete event, not only the `e.detail`        
       })
     }
 }
 ```
 
 > The most @-events of the furo base components will fit the ƒ-methods of the corresponding components.
-It is like playing domino. Read the api guide to learn what which component sends or expects.
+It is like playing domino.
