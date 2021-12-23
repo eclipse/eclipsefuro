@@ -7,16 +7,23 @@ description: フロー Furo provides simply enterprise-flavoured, language-agnos
 
 # フロー Eclipse Furo
 Eclipse Furo offers simple, enterprise-tailored, language-independent API development. 
-It comes with multiple sources of truth and generates border-crossing type and service definitions.
+It can handle multiple sources of truth and generates border-crossing type and service definitions.
 
 Furo provides tools for quickly prototyping and building your API’s functionality.
 
 {{< github_button button="star" repo="eclipsefuro" count="true" user="eclipse" >}}
 {{< github_button button="issue" repo="eclipsefuro" count="true" user="eclipse" >}}
 
+
+
 {{< columns >}}
 ## Enterprise ready
 Open for integrations, easy to expand, simple to automate, adapts to company processes and technology independent.
+
+<img src="grpcio-ar21.svg" style="width: 120px;">
+<img src="openapis-icon.svg" style="width: 60px">
+<img src="graphQL.svg" style="width: 60px">
+
 <--->
 ## API first
 API First is one of our engineering and architecture principles. By defining APIs outside the code, 
