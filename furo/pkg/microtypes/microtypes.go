@@ -136,6 +136,7 @@ func (l *MicroTypelist) UpateTypelist(typelist *typeAst.Typelist, deleteSpecs bo
 			AstField.Type = mField.Type
 			AstField.Description = mField.Description
 			AstField.XProto.Number = mField.FieldId
+			AstField.XProto.Oneof = mField.OneOfGroup
 
 			// check for __proto
 
@@ -283,10 +284,11 @@ type FieldMap struct {
 	DefaultValue string
 	Description  string
 	FieldId      int32
+	OneOfGroup   string
 }
 
 func (m *FieldMap) ParseFieldString(s string) {
-	regex := regexp.MustCompile(`^(-*)? ?(\**)? ?(\[.?])? ?([^#=:]*):?([^=#]*)(=([^#]*))?(#(?s:(.*)))?$`)
+	regex := regexp.MustCompile(`^(-*)? ?(\**)? ?(\[.?])? ?([^#\[=:]*):?([^=\[#]*)(=([^\[#]*))?(\[(.*)\][^#]*)?(#(?s:(.*)))?$`)
 	matches := regex.FindStringSubmatch(s)
 	if len(matches) == 0 {
 		fmt.Println("field not parsed", s)
@@ -313,7 +315,11 @@ func (m *FieldMap) ParseFieldString(s string) {
 	if matches[7] != "" {
 		m.DefaultValue = strings.TrimSpace(matches[7])
 	}
+
 	if matches[9] != "" {
-		m.Description = strings.TrimSpace(matches[9])
+		m.OneOfGroup = strings.TrimSpace(matches[9])
+	}
+	if matches[11] != "" {
+		m.Description = strings.TrimSpace(matches[11])
 	}
 }
