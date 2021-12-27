@@ -6,6 +6,10 @@
     display_name: '- string:2 #Readonly display name'
     in_edit: 'bool:3 #True when a draft exists'
     tags: '[] string:4 #Repeated string'
+    this: 'string:5 [oneofname] #Oneof example'
+    is: 'string:6 #Oneof example'
+    val: 'int32:7= 42  #Oneof example'
+
   target: sample.proto
   
 - type: 'sample.SampleEntity #SimpleEntity'
