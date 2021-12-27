@@ -156,10 +156,8 @@ func (l *MicroTypelist) UpateTypelist(typelist *typeAst.Typelist, deleteSpecs bo
 			if AstField.Meta == nil {
 				AstField.Meta = &specSpec.FieldMeta{}
 			}
-			// do not overwrite
-			if AstField.Meta.Default == "" {
-				AstField.Meta.Default = mField.DefaultValue
-			}
+
+			AstField.Meta.Default = mField.DefaultValue
 
 			AstField.Meta.Readonly = mField.Readonly
 			AstField.Meta.Repeated = mField.Repeated
