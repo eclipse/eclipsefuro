@@ -4,7 +4,7 @@ version: "v0.0.1" # This is the version for your spec project
 specDir: "./specs" # The spec files are generated to this folder
 specFormat: "yaml" # set to yaml or json
 dependencies:
-  - "git@github.com:theNorstroem/furoBaseSpecs.git v1.27.1" # The importer looks for all **/*.type.spec files recursive The importer looks for all **/*.service.spec files recursive
+  - "git@github.com:theNorstroem/furoBaseSpecs.git v1.28.0" # The importer looks for all **/*.type.spec files recursive The importer looks for all **/*.service.spec files recursive
 dependenciesDir: dependencies # Your installed dependencies from other spec project are saved in this directory
 muSpec:
   types: # define a set of globs which matches your type definitions
