@@ -10,14 +10,19 @@ In the client lib, at most one field can be set at the same time.
 Setting any member of the oneof automatically clears all the other members. 
 
 
-{{< hint warning >}}
-The oneof feature is **not** available **µSpec**. You have to specify them in the spec. 
-{{< /hint >}}
-
 
 ## Using Oneof
 Just define a name for the oneof.
 
+*field section of a type µSpec*
+```yaml
+  fields:
+    method: '* string:1 [handler] #The name of the method to call with the wire data. If you want add custom code use source instead of method. /oneof:handler/'
+    source: '* string:2 [handler] #Anonyous method to handle the wire. Prefer the use of method. /oneof:handler/'
+    
+```
+
+*field section of a type spec*
 ```yaml
 fields:
   method:
@@ -60,6 +65,8 @@ fields:
 ```
 
 The resulting proto would be like:
+
+*proto*
 ```proto
 
 // Wire hooks to connect internal wires with methods.

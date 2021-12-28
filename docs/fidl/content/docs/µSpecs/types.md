@@ -34,10 +34,10 @@ You can have as many type definitions per file as you want. It makes sense that 
 
 ```yaml
 - type: 'sample.Sample  #A sample type'
-  !___!  !___________!  !____________!
-    |          |             |
-    |      type name         |
-    |                        |
+  !___!  !____||_____!  !____________!
+    |       |     |          |
+    |       |   type name    |
+    |    package             |
     |                    description (recomended) begins with a #
     |                  
     | 
@@ -46,17 +46,14 @@ field name of the type
 
 
 ```
-### type name
-is defined by package.Type
 
-
-### description
-It is a good practice to give a good description of the type. This description will go to the generated protos and other generates.
+It is a good practice to give a good description of the type. 
 
 ## Fields
 
 In the "fields-object", what a surprise, you define the fields / attributes of a type.
 
+*minimalistic example*
 ```yaml
 fieldname: '* string:2 #The description.'
 !_______!  !_!!____!!_!!________________!
@@ -71,24 +68,48 @@ fieldname: '* string:2 #The description.'
 
 ```
 
-### fieldname
+*example with default value and oneof*
+```yaml
+fieldname: '* string:2 = default value [oneofname] #The description.'
+!_______!  !_!!____!!_!!______________!!__________!!________________!
+    |       |    |   |          |            |              |   
+    |       |    |   |          |   oneof definition in []  |
+    |       |    |   |    default value (=)                 |
+    |       |    |   |                                      |
+    |       |    |   |        description (recomended) begins with a #
+ field name |    |   |   
+            |    |  field id, indicated by a :   
+            |    |  
+            |   type  
+            |     
+       Indicator for required (*), readonly (-), repeated ([])
+
+```
+
+### Fieldname
 The name of the field
 
-### indicator required
+### Indicator for required
 If the field is required, type in a *
 
-### indicator readonly
+### Indicator for readonly
 If the field is readonly, type in a -
 
-### indicator repeated
+### Indicator for repeated
 If the field is repeated, type in a []
 
-### type
+### Type
 Types are the same like in protobuf
 
-### field id
+### Field id
 The field id must be unique, the generated protos use them too
 
-### description
+### Default value
+This does not reflect in the protos. 
+
+### Oneof definition
+
+
+### Description
 It is a good practice to give a good description of the type. This description will go to the generated protos and other generates.
 

@@ -41,8 +41,8 @@ There is a short notation form [(µSpecs)](/docs/µSpecs/) and the standard nota
         cid: 'string #The query param cid stands for client id.'
 ```
 - look at some example projects
-- read the [overview]()
-- install the [tools]()
+- read the [overview](/docs/overview/)
+
 
 {{< /columns >}}
 

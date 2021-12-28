@@ -12,9 +12,6 @@ bookCollapseSection: true
 
 You can do streaming by adding the keyword **stream** to your response type. 
 
-{{< hint info >}}
-Streaming is only supported as response type (Server streaming RPC or in simle words: from server to the client) at the moment.
-{{< /hint >}}
 
 {{< hint warning >}}
 You need at least [**furo 1.24.1**](https://furo.pro/) to use this feature 
