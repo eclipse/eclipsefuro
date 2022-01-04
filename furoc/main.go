@@ -16,7 +16,7 @@ import (
 
 func main() {
 	var arglist parseargs.Arglist
-	fmt.Println("furoc 1.27.2")
+	fmt.Println("furoc 1.30.1")
 	if len(os.Args) == 1 {
 		// look for a .furoc config in cwd
 		// if we are in a spec project and have furoc instructions there, follow them

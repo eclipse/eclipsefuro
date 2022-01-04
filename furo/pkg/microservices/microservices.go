@@ -140,9 +140,10 @@ func (l *MicroServiceList) UpateServicelist(servicelist *serviceAst.Servicelist,
 			}
 
 			// update only if target rpc name was not set
-			if targetRPC.RpcName == "" {
+			if targetRPC.RpcName == "" || sourceRPC.Deeplink.Href == "" {
 				targetRPC.RpcName = sourceRPC.RpcName
 			}
+
 			//todo: check if it is needed to build in a check on setted rels
 			targetRPC.Deeplink = sourceRPC.Deeplink
 
@@ -175,9 +176,11 @@ func (l *MicroServiceList) UpateServicelist(servicelist *serviceAst.Servicelist,
 				})
 
 			}
-			// create a request type only request is not a stream
+
+			// create a request type only if request is not a stream or pure
 			// maybe this is incorrect, if someone needs streams with query params
-			if !strings.HasPrefix(targetRPC.Data.Request, "stream ") {
+			// sourceRPC.Deeplink.Href
+			if !(strings.HasPrefix(targetRPC.Data.Request, "stream ") || sourceRPC.Deeplink.Href == "") {
 				requestType := &microtypes.MicroType{
 					Type:   microServiceAst.Package + "." + targetRPC.RpcName + viper.GetString("muSpec.requestTypeSuffix") + " #request message for " + targetRPC.RpcName,
 					Fields: fields,
@@ -246,7 +249,15 @@ func (mt MicroService) ToMicroServiceAst() *MicroServiceAst {
 		for i, m := range matches {
 			matches[i] = strings.TrimSpace(m)
 		}
-
+		isPureGrpc := false
+		// check for pure grpc service
+		if matches[2] == "" && matches[4] == "" {
+			matches[4] = matches[3]
+			matches[3] = ""
+		}
+		if matches[2] == "" && matches[3] == "" {
+			isPureGrpc = true
+		}
 		queryParams := orderedmap.New()
 
 		def.Qp.Map(func(iKey interface{}, iValue interface{}) {
@@ -305,6 +316,10 @@ func (mt MicroService) ToMicroServiceAst() *MicroServiceAst {
 		// We do not have a rel get, this comes from Get ... we make a self out of it
 		if r.Deeplink.Rel == "get" {
 			r.Deeplink.Rel = "self"
+		}
+
+		if isPureGrpc {
+			r.RpcName = matches[1]
 		}
 		methods.Set(matches[1], r)
 

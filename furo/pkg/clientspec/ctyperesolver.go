@@ -20,7 +20,7 @@ func AddTypesToResolver(tlist map[string]*typeAst.TypeAst) {
 
 func AddServicesToResolver(slist map[string]*serviceAst.ServiceAst) {
 	for fullname, t := range slist {
-		availableServices[t.ServiceSpec.Name] = CreateServiceFromAstService(&t.ServiceSpec, fullname)
+		availableServices[fullname] = CreateServiceFromAstService(&t.ServiceSpec, fullname)
 	}
 }
 

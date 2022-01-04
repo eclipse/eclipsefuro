@@ -111,8 +111,9 @@ func requestParamsFromRpc(rpc *specSpec.Rpc) []Qparams {
 
 // builds the request for the rpc
 // rpc {{$method.RpcName}} ({{$method | rpcRequest}}) returns ({{$method.Data.Response}}){
+// return specified methods for pure grpc or stream, otherwise RpcName + Suffix
 func rpcRequest(method *specSpec.Rpc) string {
-	if strings.HasPrefix(method.Data.Request, "stream ") {
+	if strings.HasPrefix(method.Data.Request, "stream ") || method.Deeplink.Href == "" {
 		return method.Data.Request
 	}
 	return method.RpcName + viper.GetString("muSpec.requestTypeSuffix")

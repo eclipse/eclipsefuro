@@ -18,7 +18,7 @@ func TestRunCommand(t *testing.T) {
 	rco.Execute()
 
 	require.Equal(t, true, test.FileExist(path.Join(dir, ".furo")))
-	require.Equal(t, "d8a9dbdca98179d9a7d3ebbdcb2c3fa8", test.MustMd5Sum(path.Join(dir, ".furo")))
+	require.Equal(t, "51a3179fed0de8701bc0556ec37dfedb", test.MustMd5Sum(path.Join(dir, ".furo")))
 
 	os.Args = []string{"cmd", "install"}
 	rco.Execute()
