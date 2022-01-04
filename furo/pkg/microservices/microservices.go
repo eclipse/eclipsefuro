@@ -86,7 +86,7 @@ func (l *MicroServiceList) UpateServicelist(servicelist *serviceAst.Servicelist,
 		}
 
 		AstService.ServiceSpec.XProto.Imports = append(AstService.ServiceSpec.XProto.Imports, "google/api/annotations.proto")
-		AstService.ServiceSpec.XProto.Imports = append(AstService.ServiceSpec.XProto.Imports, microServiceAst.TargetPath+"/reqmsgs.proto")
+		//AstService.ServiceSpec.XProto.Imports = append(AstService.ServiceSpec.XProto.Imports, microServiceAst.TargetPath+"/reqmsgs.proto")
 		rpcServiceDeleteList := map[string]bool{}
 		if AstService.ServiceSpec.Services != nil {
 			AstService.ServiceSpec.Services.Map(func(iKey interface{}, iValue interface{}) {
@@ -176,6 +176,7 @@ func (l *MicroServiceList) UpateServicelist(servicelist *serviceAst.Servicelist,
 				})
 
 			}
+			hasReqMsg := false
 
 			// create a request type only if request is not a stream or pure
 			// maybe this is incorrect, if someone needs streams with query params
@@ -187,6 +188,10 @@ func (l *MicroServiceList) UpateServicelist(servicelist *serviceAst.Servicelist,
 					Target: "reqmsgs.proto",
 				}
 				microTypelist.MicroTypes = append(microTypelist.MicroTypes, requestType)
+				hasReqMsg = true
+			}
+			if hasReqMsg {
+				AstService.ServiceSpec.XProto.Imports = append(AstService.ServiceSpec.XProto.Imports, microServiceAst.TargetPath+"/reqmsgs.proto")
 			}
 
 			AstService.ServiceSpec.Services.Set(rpcname, targetRPC)
