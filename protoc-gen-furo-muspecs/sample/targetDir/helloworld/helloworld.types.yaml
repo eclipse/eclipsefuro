@@ -1,0 +1,18 @@
+- type: 'helloworld.Reply #Reply ...'
+  fields:
+    message: 'string:1 #The response message containing the greetings.'
+  target: helloworld.proto
+- type: 'helloworld.Request #Request ...'
+  fields:
+    name: 'string:1 #The request message containing the user''s name.'
+  target: helloworld.proto
+- type: 'helloworld.Stuff #Stuuuuufff ...'
+  fields:
+    xxx: '[] string:1 #The request message containing the user''s name.'
+    name: 'string:4 [test_oneof] #'
+    sub_message: 'helloworld.Request:9 [test_oneof] #'
+    oname: |-
+        string:2 [ogher_oneof] #davor
+        Da geht noch was
+    osub_message: 'helloworld.Reply:24 [ogher_oneof] #'
+  target: helloworld.proto

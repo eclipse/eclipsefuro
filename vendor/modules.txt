@@ -15,6 +15,9 @@ github.com/davecgh/go-spew/spew
 github.com/fsnotify/fsnotify
 # github.com/gobuffalo/here v0.6.0
 github.com/gobuffalo/here
+# github.com/golang/protobuf v1.5.0
+github.com/golang/protobuf/proto
+github.com/golang/protobuf/protoc-gen-go/descriptor
 # github.com/google/uuid v1.1.2
 ## explicit
 github.com/google/uuid
@@ -32,6 +35,9 @@ github.com/hashicorp/hcl/json/token
 # github.com/huandu/xstrings v1.3.2
 ## explicit
 github.com/huandu/xstrings
+# github.com/iancoleman/strcase v0.2.0
+## explicit
+github.com/iancoleman/strcase
 # github.com/imdario/mergo v0.3.11
 ## explicit
 github.com/imdario/mergo
@@ -105,6 +111,9 @@ golang.org/x/sys/unix
 # golang.org/x/text v0.3.2
 golang.org/x/text/transform
 golang.org/x/text/unicode/norm
+# google.golang.org/genproto v0.0.0-20191108220845-16a3f7862a1a
+## explicit
+google.golang.org/genproto/googleapis/api/annotations
 # google.golang.org/protobuf v1.26.0
 ## explicit
 google.golang.org/protobuf/encoding/prototext
@@ -128,6 +137,7 @@ google.golang.org/protobuf/internal/set
 google.golang.org/protobuf/internal/strs
 google.golang.org/protobuf/internal/version
 google.golang.org/protobuf/proto
+google.golang.org/protobuf/reflect/protodesc
 google.golang.org/protobuf/reflect/protoreflect
 google.golang.org/protobuf/reflect/protoregistry
 google.golang.org/protobuf/runtime/protoiface

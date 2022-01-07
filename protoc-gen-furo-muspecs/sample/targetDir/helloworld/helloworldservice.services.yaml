@@ -1,0 +1,16 @@
+- name: Greeter
+  description: The greeting service definition.
+  package: helloworld
+  target: helloworldservice.proto
+  methods:
+    - md: 'SayHello:   helloworld.Request , helloworld.Reply #Sends a greeting.'
+    - md: 'SayHelloREST: POST /api/hi helloworld.Request , helloworld.Reply #Sends a greeting.'
+    - md: 'SayHiREST: GET /api/hi helloworld.Request , helloworld.Reply #Sends a greeting.'
+- name: Meeter
+  description: The greeting service definition.
+  package: helloworld
+  target: helloworldservice.proto
+  methods:
+    - md: 'SayHello:   helloworld.Request , helloworld.Reply #Sends a greeting.'
+    - md: 'SayHelloREST: POST /api/hi helloworld.Request , helloworld.Reply #Sends a greeting.'
+    - md: 'SayHiREST: GET /api/hi helloworld.Request , helloworld.Reply #Sends a greeting.'

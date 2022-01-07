@@ -8,6 +8,7 @@ require (
 	github.com/Masterminds/sprig v2.22.0+incompatible
 	github.com/google/uuid v1.1.2 // indirect
 	github.com/huandu/xstrings v1.3.2 // indirect
+	github.com/iancoleman/strcase v0.2.0
 	github.com/imdario/mergo v0.3.11 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/markbates/pkger v0.17.1
@@ -20,6 +21,7 @@ require (
 	golang.org/x/crypto v0.0.0-20200302210943-78000ba7a073 // indirect
 	golang.org/x/mod v0.1.0
 	golang.org/x/sys v0.0.0-20200302150141-5c8b2ff67527 // indirect
+	google.golang.org/genproto v0.0.0-20191108220845-16a3f7862a1a
 	google.golang.org/protobuf v1.26.0
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
 	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776
