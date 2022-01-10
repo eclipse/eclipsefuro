@@ -53,11 +53,11 @@ service Meeter {
   }
 
   // Sends a greeting.
-  rpc SayHelloREST (helloworld.Request) returns (helloworld.Reply){
+  rpc SayHelloREST (helloworld.Stuff) returns (helloworld.Reply){
     //relname: This is a comment and should appear on the SayHelloREST.deeplink.description field
     option (google.api.http) = {
       post: "/api/hi"
-      body: "*"
+      body: "sub_message"
       additional_bindings {
         get: "/v1/hello"
       }
@@ -69,7 +69,7 @@ service Meeter {
     //This is a comment and should appear on the SayHelloREST.deeplink.description field
     //The relname was not set
     option (google.api.http) = {
-      get: "/api/hi"
+      get: "/api/hi/{me}:custom"
     };
   }
 

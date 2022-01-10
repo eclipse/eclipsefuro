@@ -21,3 +21,20 @@ message Request {
     // The request message containing the user's name.
     string name = 1;
 }
+
+// Stuuuuufff ...
+message Stuff {
+
+    // The request message containing the user's name.
+    repeated string xxx = 1;
+
+    oneof test_oneof {
+        string name = 4;
+        Request sub_message = 9;
+    }
+    oneof ogher_oneof {
+        // davor
+        string oname = 2; // Da geht noch was
+        Reply osub_message = 24;
+    }
+}

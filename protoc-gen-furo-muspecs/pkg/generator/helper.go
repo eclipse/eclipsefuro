@@ -20,7 +20,6 @@ func shouldGenerateServiceSpec(ast *protoast.ProtoAST, s string, descriptor *des
 func shouldGenerateTypeSpec(protoAST *protoast.ProtoAST, name string, descriptor *descriptorpb.FileDescriptorProto, message *descriptorpb.DescriptorProto) bool {
 	// we generate types only
 	// todo: generate enums
-	// todo: generate services ???
 	if len(message.Field) == 0 {
 		return false
 	}

@@ -155,11 +155,16 @@ func (l *MicroServiceList) UpateServicelist(servicelist *serviceAst.Servicelist,
 			if targetRPC.Data.Bodyfield == "" && !strings.HasPrefix(targetRPC.Data.Request, "stream ") {
 				targetRPC.Data.Bodyfield = "body"
 			}
+			if sourceRPC.Data.Request == "*" {
+				targetRPC.Data.Bodyfield = "*"
+				targetRPC.Data.Request = "*"
+			}
 
 			// make Request Type
 			fields := orderedmap.New()
-			fields.Set(targetRPC.Data.Bodyfield, "."+targetRPC.Data.Request+":1 #Body with "+targetRPC.Data.Request)
-
+			if targetRPC.Data.Bodyfield != "*" {
+				fields.Set(targetRPC.Data.Bodyfield, "."+targetRPC.Data.Request+":1 #Body with "+targetRPC.Data.Request)
+			}
 			if sourceRPC.Query.Len() > 0 {
 				number := 1
 				sourceRPC.Query.Map(func(iKey interface{}, iValue interface{}) {

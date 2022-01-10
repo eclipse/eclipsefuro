@@ -193,7 +193,7 @@ func (ast ServiceAst) UpdateImports(typelist *typeAst.Typelist) {
 		})
 		// data.request types
 		// rpc.Data.Request
-		if rpc.Data.Request != "" {
+		if !(rpc.Data.Request == "" || rpc.Data.Request == "*") {
 			imp, found := typelist.ResolveProtoImportForType(rpc.Data.Request, ast.ServiceSpec.XProto.Package)
 			if found {
 				// just add the imports, duplicates will be removed later

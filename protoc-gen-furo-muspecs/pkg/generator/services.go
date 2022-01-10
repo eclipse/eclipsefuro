@@ -2,12 +2,13 @@ package generator
 
 import (
 	"github.com/eclipse/eclipsefuro/furo/pkg/microservices"
+	"github.com/eclipse/eclipsefuro/furo/pkg/orderedmap"
 	"github.com/eclipse/eclipsefuro/protoc-gen-furo-muspecs/pkg/protoast"
 	options "google.golang.org/genproto/googleapis/api/annotations"
 	"strings"
 )
 
-func getServices(serviceInfo protoast.ServiceInfo, sourceInfo protoast.SourceInfo) []microservices.MicroRPC {
+func getServices(serviceInfo protoast.ServiceInfo, sourceInfo protoast.SourceInfo, typeMap map[string]protoast.MessageInfo) []microservices.MicroRPC {
 
 	methodlist := []microservices.MicroRPC{}
 	for _, methodInfo := range serviceInfo.Methods {
@@ -28,26 +29,37 @@ func getServices(serviceInfo protoast.ServiceInfo, sourceInfo protoast.SourceInf
 
 		href := ""
 		verb := ""
+		bodyfield := ""
+
 		if methodInfo.HttpRule.ApiOptions != nil {
-			href, verb, _, _ = extractApiOptionPattern(methodInfo.HttpRule)
+			href, verb, _, bodyfield = extractApiOptionPattern(methodInfo.HttpRule)
 		}
 		// request type
 		req := *methodInfo.Method.InputType
-		inputType := req[1:len(req)]
+		protoRequestType := req[1:len(req)]
 		// response type
 		res := *methodInfo.Method.OutputType
 		outputType := res[1:len(res)]
 
 		mRpc := microservices.MicroRPC{}
 
+		// query params from request type
+		// body field will turn in to body
+		furoRequestType := ""
+		mRpc.Qp, furoRequestType = getServiceFields(typeMap[protoRequestType], bodyfield)
+		// set request type to * if bodyfield is *
+		if bodyfield == "*" {
+			furoRequestType = "*"
+		}
+
 		mdLine := []string{}
 		mdLine = append(mdLine, *methodInfo.Method.Name+":")
 		mdLine = append(mdLine, verb)
 		mdLine = append(mdLine, href)
-		if inputType == "" {
-			inputType = "google.protobuf.Empty"
+		if furoRequestType == "" {
+			furoRequestType = "google.protobuf.Empty"
 		}
-		mdLine = append(mdLine, inputType)
+		mdLine = append(mdLine, furoRequestType)
 		mdLine = append(mdLine, ",")
 
 		mdLine = append(mdLine, outputType)
@@ -145,4 +157,36 @@ func extractApiOptionPattern(info *protoast.ApiOptionInfo) (href string, method 
 	}
 
 	return href, method, rel, body
+}
+
+func getServiceFields(messageInfo protoast.MessageInfo, bodyfield string) (*orderedmap.OrderedMap, string) {
+	omap := orderedmap.New()
+	var innerRequestType string
+	for _, f := range messageInfo.FieldInfos {
+
+		fielddescription := ""
+		if f.Info.LeadingComments != nil {
+			fielddescription = cleanDescription(*f.Info.LeadingComments)
+		}
+
+		if f.Info.TrailingComments != nil {
+			fielddescription = fielddescription + "\n" + cleanDescription(*f.Info.TrailingComments)
+		}
+		fieldline := []string{}
+
+		fieldline = append(fieldline, extractTypeFromField(&f)) // +":"+strconv.Itoa(int(*f.Field.Number)))
+
+		fieldline = append(fieldline, "#"+fielddescription)
+
+		field := strings.Join(fieldline, " ")
+		if f.Name == bodyfield {
+			// do nothing, because the body field is set as the request type
+			innerRequestType = extractTypeFromField(&f)
+		} else {
+			omap.Set(f.Name, field)
+		}
+
+	}
+
+	return omap, innerRequestType
 }

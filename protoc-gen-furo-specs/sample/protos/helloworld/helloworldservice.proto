@@ -43,3 +43,34 @@ service Greeter {
 }
 
 
+
+// The greeting service definition.
+service Meeter {
+
+  // Sends a greeting.
+  rpc SayHello (helloworld.Request) returns (helloworld.Reply){
+
+  }
+
+  // Sends a greeting.
+  rpc SayHelloREST (helloworld.Stuff) returns (helloworld.Reply){
+    //relname: This is a comment and should appear on the SayHelloREST.deeplink.description field
+    option (google.api.http) = {
+      post: "/api/hi"
+      body: "*"
+      additional_bindings {
+        get: "/v1/hello"
+      }
+    };
+  }
+
+  // Sends a greeting.
+  rpc SayHiREST (helloworld.Request) returns (helloworld.Reply){
+    //This is a comment and should appear on the SayHelloREST.deeplink.description field
+    //The relname was not set
+    option (google.api.http) = {
+      get: "/api/hi/{me}:custom"
+    };
+  }
+
+}

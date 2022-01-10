@@ -16,6 +16,14 @@ import (
 
 func Generate(protoAST *protoast.ProtoAST) error {
 
+	// this is used to resolve the query params for the services
+	typeMap := map[string]protoast.MessageInfo{}
+	for _, descriptor := range protoAST.ProtoMap {
+		for i, message := range descriptor.MessageType {
+			typeMap[*descriptor.Package+"."+*message.Name] = protoast.GetSourceInfo(descriptor).Messages[i]
+		}
+	}
+
 	for protofilename, descriptor := range protoAST.ProtoMap {
 		var fileName *string
 		servicesInFile := []*microservices.MicroService{}
@@ -41,7 +49,7 @@ func Generate(protoAST *protoast.ProtoAST) error {
 					Description: description,
 					Package:     strings.Join(strings.Split(path.Dir(protofilename), "/"), "."),
 					Target:      path.Base(protofilename),
-					Methods:     getServices(SourceInfo.Services[ServiceIndex], SourceInfo),
+					Methods:     getServices(SourceInfo.Services[ServiceIndex], SourceInfo, typeMap),
 				}
 				servicesInFile = append(servicesInFile, serviceSpec)
 

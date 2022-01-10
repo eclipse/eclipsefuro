@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func getServices(serviceInfo protoast.ServiceInfo, sourceInfo protoast.SourceInfo) *orderedmap.OrderedMap {
+func getServices(serviceInfo protoast.ServiceInfo, sourceInfo protoast.SourceInfo, typeMap map[string]protoast.MessageInfo) *orderedmap.OrderedMap {
 	omap := orderedmap.New()
 	for _, methodInfo := range serviceInfo.Methods {
 
@@ -50,7 +50,7 @@ func getServices(serviceInfo protoast.ServiceInfo, sourceInfo protoast.SourceInf
 					Method:      verb,
 					Rel:         rel,
 				},
-				Query:   nil, // fill from request type for compatibility reason
+				Query:   getFields(typeMap[inputType]),
 				RpcName: *methodInfo.Method.Name,
 			}
 

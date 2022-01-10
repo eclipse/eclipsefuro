@@ -14,6 +14,14 @@ import (
 
 func Generate(protoAST *protoast.ProtoAST) error {
 
+	// this is used to resolve the query params for the services
+	typeMap := map[string]protoast.MessageInfo{}
+	for _, descriptor := range protoAST.ProtoMap {
+		for i, message := range descriptor.MessageType {
+			typeMap[*descriptor.Package+"."+*message.Name] = protoast.GetSourceInfo(descriptor).Messages[i]
+		}
+	}
+
 	for protofilename, descriptor := range protoAST.ProtoMap {
 
 		// generate all the services
@@ -41,7 +49,7 @@ func Generate(protoAST *protoast.ProtoAST) error {
 						Imports:    descriptor.Dependency,
 						Options:    getProtoOptions(descriptor.Options),
 					},
-					Services: getServices(SourceInfo.Services[ServiceIndex], SourceInfo),
+					Services: getServices(SourceInfo.Services[ServiceIndex], SourceInfo, typeMap),
 				}
 
 				// append the response

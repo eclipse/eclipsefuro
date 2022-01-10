@@ -14,14 +14,14 @@ func main() {
 	// https://godoc.org/github.com/golang/protobuf/protoc-gen-go/plugin#CodeGeneratorRequest
 	req := &pluginpb.CodeGeneratorRequest{}
 
-	data, err := ioutil.ReadAll(os.Stdin)
+	// data, err := ioutil.ReadAll(os.Stdin)
 
 	// enable next line to save stdin to a file. This file can be used for debugging.
-	//	ioutil.WriteFile("protocdata",data, 666)
+	// ioutil.WriteFile("protocdata", data, 755)
 
 	// debug mode
 	// enable next line to read the file instead using stdin.
-	// data, err := ioutil.ReadFile("protocdata")
+	data, err := ioutil.ReadFile("sample/protos/protocdata")
 
 	if err != nil {
 		panic(err)
