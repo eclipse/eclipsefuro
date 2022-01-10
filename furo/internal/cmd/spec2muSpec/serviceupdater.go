@@ -56,31 +56,33 @@ func updateAndStoreMicroServices(serviceItems map[string]*UTshadowNode) {
 
 					// find the correct entry in shadowNode.edgeRequestTypeNode
 					reqType := findRequestType(rpc.RpcName, shadowNode)
-					reqType.TypeSpec.Fields.Map(func(iKey interface{}, iValue interface{}) {
-						f := iValue.(*specSpec.Field) //*string:1 # A * before the type means required
-						// ignore the Body field
-						if rpc.Data.Bodyfield != iKey.(string) {
-							fieldline := []string{}
+					if reqType != nil {
+						reqType.TypeSpec.Fields.Map(func(iKey interface{}, iValue interface{}) {
+							f := iValue.(*specSpec.Field) //*string:1 # A * before the type means required
+							// ignore the Body field
+							if rpc.Data.Bodyfield != iKey.(string) {
+								fieldline := []string{}
 
-							// maybe one day we want more on the query paramy??
-							/*if f.Constraints["required"] != nil {
-								fieldline = append(fieldline, "*")
+								// maybe one day we want more on the query paramy??
+								/*if f.Constraints["required"] != nil {
+									fieldline = append(fieldline, "*")
+								}
+								if f.Meta.Readonly {
+									fieldline = append(fieldline, "-")
+								}
+								if f.Meta.Repeated {
+									fieldline = append(fieldline, "[]")
+								}
+								fieldline = append(fieldline, f.Type+":"+strconv.Itoa(int(f.XProto.Number)))
+								/*
+								*/
+								fieldline = append(fieldline, f.Type)
+								fieldline = append(fieldline, "#"+f.Description)
+								qplist.Set(iKey, strings.Join(fieldline, " "))
 							}
-							if f.Meta.Readonly {
-								fieldline = append(fieldline, "-")
-							}
-							if f.Meta.Repeated {
-								fieldline = append(fieldline, "[]")
-							}
-							fieldline = append(fieldline, f.Type+":"+strconv.Itoa(int(f.XProto.Number)))
-							/*
-							*/
-							fieldline = append(fieldline, f.Type)
-							fieldline = append(fieldline, "#"+f.Description)
-							qplist.Set(iKey, strings.Join(fieldline, " "))
-						}
 
-					})
+						})
+					}
 					if qplist.Len() > 0 {
 						mRpc.Qp = qplist
 					}

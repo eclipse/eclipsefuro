@@ -5,6 +5,7 @@ import (
 	"github.com/eclipse/eclipsefuro/furo/pkg/specSpec"
 	"github.com/eclipse/eclipsefuro/protoc-gen-furo-muspecs/pkg/protoast"
 	options "google.golang.org/genproto/googleapis/api/annotations"
+	"google.golang.org/protobuf/types/descriptorpb"
 	"strings"
 )
 
@@ -29,20 +30,25 @@ func getServices(serviceInfo protoast.ServiceInfo, sourceInfo protoast.SourceInf
 		// details: vendor/google.golang.org/genproto/googleapis/api/annotations/http.pb.go:400
 
 		if methodInfo.HttpRule.ApiOptions != nil {
-			href, verb, rel, databody := extractApiOptionPattern(methodInfo.HttpRule)
+			href, verb, rel, bodyfield := extractApiOptionPattern(methodInfo.HttpRule)
 			// request type
 			req := *methodInfo.Method.InputType
 			inputType := req[1:len(req)]
 			// response type
 			res := *methodInfo.Method.OutputType
 			outputType := res[1:len(res)]
+			query, furoRequestType := getServiceFields(typeMap[inputType], bodyfield)
+			// set request type to * if bodyfield is *
+			if bodyfield == "*" {
+				furoRequestType = "*"
+			}
 
 			method := specSpec.Rpc{
 				Description: rpcMethodDescription,
 				Data: &specSpec.Servicereqres{
-					Request:   inputType,
+					Request:   furoRequestType,
 					Response:  outputType,
-					Bodyfield: databody,
+					Bodyfield: bodyfield,
 				},
 				Deeplink: &specSpec.Servicedeeplink{
 					Description: deeplinkDescription,
@@ -50,7 +56,7 @@ func getServices(serviceInfo protoast.ServiceInfo, sourceInfo protoast.SourceInf
 					Method:      verb,
 					Rel:         rel,
 				},
-				Query:   getFields(typeMap[inputType]),
+				Query:   query,
 				RpcName: *methodInfo.Method.Name,
 			}
 
@@ -165,4 +171,55 @@ func extractApiOptionPattern(info *protoast.ApiOptionInfo) (href string, method 
 	}
 
 	return href, method, rel, body
+}
+
+func getServiceFields(messageInfo protoast.MessageInfo, bodyfield string) (*orderedmap.OrderedMap, string) {
+	omap := orderedmap.New()
+	var innerRequestType string
+	for _, f := range messageInfo.FieldInfos {
+
+		fielddescription := ""
+		if f.Info.LeadingComments != nil {
+			fielddescription = cleanDescription(*f.Info.LeadingComments)
+		}
+
+		if f.Info.TrailingComments != nil {
+			fielddescription = fielddescription + "\n" + cleanDescription(*f.Info.TrailingComments)
+		}
+
+		oneofName := ""
+		if f.Field.OneofIndex != nil {
+			oneofName = *f.Message.OneofDecl[*f.Field.OneofIndex].Name
+		}
+
+		field := specSpec.Field{
+			Type:        extractTypeFromField(&f),
+			Description: fielddescription,
+			XProto: &specSpec.Fieldproto{
+				Number: *f.Field.Number,
+				Oneof:  oneofName,
+			},
+			Meta: &specSpec.FieldMeta{
+				Options: &specSpec.Fieldoption{},
+				Label:   "label." + messageInfo.Name + "." + *f.Field.Name,
+			},
+			Constraints: nil,
+		}
+
+		// set repeated, must be false on maps!
+		// repeated is in f.Field.Label
+		isRepeated := false
+		if *f.Field.Label == descriptorpb.FieldDescriptorProto_LABEL_REPEATED {
+			isRepeated = !strings.HasPrefix(field.Type, "map<")
+		}
+		field.Meta.Repeated = isRepeated
+		if f.Name == bodyfield {
+			// do nothing, because the body field is set as the request type
+			innerRequestType = extractTypeFromField(&f)
+		} else {
+			omap.Set(f.Name, field)
+		}
+	}
+
+	return omap, innerRequestType
 }

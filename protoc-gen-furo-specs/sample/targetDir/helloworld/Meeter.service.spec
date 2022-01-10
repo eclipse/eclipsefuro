@@ -30,21 +30,98 @@ services:
     SayHelloREST:
         description: Sends a greeting.
         data:
-            request: helloworld.Stuff
+            request: helloworld.Request
             response: helloworld.Reply
-            bodyfield: '*'
+            bodyfield: sub_message
         deeplink:
             description: |
                 relname: This is a comment and should appear on the SayHelloREST.deeplink.description field
             href: /api/hi
             method: POST
             rel: relname
-        query: null
+        query:
+            xxx:
+                type: string
+                description: The request message containing the user's name.
+                __proto:
+                    number: 1
+                __ui: null
+                meta:
+                    default: ""
+                    placeholder: ""
+                    hint: ""
+                    label: label.Stuff.xxx
+                    options:
+                        flags: []
+                        list: []
+                    readonly: false
+                    repeated: true
+                    typespecific: null
+                constraints: {}
+            name:
+                type: string
+                description: ""
+                __proto:
+                    number: 4
+                    oneof: test_oneof
+                __ui: null
+                meta:
+                    default: ""
+                    placeholder: ""
+                    hint: ""
+                    label: label.Stuff.name
+                    options:
+                        flags: []
+                        list: []
+                    readonly: false
+                    repeated: false
+                    typespecific: null
+                constraints: {}
+            oname:
+                type: string
+                description: |-
+                    davor
+                    Da geht noch was
+                __proto:
+                    number: 2
+                    oneof: ogher_oneof
+                __ui: null
+                meta:
+                    default: ""
+                    placeholder: ""
+                    hint: ""
+                    label: label.Stuff.oname
+                    options:
+                        flags: []
+                        list: []
+                    readonly: false
+                    repeated: false
+                    typespecific: null
+                constraints: {}
+            osub_message:
+                type: helloworld.Reply
+                description: ""
+                __proto:
+                    number: 24
+                    oneof: ogher_oneof
+                __ui: null
+                meta:
+                    default: ""
+                    placeholder: ""
+                    hint: ""
+                    label: label.Stuff.osub_message
+                    options:
+                        flags: []
+                        list: []
+                    readonly: false
+                    repeated: false
+                    typespecific: null
+                constraints: {}
         rpc_name: SayHelloREST
     SayHiREST:
         description: Sends a greeting.
         data:
-            request: helloworld.Request
+            request: ""
             response: helloworld.Reply
             bodyfield: ""
         deeplink:
@@ -54,5 +131,23 @@ services:
             href: /api/hi/{me}:custom
             method: GET
             rel: self
-        query: null
+        query:
+            name:
+                type: string
+                description: The request message containing the user's name.
+                __proto:
+                    number: 1
+                __ui: null
+                meta:
+                    default: ""
+                    placeholder: ""
+                    hint: ""
+                    label: label.Request.name
+                    options:
+                        flags: []
+                        list: []
+                    readonly: false
+                    repeated: false
+                    typespecific: null
+                constraints: {}
         rpc_name: SayHiREST

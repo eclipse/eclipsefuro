@@ -30,7 +30,7 @@ services:
     SayHelloREST:
         description: Sends a greeting.
         data:
-            request: helloworld.Request
+            request: '*'
             response: helloworld.Reply
             bodyfield: '*'
         deeplink:
@@ -39,12 +39,30 @@ services:
             href: /api/hi
             method: POST
             rel: relname
-        query: null
+        query:
+            name:
+                type: string
+                description: The request message containing the user's name.
+                __proto:
+                    number: 1
+                __ui: null
+                meta:
+                    default: ""
+                    placeholder: ""
+                    hint: ""
+                    label: label.Request.name
+                    options:
+                        flags: []
+                        list: []
+                    readonly: false
+                    repeated: false
+                    typespecific: null
+                constraints: {}
         rpc_name: SayHelloREST
     SayHiREST:
         description: Sends a greeting.
         data:
-            request: helloworld.Request
+            request: ""
             response: helloworld.Reply
             bodyfield: ""
         deeplink:
@@ -54,5 +72,23 @@ services:
             href: /api/hi
             method: GET
             rel: self
-        query: null
+        query:
+            name:
+                type: string
+                description: The request message containing the user's name.
+                __proto:
+                    number: 1
+                __ui: null
+                meta:
+                    default: ""
+                    placeholder: ""
+                    hint: ""
+                    label: label.Request.name
+                    options:
+                        flags: []
+                        list: []
+                    readonly: false
+                    repeated: false
+                    typespecific: null
+                constraints: {}
         rpc_name: SayHiREST

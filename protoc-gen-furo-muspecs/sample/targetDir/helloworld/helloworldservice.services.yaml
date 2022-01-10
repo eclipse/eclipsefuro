@@ -3,31 +3,10 @@
   package: helloworld
   target: helloworldservice.proto
   methods:
-    - md: 'SayHello:   google.protobuf.Empty , helloworld.Reply #Sends a greeting.'
-      qp:
-        name: 'string #The request message containing the user''s name.'
+    - md: 'AAAASayHello:   helloworld.Request , helloworld.Reply #Sends a pure grpc greeting.'
     - md: 'SayHelloREST: POST /api/hi * , helloworld.Reply #Sends a greeting.'
       qp:
         name: 'string #The request message containing the user''s name.'
     - md: 'SayHiREST: GET /api/hi google.protobuf.Empty , helloworld.Reply #Sends a greeting.'
-      qp:
-        name: 'string #The request message containing the user''s name.'
-- name: Meeter
-  description: The greeting service definition.
-  package: helloworld
-  target: helloworldservice.proto
-  methods:
-    - md: 'SayHello:   google.protobuf.Empty , helloworld.Reply #Sends a greeting.'
-      qp:
-        name: 'string #The request message containing the user''s name.'
-    - md: 'SayHelloREST: POST /api/hi helloworld.Request , helloworld.Reply #Sends a greeting.'
-      qp:
-        xxx: 'string #The request message containing the user''s name.'
-        name: 'string #'
-        oname: |-
-            string #davor
-            Da geht noch was
-        osub_message: 'helloworld.Reply #'
-    - md: 'SayHiREST: GET /api/hi/{me}:custom google.protobuf.Empty , helloworld.Reply #Sends a greeting.'
       qp:
         name: 'string #The request message containing the user''s name.'

@@ -46,10 +46,14 @@ func getServices(serviceInfo protoast.ServiceInfo, sourceInfo protoast.SourceInf
 		// query params from request type
 		// body field will turn in to body
 		furoRequestType := ""
-		mRpc.Qp, furoRequestType = getServiceFields(typeMap[protoRequestType], bodyfield)
-		// set request type to * if bodyfield is *
-		if bodyfield == "*" {
-			furoRequestType = "*"
+		if href != "" {
+			mRpc.Qp, furoRequestType = getServiceFields(typeMap[protoRequestType], bodyfield)
+			// set request type to * if bodyfield is *
+			if bodyfield == "*" {
+				furoRequestType = "*"
+			}
+		} else {
+			furoRequestType = protoRequestType
 		}
 
 		mdLine := []string{}
