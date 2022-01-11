@@ -58,7 +58,7 @@ func (s *UTShadowList) AddRegularTypeNode(fullTypeName string, ast *typeAst.Type
 }
 
 func (s *UTShadowList) AddRequestTypeNode(ast *typeAst.TypeAst) *UTshadowNode {
-	fullTypeName := ast.TypeSpec.XProto.Package + "." + ast.TypeSpec.Name[0:len(ast.TypeSpec.Name)-7]
+	fullTypeName := ast.TypeSpec.XProto.Package + "." + ast.TypeSpec.Name[0:len(ast.TypeSpec.Name)-len(viper.GetString("muSpec.requestTypeSuffix"))]
 
 	var node *UTshadowNode
 	// find item by name, nok => create
