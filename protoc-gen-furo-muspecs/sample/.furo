@@ -22,6 +22,7 @@ commands: #camelCase is not allowed, command scripts can only be executed from a
   gen_transcoder: "./scripts/gprcgateway/generate.sh" # shell script to generate a half grpc gateway
   buf_generate: "./scripts/buf_generate.sh"
   buf_braking: "./scripts/buf_breaking.sh"
+  import_ptoto: "./scripts/import_proto.sh"
   clean_dist : "./scripts/cleanUpDist.sh" # Deletes the dist folder
 flows:
   default: #we choose µSpec as source https://fidl.furo.pro/docs/sourceoftruth/#%C2%B5spec-as-source

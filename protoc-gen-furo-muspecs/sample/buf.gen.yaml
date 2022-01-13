@@ -1,4 +1,12 @@
 version: v1beta1
 plugins:
-  - name: furo-muspecs
-    out: muspecs
+  - name: go
+    out: dist/pb
+    opt: paths=source_relative
+  - name: go-grpc
+    out: dist/pb
+    opt: paths=source_relative
+  - name: grpc-gateway
+    out: dist/pb
+    opt: paths=source_relative
+
