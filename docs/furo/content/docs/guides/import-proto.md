@@ -53,6 +53,8 @@ It will accept a regex which will not generate the matching file names.
 Add the plugin to your buf config and define the output directory.
 
 ## Define the buf template
+If you are not familiar with buf, [read more about buf here.](https://docs.buf.build/introduction)
+
 *buf.protoimport.yaml*
 ```yaml
 version: v1beta1
