@@ -28,13 +28,10 @@ flows:
   default: #we choose µSpec as source https://fidl.furo.pro/docs/sourceoftruth/#%C2%B5spec-as-source
     - deprecated
     - muSpec2Spec
-    - clean_dist
     - checkImports
     - genMessageProtos
     - genServiceProtos
     - buf_generate
-    - gen_transcoder
-    - genEsModule
 build:
   proto:
     targetDir: "dist/protos/" # Hint: add this to your proto include path
