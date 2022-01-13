@@ -20,9 +20,10 @@ Furo provides tools for quickly prototyping and building your API’s functional
 ## Enterprise ready
 Open for integrations, easy to expand, simple to automate, adapts to company processes and technology independent.
 
-<img src="grpcio-ar21.svg" style="width: 120px;">
-<img src="openapis-icon.svg" style="width: 60px">
-<img src="graphQL.svg" style="width: 60px">
+<a href="https://developers.google.com/protocol-buffers"><img src="protologo.png" style="width: 80px;"></a>
+<a href="https://grpc.io/"><img src="grpcio-ar21.svg" style="width: 120px;"></a>
+<a href="https://swagger.io/docs/specification/about/"><img src="openapis-icon.svg" style="width: 60px"></a>
+<a href="https://graphql.org/"><img src="graphQL.svg" style="width: 60px"></a>
 
 <--->
 ## API first

@@ -78,7 +78,7 @@ buf generate --template ./buf.protoimport.yaml --path $(find sourceprotos/ -type
 
 ## Add the script to your flow
 If you want to use the proto files as source of truth, consider to add the import script to your flow config. 
-And add it to your default flow 
+And add it to your default flow. 
 
 
 ```yaml
