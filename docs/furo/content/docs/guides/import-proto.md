@@ -11,7 +11,7 @@ We offer 2 different ways to import specs from proto.
 - `protoc-gen-furo-muspecs` which will generate muspecs
 
 The steps for any of these two generators are the same. 
-This document describes the import process for muspecs.
+This document describes the import process for *.proto to µSpecs.
 
 
 <img src="/protologo.png" style="width: 100px;">
@@ -73,5 +73,25 @@ set -e
 buf generate --template ./buf.protoimport.yaml --path $(find sourceprotos/ -type d | grep sourceprotos/[^$] | tr '\n' , | sed 's/.$//')
 ```
 
+## Add the script to your flow
+If you want to use the proto files as source of truth, consider to add the import script to your flow config. 
+And add it to your default flow 
 
-Take a look in to the [sample](https://github.com/eclipse/eclipsefuro/tree/main/protoc-gen-furo-muspecs/sample) to see a complete example.
+```yaml
+commands: #camelCase is not allowed, command scripts can only be executed from a flow
+  gen_transcoder: "./scripts/gprcgateway/generate.sh" # shell script to generate a half grpc gateway
+  buf_generate: "./scripts/buf_generate.sh"
+  buf_braking: "./scripts/buf_breaking.sh"
+  import_proto: "./scripts/import_proto.sh"
+flows:
+  default: #we choose µSpec as source https://fidl.furo.pro/docs/sourceoftruth/#%C2%B5spec-as-source
+    - deprecated
+    - import_proto
+    - muSpec2Spec
+    - checkImports
+    - genMessageProtos
+    - genServiceProtos
+    - buf_generate
+```
+
+For more details, take a look in to the [sample](https://github.com/eclipse/eclipsefuro/tree/main/protoc-gen-furo-muspecs/sample) to see a complete example.
