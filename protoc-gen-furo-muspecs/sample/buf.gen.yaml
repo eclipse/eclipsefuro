@@ -2,4 +2,3 @@ version: v1beta1
 plugins:
   - name: furo-muspecs
     out: muspecs
-    opt: paths=source_relative

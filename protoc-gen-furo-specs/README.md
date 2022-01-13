@@ -37,8 +37,11 @@ import (
 
 ## Using the plugin
 Like every other protoc generator... Nothing special here.
+
+Look at the sample folder for a **buf** example.
 ```
 go build . && protoc --plugin protoc-gen-furo-specs -I../furoBaseSpecs/dist/proto/Messages/ -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis -I$GOPATH/src/github.com/googleapis/googleapis --furo-specs_out=:./out ../furoBaseSpecs/dist/proto/Messages/**/*.proto
 
 ```
+
 
