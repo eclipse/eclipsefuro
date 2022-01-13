@@ -55,13 +55,14 @@ Add the plugin to your buf config and define the output directory.
 ## Define the buf template
 If you are not familiar with buf, [read more about buf here.](https://docs.buf.build/introduction)
 
-*buf.protoimport.yaml*
 ```yaml
 version: v1beta1
 plugins:
   - name: furo-muspecs
     out: dist/muspecs    
 ```
+*buf.protoimport.yaml*
+
 
 ## Example script to import protos from a folder
 
@@ -72,10 +73,13 @@ set -e
 
 buf generate --template ./buf.protoimport.yaml --path $(find sourceprotos/ -type d | grep sourceprotos/[^$] | tr '\n' , | sed 's/.$//')
 ```
+*scripts/import_proto.sh*
+
 
 ## Add the script to your flow
 If you want to use the proto files as source of truth, consider to add the import script to your flow config. 
 And add it to your default flow 
+
 
 ```yaml
 commands: #camelCase is not allowed, command scripts can only be executed from a flow
@@ -93,5 +97,6 @@ flows:
     - genServiceProtos
     - buf_generate
 ```
+*.furo*
 
 For more details, take a look in to the [sample](https://github.com/eclipse/eclipsefuro/tree/main/protoc-gen-furo-muspecs/sample) to see a complete example.
