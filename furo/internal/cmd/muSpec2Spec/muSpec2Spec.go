@@ -138,6 +138,7 @@ func Run(cmd *cobra.Command, args []string) {
 
 	// save types and services
 	typeAst.Format = viper.GetString("specFormat")
+	enumAst.Format = viper.GetString("specFormat")
 	serviceAst.Format = viper.GetString("specFormat")
 
 	Typelist.SaveAllTypeSpecsToDir(viper.GetString("specDir"))

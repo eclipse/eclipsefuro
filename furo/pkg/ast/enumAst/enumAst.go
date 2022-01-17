@@ -26,7 +26,7 @@ type EnumAst struct {
 	SpecDir  string // the base path, like specDir or dependencies/x.y.com/specDir
 	Path     string // relative path of spec file to SpecDir
 	FileName string
-	Enumspec specSpec.Enum
+	EnumSpec specSpec.Enum
 }
 
 var Format = "json"
@@ -90,10 +90,10 @@ func loadEnumSpecsFromDir(specDir string) (enumsMap map[string]*EnumAst) {
 					Path:     relativePath, // store Path without specDir
 					SpecDir:  specDir,      // store Path without specDir
 					FileName: filename,
-					Enumspec: readAndUnmarshalSpec(fpath),
+					EnumSpec: readAndUnmarshalEnumSpec(fpath),
 				}
 
-				enumsMap[strings.Join([]string{AstType.Enumspec.XProto.Package, AstType.Enumspec.Type}, ".")] = AstType
+				enumsMap[strings.Join([]string{AstType.EnumSpec.XProto.Package, AstType.EnumSpec.Type}, ".")] = AstType
 			}
 			return nil
 		})
@@ -103,7 +103,7 @@ func loadEnumSpecsFromDir(specDir string) (enumsMap map[string]*EnumAst) {
 	return enumsMap
 }
 
-func readAndUnmarshalSpec(fpath string) (s specSpec.Enum) {
+func readAndUnmarshalEnumSpec(fpath string) (s specSpec.Enum) {
 	dataBytes, readError := ioutil.ReadFile(fpath)
 	if readError != nil {
 		log.Fatal(readError)
@@ -153,18 +153,18 @@ func (a *EnumAst) Save(specDir string) {
 }
 
 func (a *EnumAst) ToJson() (d []byte, err error) {
-	d, err = json.MarshalIndent(a.Enumspec, "", " ")
+	d, err = json.MarshalIndent(a.EnumSpec, "", " ")
 	return d, err
 }
 
 // returns unindented json
 func (a *EnumAst) ToJsonFlat() (d []byte, err error) {
-	d, err = json.Marshal(a.Enumspec)
+	d, err = json.Marshal(a.EnumSpec)
 	return d, err
 }
 
 func (a *EnumAst) ToYaml() (d []byte, err error) {
-	d, err = yaml.Marshal(&a.Enumspec)
+	d, err = yaml.Marshal(&a.EnumSpec)
 	return d, err
 }
 
@@ -205,7 +205,7 @@ func (l *Enumlist) ResolveProtoImportForType(typeName string, pkg string) (imp s
 }
 
 func (a *EnumAst) GetProtoTarget() (proto string) {
-	protoFile := a.Enumspec.XProto.Targetfile
+	protoFile := a.EnumSpec.XProto.Targetfile
 	return path.Join(a.Path, protoFile)
 }
 

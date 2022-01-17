@@ -39,15 +39,15 @@ func (l *MicroEnumlist) UpateTypelist(typelist *enumAst.Enumlist, deleteSpecs bo
 			typelist.EnumsByName[typename] = &enumAst.EnumAst{
 				Path:     mType.TargetPath,
 				FileName: mType.Type + ".enum.spec",
-				Enumspec: specSpec.Enum{},
+				EnumSpec: specSpec.Enum{},
 			}
 			AstType = typelist.EnumsByName[typename]
 		}
 
-		AstType.Enumspec.Type = mType.Type
-		AstType.Enumspec.Description = mType.Description
-		if AstType.Enumspec.XProto == nil {
-			AstType.Enumspec.XProto = &specSpec.Enumproto{
+		AstType.EnumSpec.Type = mType.Type
+		AstType.EnumSpec.Description = mType.Description
+		if AstType.EnumSpec.XProto == nil {
+			AstType.EnumSpec.XProto = &specSpec.Enumproto{
 				Imports:    []string{},
 				Options:    map[string]string{},
 				Package:    "",
@@ -55,34 +55,34 @@ func (l *MicroEnumlist) UpateTypelist(typelist *enumAst.Enumlist, deleteSpecs bo
 			}
 		}
 
-		AstType.Enumspec.XProto.Package = mType.Package
-		AstType.Enumspec.XProto.Targetfile = mType.Target
-		AstType.Enumspec.XProto.AllowAlias = mType.AllowAlias
+		AstType.EnumSpec.XProto.Package = mType.Package
+		AstType.EnumSpec.XProto.Targetfile = mType.Target
+		AstType.EnumSpec.XProto.AllowAlias = mType.AllowAlias
 		// check for empty options
-		if AstType.Enumspec.XProto.Options == nil || overwriteSpecOptions {
-			AstType.Enumspec.XProto.Options = map[string]string{}
+		if AstType.EnumSpec.XProto.Options == nil || overwriteSpecOptions {
+			AstType.EnumSpec.XProto.Options = map[string]string{}
 		}
 		// set option only if it does not exist
-		_, ok = AstType.Enumspec.XProto.Options["go_package"]
+		_, ok = AstType.EnumSpec.XProto.Options["go_package"]
 		if !ok {
-			AstType.Enumspec.XProto.Options["go_package"] = util.GetGoPackageName(mType.TargetPath)
+			AstType.EnumSpec.XProto.Options["go_package"] = util.GetGoPackageName(mType.TargetPath)
 		}
-		_, ok = AstType.Enumspec.XProto.Options["java_package"]
+		_, ok = AstType.EnumSpec.XProto.Options["java_package"]
 		if !ok {
-			AstType.Enumspec.XProto.Options["java_package"] = viper.GetString("muSpec.javaPackagePrefix") + mType.Package
+			AstType.EnumSpec.XProto.Options["java_package"] = viper.GetString("muSpec.javaPackagePrefix") + mType.Package
 		}
-		_, ok = AstType.Enumspec.XProto.Options["java_outer_classname"]
+		_, ok = AstType.EnumSpec.XProto.Options["java_outer_classname"]
 		if !ok {
-			AstType.Enumspec.XProto.Options["java_outer_classname"] = strings.Title(strings.Replace(path.Base(mType.Target), ".proto", "Proto", 1))
+			AstType.EnumSpec.XProto.Options["java_outer_classname"] = strings.Title(strings.Replace(path.Base(mType.Target), ".proto", "Proto", 1))
 		}
-		_, ok = AstType.Enumspec.XProto.Options["java_multiple_files"]
+		_, ok = AstType.EnumSpec.XProto.Options["java_multiple_files"]
 		if !ok {
-			AstType.Enumspec.XProto.Options["java_multiple_files"] = "true"
+			AstType.EnumSpec.XProto.Options["java_multiple_files"] = "true"
 		}
 
 		valueDeleteList := map[string]bool{}
-		if AstType.Enumspec.Values != nil {
-			AstType.Enumspec.Values.Map(func(iKey interface{}, iValue interface{}) {
+		if AstType.EnumSpec.Values != nil {
+			AstType.EnumSpec.Values.Map(func(iKey interface{}, iValue interface{}) {
 				valueDeleteList[iKey.(string)] = true
 			})
 		}
@@ -90,8 +90,8 @@ func (l *MicroEnumlist) UpateTypelist(typelist *enumAst.Enumlist, deleteSpecs bo
 			mFieldname := pair.Key.(string)
 
 			// check for values create if they do not exist and update later
-			if AstType.Enumspec.Values == nil {
-				AstType.Enumspec.Values = orderedmap.New()
+			if AstType.EnumSpec.Values == nil {
+				AstType.EnumSpec.Values = orderedmap.New()
 			}
 
 			// remove field from deletelist
@@ -102,12 +102,12 @@ func (l *MicroEnumlist) UpateTypelist(typelist *enumAst.Enumlist, deleteSpecs bo
 			}
 
 			// Assign to Node again
-			AstType.Enumspec.Values.Set(mFieldname, pair.Value)
+			AstType.EnumSpec.Values.Set(mFieldname, pair.Value)
 		}
 
 		for fieldname, del := range valueDeleteList {
 			if del {
-				AstType.Enumspec.Values.Delete(fieldname)
+				AstType.EnumSpec.Values.Delete(fieldname)
 			}
 		}
 	}
