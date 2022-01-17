@@ -11,6 +11,25 @@ option objc_class_prefix = "FPB";
 import "google/protobuf/any.proto";
 
 
+// Main proto for a type
+message Enumproto {
+
+    // the package this type belogs to
+    string package = 1;
+
+    // the target proto file for this type
+    string targetfile = 3;
+
+    // needed imports like [ "spec/descriptor.proto", "google/protobuf/empty.proto" ]
+    repeated string imports = 2;
+
+    // Proto options Todo: find a solution for boolean options
+    map<string,string> options = 4;
+
+    // Allow aliases on enums (different names same value)
+    bool allow_alias = 5;
+}
+
 // Defines a queryparam field (for rpc type)
 message Queryparam {  
 
@@ -25,6 +44,28 @@ message Queryparam {
 
     // the field type, https://developers.google.com/protocol-buffers/docs/proto3#scalar
     string type = 2;
+}
+
+// Defines a type in the furo spec
+message Enum {
+
+    // This is the Typename
+    string type = 2;
+
+    // the type description
+    string description = 3;
+
+    // Type lifecycle information, setting deprecated to true will log a warning when running furo
+    descriptor.Lifecycle lifecycle = 7;
+
+    // information for the proto generator, should be removed for the client spec
+    descriptor.Enumproto __proto = 4;
+
+    // Value of a enum
+    map<string,int32> values = 5;
+
+    // Custom extension
+    map<string,google.protobuf.Any> extensions = 6;
 }
 
 // Defines a field in the furo spec
