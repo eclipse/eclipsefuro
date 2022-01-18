@@ -3,6 +3,7 @@ package genMessageProtos
 import (
 	"bytes"
 	"fmt"
+	"github.com/eclipse/eclipsefuro/furo/pkg/ast/enumAst"
 	"github.com/eclipse/eclipsefuro/furo/pkg/ast/typeAst"
 	"github.com/eclipse/eclipsefuro/furo/pkg/protoTemplates"
 	"github.com/eclipse/eclipsefuro/furo/pkg/specSpec"
@@ -19,6 +20,7 @@ import (
 
 type singleTplData struct {
 	Types     []specSpec.Type `json:"types,omitempty"`
+	Enums     []specSpec.Enum `json:"enums,omitempty"`
 	Imports   []string        `json:"imports,omitempty"`
 	Package   string          `json:"package,omitempty"`
 	preImport map[string]bool
@@ -34,6 +36,11 @@ func Run(cmd *cobra.Command, args []string) {
 	Typelist := &typeAst.Typelist{}
 	Typelist.LoadInstalledTypeSpecsFromDir(util.GetDependencyList()...)
 	Typelist.LoadTypeSpecsFromDir(viper.GetString("specDir"))
+
+	// ENUMS
+	Enumlist := &enumAst.Enumlist{}
+	Enumlist.LoadEnumSpecsFromDir(viper.GetString("specDir"))
+	Enumlist.LoadInstalledEnumSpecsFromDir(util.GetDependencyList()...)
 
 	for k, t := range Typelist.TypesByName {
 		allTypes[k] = &t.TypeSpec
@@ -77,6 +84,14 @@ func Run(cmd *cobra.Command, args []string) {
 		for imp, _ := range tplData.preImport {
 			tplData.Imports = append(tplData.Imports, imp)
 		}
+	}
+
+	// enums
+	for typeName, enumAST := range Enumlist.EnumsByName {
+		// typename is not the filename
+		s := strings.Split(typeName, ".")
+		filepath := strings.Join(s[:len(s)-1], "/") + "/" + enumAST.EnumSpec.XProto.Targetfile
+		protoTplData[filepath].Enums = append(protoTplData[filepath].Enums, enumAST.EnumSpec)
 	}
 
 	// prepare templating

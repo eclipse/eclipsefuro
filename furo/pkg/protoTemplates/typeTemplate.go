@@ -22,4 +22,13 @@ message {{$message.Type}} {  {{range  $fmap := $fp -}}{{ $fieldname := $fmap.Fie
     {{- end}}
     }{{end}}
 }{{end -}}
+
+{{range $enum := .Enums}}
+enum {{$enum.Type}} {{"{"}}{{if $enum.XProto.AllowAlias }}
+  option allow_alias = true;{{end}}
+  {{- range $option := $enum.Values | enumpairs}}
+  {{$option.Optionname}} = {{$option.Value}};  
+  {{- end}}
+}
+{{end -}}
 `
