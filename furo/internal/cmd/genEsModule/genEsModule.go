@@ -3,6 +3,7 @@ package genEsModule
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/eclipse/eclipsefuro/furo/pkg/ast/enumAst"
 	"github.com/eclipse/eclipsefuro/furo/pkg/ast/serviceAst"
 	"github.com/eclipse/eclipsefuro/furo/pkg/ast/typeAst"
 	"github.com/eclipse/eclipsefuro/furo/pkg/clientspec"
@@ -19,6 +20,12 @@ func Run(cmd *cobra.Command, args []string) {
 	Typelist.LoadTypeSpecsFromDir(viper.GetString("specDir"))
 	Typelist.LoadInstalledTypeSpecsFromDir(util.GetDependencyList()...)
 
+	// ENUMS
+	Enumlist := &enumAst.Enumlist{}
+	Enumlist.LoadEnumSpecsFromDir(viper.GetString("specDir"))
+	Enumlist.LoadInstalledEnumSpecsFromDir(util.GetDependencyList()...)
+
+	clientspec.AddEnumsToResolver(Enumlist.EnumsByName)
 	clientspec.AddTypesToResolver(Typelist.TypesByName)
 	clientspec.AddTypesToResolver(Typelist.InstalledTypesByName)
 	// after adding all types we can build up the type resolutions
