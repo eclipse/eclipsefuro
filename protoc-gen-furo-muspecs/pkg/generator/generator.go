@@ -133,9 +133,10 @@ func Generate(protoAST *protoast.ProtoAST) error {
 			typeLine = append(typeLine, "#"+description)
 
 			enumSpec := &microenums.MicroEnum{
-				Enum:   strings.Join(typeLine, " "),
-				Values: getEnumValues(SourceInfo.Enums[EnumIndex]),
-				Target: path.Base(protofilename),
+				Enum:       strings.Join(typeLine, " "),
+				Values:     getEnumValues(SourceInfo.Enums[EnumIndex]),
+				Target:     path.Base(protofilename),
+				AllowAlias: SourceInfo.Enums[EnumIndex].AllowAlias,
 			}
 
 			enumsInFile = append(enumsInFile, enumSpec)

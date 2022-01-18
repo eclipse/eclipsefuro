@@ -6,18 +6,10 @@ option java_multiple_files = true;
 option java_outer_classname = "EnumsProto";
 option java_package = "com.example.tutorial.enums";
 
-// xxxx
+// comment before
 enum Corpus {
-  option allow_alias = true;
   UNKNOWN = 0;
-  COMPLETE = 2;
   STARTED = 1;
   RUNNING = 1;
-}
-
-// ssssssd
-enum Secondenum {
-  SUNKNOWN = 0;
-  SSTARTED = 1;
-  SCOMPLETE = 2;
+  option allow_alias = true;
 }

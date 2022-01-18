@@ -42,6 +42,7 @@ type EnumInfo struct {
 	Name       string
 	Info       *descriptorpb.SourceCodeInfo_Location
 	ValuesInfo []ValueInfo
+	AllowAlias bool
 	Message    descriptorpb.DescriptorProto
 }
 
@@ -105,9 +106,15 @@ func GetSourceInfo(descr *descriptorpb.FileDescriptorProto) SourceInfo {
 		// location info for descriptor.ServiceType[111]Field[222]
 		if len(location.GetPath()) == 2 && location.Path[0] == 5 {
 			msgIndex := location.Path[1]
+
+			alias := false
+			if descr.EnumType[msgIndex].Options != nil && descr.EnumType[msgIndex].Options.AllowAlias != nil {
+				alias = *descr.EnumType[msgIndex].Options.AllowAlias
+			}
 			SourceInfo.Enums = append(SourceInfo.Enums, EnumInfo{
 				Name:       *descr.EnumType[msgIndex].Name,
 				ValuesInfo: []ValueInfo{},
+				AllowAlias: alias,
 				Info:       location,
 			})
 		}

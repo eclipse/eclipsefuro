@@ -24,11 +24,11 @@ message {{$message.Type}} {  {{range  $fmap := $fp -}}{{ $fieldname := $fmap.Fie
 }{{end -}}
 
 {{range $enum := .Enums}}
-enum {{$enum.Type}} {{"{"}}{{if $enum.XProto.AllowAlias }}
-  option allow_alias = true;{{end}}
+enum {{$enum.Type}} {{"{"}}
   {{- range $option := $enum.Values | enumpairs}}
   {{$option.Optionname}} = {{$option.Value}};  
-  {{- end}}
+  {{- end}}{{if $enum.XProto.AllowAlias }}
+  option allow_alias = true;{{end}}
 }
 {{end -}}
 `
