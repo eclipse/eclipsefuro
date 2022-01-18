@@ -1,0 +1,14 @@
+- type: 'helloworld.Typesss #Address referencer'
+  fields:
+    id: 'string:1 #Id of the referenced city.'
+    display_name: 'string:2 #One liner for the address. "Werberstrasse 218e, 9436 Heerbrugg,'
+    corpus: 'unknown:4 #use a enum'
+    comment: 'string:5 #Comment'
+  target: enums.proto
+- type: 'helloworld.Typeeeesss #Address referencer'
+  fields:
+    id: 'string:1 #Id of the referenced city.'
+    display_name: 'string:2 #One liner for the address. "Werberstrasse 218e, 9436 Heerbrugg,'
+    corpus: 'unknown:4 #use a enum'
+    comment: 'string:5 #Comment'
+  target: enums.proto

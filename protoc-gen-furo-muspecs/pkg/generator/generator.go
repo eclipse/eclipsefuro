@@ -1,6 +1,7 @@
 package generator
 
 import (
+	"github.com/eclipse/eclipsefuro/furo/pkg/microenums"
 	"github.com/eclipse/eclipsefuro/furo/pkg/microservices"
 	"github.com/eclipse/eclipsefuro/furo/pkg/microtypes"
 	"github.com/eclipse/eclipsefuro/furo/pkg/orderedmap"
@@ -18,9 +19,15 @@ func Generate(protoAST *protoast.ProtoAST) error {
 
 	// this is used to resolve the query params for the services
 	typeMap := map[string]protoast.MessageInfo{}
+	enumMap := map[string]protoast.EnumInfo{}
+
 	for _, descriptor := range protoAST.ProtoMap {
 		for i, message := range descriptor.MessageType {
 			typeMap[*descriptor.Package+"."+*message.Name] = protoast.GetSourceInfo(descriptor).Messages[i]
+		}
+
+		for i, enum := range descriptor.EnumType {
+			enumMap[*descriptor.Package+"."+*enum.Name] = protoast.GetSourceInfo(descriptor).Enums[i]
 		}
 	}
 
@@ -28,6 +35,7 @@ func Generate(protoAST *protoast.ProtoAST) error {
 		var fileName *string
 		servicesInFile := []*microservices.MicroService{}
 		typesInFile := []*microtypes.MicroType{}
+		enumsInFile := []*microenums.MicroEnum{}
 		// generate all the services
 
 		for ServiceIndex, Service := range descriptor.Service {
@@ -95,6 +103,7 @@ func Generate(protoAST *protoast.ProtoAST) error {
 			}
 
 		}
+
 		if fileName != nil {
 			// append the response
 			var responseFile pluginpb.CodeGeneratorResponse_File
@@ -106,9 +115,53 @@ func Generate(protoAST *protoast.ProtoAST) error {
 			protoAST.Response.File = append(protoAST.Response.File, &responseFile)
 			fileName = nil
 		}
+
+		SourceInfo := protoast.GetSourceInfo(descriptor)
+		for EnumIndex, Enum := range descriptor.EnumType {
+
+			Enum = Enum
+			fn := strings.Replace(protofilename, ".proto", ".enums.yaml", 1)
+			fileName = &fn
+			description := " does not have a description"
+			if SourceInfo.Enums[EnumIndex].Info.LeadingComments != nil {
+				description = cleanDescription(*SourceInfo.Enums[EnumIndex].Info.LeadingComments)
+			}
+
+			typeLine := []string{}
+			typeLine = append(typeLine, strings.Join(strings.Split(path.Dir(protofilename), "/"), ".")+"."+*Enum.Name)
+
+			typeLine = append(typeLine, "#"+description)
+
+			enumSpec := &microenums.MicroEnum{
+				Enum:   strings.Join(typeLine, " "),
+				Values: getEnumValues(SourceInfo.Enums[EnumIndex]),
+				Target: path.Base(protofilename),
+			}
+
+			enumsInFile = append(enumsInFile, enumSpec)
+		}
+		if fileName != nil {
+			// append the response
+			var responseFile pluginpb.CodeGeneratorResponse_File
+			responseFile.Name = fileName
+			content, _ := yaml.Marshal(enumsInFile)
+			s := string(content)
+			responseFile.Content = &s
+
+			protoAST.Response.File = append(protoAST.Response.File, &responseFile)
+			fileName = nil
+		}
 	}
 
 	return nil
+}
+
+func getEnumValues(info protoast.EnumInfo) *orderedmap.OrderedMap {
+	om := orderedmap.New()
+	for _, e := range info.ValuesInfo {
+		om.Set(e.Name, e.Value)
+	}
+	return om
 }
 
 func cleanDescription(s string) string {

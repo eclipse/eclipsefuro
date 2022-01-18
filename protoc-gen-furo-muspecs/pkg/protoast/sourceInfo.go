@@ -7,6 +7,7 @@ import (
 
 type SourceInfo struct {
 	Messages []MessageInfo
+	Enums    []EnumInfo
 	Services []ServiceInfo
 }
 
@@ -36,6 +37,18 @@ type MessageInfo struct {
 	FieldInfos []FieldInfo
 	Message    descriptorpb.DescriptorProto
 }
+
+type EnumInfo struct {
+	Name       string
+	Info       *descriptorpb.SourceCodeInfo_Location
+	ValuesInfo []ValueInfo
+	Message    descriptorpb.DescriptorProto
+}
+
+type ValueInfo struct {
+	Name  string
+	Value int32
+}
 type FieldInfo struct {
 	Name    string
 	Info    *descriptorpb.SourceCodeInfo_Location
@@ -59,6 +72,7 @@ func GetSourceInfo(descr *descriptorpb.FileDescriptorProto) SourceInfo {
 				Methods: []MethodInfo{},
 			})
 		}
+
 		// Methods
 		// 6 111 2 222 4 9999 =>	 4 ServiceIndex 2 Method 4 Option
 		// for field with index 222 in Service with index 111
@@ -85,6 +99,27 @@ func GetSourceInfo(descr *descriptorpb.FileDescriptorProto) SourceInfo {
 			sIndex := location.Path[1]
 			methodIndex := location.Path[3]
 			SourceInfo.Services[sIndex].Methods[methodIndex].HttpRule.Info = location
+		}
+
+		// 5 111 => 5 EnumIndex
+		// location info for descriptor.ServiceType[111]Field[222]
+		if len(location.GetPath()) == 2 && location.Path[0] == 5 {
+			msgIndex := location.Path[1]
+			SourceInfo.Enums = append(SourceInfo.Enums, EnumInfo{
+				Name:       *descr.EnumType[msgIndex].Name,
+				ValuesInfo: []ValueInfo{},
+				Info:       location,
+			})
+		}
+
+		if len(location.GetPath()) == 4 && location.Path[0] == 5 {
+			msgIndex := location.Path[1]
+			fieldIndex := location.Path[3]
+			fi := ValueInfo{
+				Name:  *descr.EnumType[msgIndex].Value[fieldIndex].Name,
+				Value: *descr.EnumType[msgIndex].Value[fieldIndex].Number,
+			}
+			SourceInfo.Enums[msgIndex].ValuesInfo = append(SourceInfo.Enums[msgIndex].ValuesInfo, fi)
 		}
 
 		// 4 111 2 222 => 4 MessageIndex 2 FieldIndex
