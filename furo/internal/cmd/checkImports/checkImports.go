@@ -1,6 +1,7 @@
 package checkImports
 
 import (
+	"github.com/eclipse/eclipsefuro/furo/pkg/ast/enumAst"
 	"github.com/eclipse/eclipsefuro/furo/pkg/ast/serviceAst"
 	"github.com/eclipse/eclipsefuro/furo/pkg/ast/typeAst"
 	"github.com/eclipse/eclipsefuro/furo/pkg/util"
@@ -13,7 +14,11 @@ func Run(cmd *cobra.Command, args []string) {
 	Typelist.LoadInstalledTypeSpecsFromDir(util.GetDependencyList()...)
 	Typelist.LoadTypeSpecsFromDir(viper.GetString("specDir"))
 
-	Typelist.UpdateImports()
+	Enumlist := &enumAst.Enumlist{}
+	Enumlist.LoadEnumSpecsFromDir(viper.GetString("specDir"))
+	Enumlist.LoadInstalledEnumSpecsFromDir(util.GetDependencyList()...)
+
+	Typelist.UpdateImports(Enumlist)
 
 	typeAst.Format = viper.GetString("specFormat")
 	Typelist.SaveAllTypeSpecsToDir(viper.GetString("specDir"))

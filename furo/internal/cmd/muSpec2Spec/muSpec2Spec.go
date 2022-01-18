@@ -134,7 +134,8 @@ func Run(cmd *cobra.Command, args []string) {
 	// update the typelist from microspecs
 	microList.UpateTypelist(Typelist, deleteSpecs, overwriteSpecOptions)
 	microEnumList.UpateTypelist(Enumlist, deleteSpecs, overwriteSpecOptions)
-	Typelist.UpdateImports()
+
+	Typelist.UpdateImports(Enumlist)
 
 	// save types and services
 	typeAst.Format = viper.GetString("specFormat")
