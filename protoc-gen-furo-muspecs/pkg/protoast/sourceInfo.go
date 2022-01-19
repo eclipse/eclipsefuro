@@ -6,9 +6,10 @@ import (
 )
 
 type SourceInfo struct {
-	Messages []MessageInfo
-	Enums    []EnumInfo
-	Services []ServiceInfo
+	Messages    []MessageInfo
+	Enums       []EnumInfo
+	InlineEnums []EnumInfo
+	Services    []ServiceInfo
 }
 
 type ServiceInfo struct {
@@ -111,22 +112,22 @@ func GetSourceInfo(descr *descriptorpb.FileDescriptorProto) SourceInfo {
 			if descr.EnumType[msgIndex].Options != nil && descr.EnumType[msgIndex].Options.AllowAlias != nil {
 				alias = *descr.EnumType[msgIndex].Options.AllowAlias
 			}
+			// values
+			vals := []ValueInfo{}
+			for _, v := range descr.EnumType[msgIndex].Value {
+				fi := ValueInfo{
+					Name:  *v.Name,
+					Value: *v.Number,
+				}
+				vals = append(vals, fi)
+			}
+
 			SourceInfo.Enums = append(SourceInfo.Enums, EnumInfo{
 				Name:       *descr.EnumType[msgIndex].Name,
-				ValuesInfo: []ValueInfo{},
+				ValuesInfo: vals,
 				AllowAlias: alias,
 				Info:       location,
 			})
-		}
-
-		if len(location.GetPath()) == 4 && location.Path[0] == 5 {
-			msgIndex := location.Path[1]
-			fieldIndex := location.Path[3]
-			fi := ValueInfo{
-				Name:  *descr.EnumType[msgIndex].Value[fieldIndex].Name,
-				Value: *descr.EnumType[msgIndex].Value[fieldIndex].Number,
-			}
-			SourceInfo.Enums[msgIndex].ValuesInfo = append(SourceInfo.Enums[msgIndex].ValuesInfo, fi)
 		}
 
 		// 4 111 2 222 => 4 MessageIndex 2 FieldIndex
@@ -140,6 +141,32 @@ func GetSourceInfo(descr *descriptorpb.FileDescriptorProto) SourceInfo {
 				Info:       location,
 				FieldInfos: []FieldInfo{},
 			})
+
+			// check for inline enums
+			for _, nestedEnum := range descr.MessageType[msgIndex].EnumType {
+
+				alias := false
+				if nestedEnum.Options != nil && nestedEnum.Options.AllowAlias != nil {
+					alias = *nestedEnum.Options.AllowAlias
+				}
+				// values
+				vals := []ValueInfo{}
+				for _, v := range nestedEnum.Value {
+					fi := ValueInfo{
+						Name:  *v.Name,
+						Value: *v.Number,
+					}
+					vals = append(vals, fi)
+				}
+
+				SourceInfo.InlineEnums = append(SourceInfo.InlineEnums, EnumInfo{
+					Name:       *descr.MessageType[msgIndex].Name + "_" + *nestedEnum.Name,
+					ValuesInfo: vals,
+					AllowAlias: alias,
+					Info:       location,
+				})
+
+			}
 		}
 
 		// 4 111 2 222 =>	 4 MessageIndex 2 FieldIndex

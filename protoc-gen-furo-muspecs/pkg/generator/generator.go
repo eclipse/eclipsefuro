@@ -19,16 +19,18 @@ func Generate(protoAST *protoast.ProtoAST) error {
 
 	// this is used to resolve the query params for the services
 	typeMap := map[string]protoast.MessageInfo{}
-	enumMap := map[string]protoast.EnumInfo{}
+	enumArr := []protoast.EnumInfo{}
 
 	for _, descriptor := range protoAST.ProtoMap {
+		si := protoast.GetSourceInfo(descriptor)
 		for i, message := range descriptor.MessageType {
-			typeMap[*descriptor.Package+"."+*message.Name] = protoast.GetSourceInfo(descriptor).Messages[i]
+			typeMap[*descriptor.Package+"."+*message.Name] = si.Messages[i]
 		}
 
-		for i, enum := range descriptor.EnumType {
-			enumMap[*descriptor.Package+"."+*enum.Name] = protoast.GetSourceInfo(descriptor).Enums[i]
+		for i, _ := range descriptor.EnumType {
+			enumArr = append(enumArr, si.Enums[i])
 		}
+
 	}
 
 	for protofilename, descriptor := range protoAST.ProtoMap {
@@ -79,6 +81,7 @@ func Generate(protoAST *protoast.ProtoAST) error {
 		// generate all the messages
 		for MessageIndex, Message := range descriptor.MessageType {
 			if shouldGenerateTypeSpec(protoAST, *Message.Name, descriptor, Message) {
+
 				SourceInfo := protoast.GetSourceInfo(descriptor)
 				_, packagename := FileAndPackageNameToGenerate(descriptor, Message)
 				fn := strings.Replace(protofilename, ".proto", ".types.yaml", 1)
@@ -87,7 +90,6 @@ func Generate(protoAST *protoast.ProtoAST) error {
 				if SourceInfo.Messages[MessageIndex].Info.LeadingComments != nil {
 					description = cleanDescription(*SourceInfo.Messages[MessageIndex].Info.LeadingComments)
 				}
-
 				typeLine := []string{}
 				typeLine = append(typeLine, strings.Join(strings.Split(path.Dir(protofilename), "/"), ".")+"."+*Message.Name)
 
@@ -100,6 +102,12 @@ func Generate(protoAST *protoast.ProtoAST) error {
 				}
 
 				typesInFile = append(typesInFile, typeSpec)
+
+				// sub enums
+				for i, _ := range typeMap[*descriptor.Package+"."+*Message.Name].Message.EnumType {
+					enumArr = append(enumArr, protoast.GetSourceInfo(descriptor).InlineEnums[i])
+
+				}
 			}
 
 		}
@@ -116,27 +124,25 @@ func Generate(protoAST *protoast.ProtoAST) error {
 			fileName = nil
 		}
 
-		SourceInfo := protoast.GetSourceInfo(descriptor)
-		for EnumIndex, Enum := range descriptor.EnumType {
+		for _, Enum := range enumArr {
 
-			Enum = Enum
 			fn := strings.Replace(protofilename, ".proto", ".enums.yaml", 1)
 			fileName = &fn
 			description := " does not have a description"
-			if SourceInfo.Enums[EnumIndex].Info.LeadingComments != nil {
-				description = cleanDescription(*SourceInfo.Enums[EnumIndex].Info.LeadingComments)
+			if Enum.Info.LeadingComments != nil {
+				description = cleanDescription(*Enum.Info.LeadingComments)
 			}
 
 			typeLine := []string{}
-			typeLine = append(typeLine, strings.Join(strings.Split(path.Dir(protofilename), "/"), ".")+"."+*Enum.Name)
+			typeLine = append(typeLine, strings.Join(strings.Split(path.Dir(protofilename), "/"), ".")+"."+Enum.Name)
 
 			typeLine = append(typeLine, "#"+description)
 
 			enumSpec := &microenums.MicroEnum{
 				Enum:       strings.Join(typeLine, " "),
-				Values:     getEnumValues(SourceInfo.Enums[EnumIndex]),
+				Values:     getEnumValues(Enum),
 				Target:     path.Base(protofilename),
-				AllowAlias: SourceInfo.Enums[EnumIndex].AllowAlias,
+				AllowAlias: Enum.AllowAlias,
 			}
 
 			enumsInFile = append(enumsInFile, enumSpec)
@@ -268,7 +274,19 @@ func extractTypeFromField(fieldinfo *protoast.FieldInfo) string {
 			}
 
 			f := *field.TypeName
-			return f[1:len(f)]
+			return f[1:]
+		}
+
+		// inline enum
+		if *field.Type == descriptorpb.FieldDescriptorProto_TYPE_ENUM {
+			// name is messagename_enumnname
+
+			parts := strings.Split(*field.TypeName, ".")
+			mi := len(parts) - 2
+			fi := len(parts) - 1
+			parts[mi] = parts[mi] + "_" + parts[fi]
+			f := strings.Join(parts[:len(parts)-1], ".")
+			return f[1:]
 		}
 	}
 
