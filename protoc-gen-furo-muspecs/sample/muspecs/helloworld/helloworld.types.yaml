@@ -2,6 +2,10 @@
   fields:
     message: 'string:1 #The response message containing the greetings.'
   target: helloworld.proto
+- type: 'helloworld.SearchResponse #nested type'
+  fields:
+    results: '[] helloworld.SearchResponse.Result:1 #'
+  target: helloworld.proto
 - type: 'helloworld.Request #Request ...'
   fields:
     name: 'string:1 #The request message containing the user''s name.'

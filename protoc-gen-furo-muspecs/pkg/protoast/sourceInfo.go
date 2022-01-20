@@ -60,7 +60,8 @@ type FieldInfo struct {
 
 func GetSourceInfo(descr *descriptorpb.FileDescriptorProto) SourceInfo {
 	SourceInfo := SourceInfo{}
-
+	r := descr.GetSourceCodeInfo().GetLocation()
+	r = r
 	for _, location := range descr.GetSourceCodeInfo().GetLocation() {
 
 		// 6 111 => 6 ServiceIndex

@@ -178,14 +178,14 @@ func getServiceFields(messageInfo protoast.MessageInfo, bodyfield string) (*orde
 		}
 		fieldline := []string{}
 
-		fieldline = append(fieldline, extractTypeFromField(&f)) // +":"+strconv.Itoa(int(*f.Field.Number)))
+		fieldline = append(fieldline, extractTypeNameFromField(&f)) // +":"+strconv.Itoa(int(*f.Field.Number)))
 
 		fieldline = append(fieldline, "#"+fielddescription)
 
 		field := strings.Join(fieldline, " ")
 		if f.Name == bodyfield {
 			// do nothing, because the body field is set as the request type
-			innerRequestType = extractTypeFromField(&f)
+			innerRequestType = extractTypeNameFromField(&f)
 		} else {
 			omap.Set(f.Name, field)
 		}
