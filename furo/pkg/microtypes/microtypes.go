@@ -144,9 +144,13 @@ func (l *MicroTypelist) UpateTypelist(typelist *typeAst.Typelist, deleteSpecs bo
 				if AstField.Constraints == nil {
 					AstField.Constraints = map[string]*specSpec.FieldConstraint{}
 				}
-				AstField.Constraints["required"] = &specSpec.FieldConstraint{
-					Is:      "true",
-					Message: mFieldname + " is required",
+				_, found := AstField.Constraints["required"]
+				if !found {
+					// create constraint if it does not exist
+					AstField.Constraints["required"] = &specSpec.FieldConstraint{
+						Is:      "true",
+						Message: mFieldname + ".is.required",
+					}
 				}
 			} else {
 				// remove if setted
