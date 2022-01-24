@@ -93,6 +93,7 @@ func Generate(protoAST *protoast.ProtoAST) error {
 					enumArr = append(enumArr, protoast.GetSourceInfo(descriptor).InlineEnums[i])
 				}
 			}
+			typesInFile = buildNestedMessages(typesInFile, path.Base(protofilename), strings.Join(strings.Split(path.Dir(protofilename), "/"), ".")+"."+*Message.Name, Message.NestedType)
 
 		}
 
@@ -145,6 +146,51 @@ func Generate(protoAST *protoast.ProtoAST) error {
 	}
 
 	return nil
+}
+
+func buildNestedMessages(file []*microtypes.MicroType, target string, prefix string, nestedType []*descriptorpb.DescriptorProto) []*microtypes.MicroType {
+	for _, message := range nestedType {
+		typeLine := []string{}
+		typeLine = append(typeLine, prefix+"_"+*message.Name)
+		typeLine = append(typeLine, "# ")
+
+		typeSpec := &microtypes.MicroType{
+			Type:   strings.Join(typeLine, " "),
+			Fields: getNestedFields(message.Field),
+			Target: target,
+		}
+
+		file = append(file, typeSpec)
+		file = buildNestedMessages(file, target, prefix+"_"+*message.Name, message.NestedType)
+	}
+
+	return file
+}
+
+func getNestedFields(fields []*descriptorpb.FieldDescriptorProto) *orderedmap.OrderedMap {
+	omap := orderedmap.New()
+	for _, f := range fields {
+		fieldline := []string{}
+
+		// set repeated, must be false on maps!
+		// repeated is in f.Field.Label
+		isRepeated := false
+		if *f.Label == descriptorpb.FieldDescriptorProto_LABEL_REPEATED {
+			isRepeated = true
+		}
+
+		if isRepeated {
+			fieldline = append(fieldline, "[]")
+		}
+		fieldinfo := &protoast.FieldInfo{Field: f}
+		fieldline = append(fieldline, extractTypeNameFromField(fieldinfo)+":"+strconv.Itoa(int(*f.Number)))
+
+		fieldline = append(fieldline, "#")
+
+		field := strings.Join(fieldline, " ")
+		omap.Set(*f.Name, field)
+	}
+	return omap
 }
 
 func extractMessageType(descriptor *descriptorpb.FileDescriptorProto, packagename string, MessageIndex int, protofilename string, Message *descriptorpb.DescriptorProto, typesInFile []*microtypes.MicroType) []*microtypes.MicroType {
