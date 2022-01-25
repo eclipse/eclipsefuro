@@ -22,6 +22,36 @@ message Request {
     string name = 1;
 }
 
+// nested type is not imported at the moment
+message SearchResponse {  
+
+    // no description
+    repeated helloworld.SearchResponse.Result results = 1;
+}
+
+
+message SearchResponse_Result {  
+
+    // no description
+    string url = 1;
+
+    // no description
+    helloworld.SearchResponse.Result.SubResult subresult = 8;
+
+    // no description
+    string title = 2;
+
+    // no description
+    repeated string snippets = 3;
+}
+
+
+message SearchResponse_Result_SubResult {  
+
+    // no description
+    string url = 1;
+}
+
 // Stuuuuufff ...
 message Stuff {  
 

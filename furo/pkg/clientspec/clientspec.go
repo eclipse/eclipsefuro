@@ -22,6 +22,21 @@ func CreateClientTypeFromAstType(ast *specSpec.Type) (t *Type) {
 			XProto:      astField.XProto,
 		}
 		t.Fields.Set(iKey, field)
+
+	})
+
+	return t
+}
+
+func CreateClientTypeFromEnum(ast *specSpec.Enum) (t *Type) {
+
+	t = &Type{
+		Type:   ast.Type,
+		Values: orderedmap.New(),
+	}
+
+	ast.Values.Map(func(iKey interface{}, iValue interface{}) {
+		t.Values.Set(iKey, iValue)
 	})
 
 	return t
@@ -80,11 +95,13 @@ type Deeplink struct {
 // Defines a type in the furo env spec
 type Type struct {
 	// Name of the type
-	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name" yaml:"name"`
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty" yaml:"name"`
 	// the type
 	Type string `protobuf:"bytes,2,opt,name=type,proto3" json:"type" yaml:"type"`
 	// fields of a type
 	Fields *orderedmap.OrderedMap `protobuf:"bytes,5,rep,name=fields,proto3" json:"fields,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	// values for enum types
+	Values *orderedmap.OrderedMap `protobuf:"bytes,5,rep,name=fields,proto3" json:"values,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 }
 type Field struct {
 	// the field type, https://developers.google.com/protocol-buffers/docs/proto3#scalar

@@ -22,7 +22,7 @@ func main() {
 
 	// debug mode
 	// enable next line to read the file instead using stdin.
-	// data, err := ioutil.ReadFile("sample/protos/protocdata")
+	// data, err := ioutil.ReadFile("protocdata")
 
 	if err != nil {
 		panic(err)

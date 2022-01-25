@@ -15,6 +15,11 @@ type FieldMap struct {
 	Field     *specSpec.Field
 }
 
+type EnumMap struct {
+	Optionname string
+	Value      *uint32
+}
+
 func fieldpairs(orderedMap orderedmap.OrderedMap) (f []FieldMap) {
 	f = []FieldMap{}
 
@@ -22,6 +27,19 @@ func fieldpairs(orderedMap orderedmap.OrderedMap) (f []FieldMap) {
 		m := FieldMap{
 			Fieldname: p.Key.(string),
 			Field:     p.Value.(*specSpec.Field),
+		}
+		f = append(f, m)
+	}
+
+	return f
+}
+func enumpairs(orderedMap orderedmap.OrderedMap) (f []EnumMap) {
+	f = []EnumMap{}
+
+	for p := orderedMap.Oldest(); p != nil; p = p.Next() {
+		m := EnumMap{
+			Optionname: p.Key.(string),
+			Value:      p.Value.(*uint32),
 		}
 		f = append(f, m)
 	}
@@ -131,6 +149,7 @@ func GetSprigFuncs() template.FuncMap {
 	fn["noescape"] = noescape
 	fn["collectoneof"] = collectoneof
 	fn["fieldpairs"] = fieldpairs
+	fn["enumpairs"] = enumpairs
 	fn["rpcmap"] = rpcmap
 	fn["requestParamsFromRpc"] = requestParamsFromRpc
 	fn["rpcRequest"] = rpcRequest

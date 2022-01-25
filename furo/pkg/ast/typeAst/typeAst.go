@@ -3,6 +3,7 @@ package typeAst
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/eclipse/eclipsefuro/furo/pkg/ast/enumAst"
 	"github.com/eclipse/eclipsefuro/furo/pkg/specSpec"
 	"github.com/eclipse/eclipsefuro/furo/pkg/util"
 	"github.com/spf13/viper"
@@ -212,7 +213,7 @@ func (a *TypeAst) GetProtoTarget() (proto string) {
 }
 
 // updates the imports on each type
-func (l *Typelist) UpdateImports() {
+func (l *Typelist) UpdateImports(enumlist *enumAst.Enumlist) {
 	for t, v := range l.TypesByName {
 		self, _ := l.ResolveProtoImportForType(t, v.TypeSpec.XProto.Package)
 		imports := []string{}
@@ -235,8 +236,16 @@ func (l *Typelist) UpdateImports() {
 					imports = append(imports, i)
 				} else {
 					if i != self {
-						fmt.Println(util.ScanForStringPosition(typeToImport, path.Join(viper.GetString("specDir"), l.TypesByName[t].Path, l.TypesByName[t].FileName))+":Import", typeToImport, "not found in type", t, "on field", iFieldname)
-						fmt.Println(util.ScanForStringPosition(typeToImport, viper.GetString("muSpec.types"))+":Import not found. Check your muSpec types if you came from there. Field:", iFieldname)
+						en, enFound := enumlist.ResolveProtoImportForType(typeToImport, v.TypeSpec.XProto.Package)
+						if enFound && en != self {
+							imports = append(imports, en)
+						} else {
+							if en != self {
+								fmt.Println(util.ScanForStringPosition(typeToImport, path.Join(viper.GetString("specDir"), l.TypesByName[t].Path, l.TypesByName[t].FileName))+":Import", typeToImport, "not found in type", t, "on field", iFieldname)
+								fmt.Println(util.ScanForStringPosition(typeToImport, viper.GetString("muSpec.types"))+":Import not found. Check your muSpec types if you came from there. Field:", iFieldname)
+							}
+						}
+
 					}
 				}
 			}

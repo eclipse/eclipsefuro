@@ -1,6 +1,7 @@
 package clientspec
 
 import (
+	"github.com/eclipse/eclipsefuro/furo/pkg/ast/enumAst"
 	"github.com/eclipse/eclipsefuro/furo/pkg/ast/serviceAst"
 	"github.com/eclipse/eclipsefuro/furo/pkg/ast/typeAst"
 	"strings"
@@ -15,6 +16,12 @@ var availableServices = ClientServiceList{}
 func AddTypesToResolver(tlist map[string]*typeAst.TypeAst) {
 	for k, t := range tlist {
 		availableTypes[k] = CreateClientTypeFromAstType(&t.TypeSpec)
+	}
+}
+
+func AddEnumsToResolver(tlist map[string]*enumAst.EnumAst) {
+	for k, t := range tlist {
+		availableTypes[k] = CreateClientTypeFromEnum(&t.EnumSpec)
 	}
 }
 

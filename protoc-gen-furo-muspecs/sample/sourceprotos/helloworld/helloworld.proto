@@ -15,6 +15,22 @@ message Reply {
     string message = 1;
 }
 
+// nested type is not imported at the moment
+message SearchResponse {
+    // subtype
+    message Result {
+        string url = 1;
+        // subtype
+        message SubResult {
+            string url = 1;
+        }
+        SubResult subresult = 8;
+        string title = 2;
+        repeated string snippets = 3;
+    }
+    repeated Result results = 1;
+}
+
 // Request ...
 message Request {  
 

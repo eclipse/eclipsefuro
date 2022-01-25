@@ -1,6 +1,7 @@
 package generator
 
 import (
+	"github.com/eclipse/eclipsefuro/furo/pkg/microenums"
 	"github.com/eclipse/eclipsefuro/furo/pkg/microservices"
 	"github.com/eclipse/eclipsefuro/furo/pkg/microtypes"
 	"github.com/eclipse/eclipsefuro/furo/pkg/orderedmap"
@@ -19,15 +20,24 @@ func Generate(protoAST *protoast.ProtoAST) error {
 	// this is used to resolve the query params for the services
 	typeMap := map[string]protoast.MessageInfo{}
 	for _, descriptor := range protoAST.ProtoMap {
+		si := protoast.GetSourceInfo(descriptor)
 		for i, message := range descriptor.MessageType {
-			typeMap[*descriptor.Package+"."+*message.Name] = protoast.GetSourceInfo(descriptor).Messages[i]
+			typeMap[*descriptor.Package+"."+*message.Name] = si.Messages[i]
 		}
 	}
 
-	for protofilename, descriptor := range protoAST.ProtoMap {
+	for protofilename, descriptor := range protoAST.FileProtoMap {
+		si := protoast.GetSourceInfo(descriptor)
+		enumArr := []protoast.EnumInfo{}
+
+		for i, _ := range descriptor.EnumType {
+			enumArr = append(enumArr, si.Enums[i])
+		}
+
 		var fileName *string
 		servicesInFile := []*microservices.MicroService{}
 		typesInFile := []*microtypes.MicroType{}
+		enumsInFile := []*microenums.MicroEnum{}
 		// generate all the services
 
 		for ServiceIndex, Service := range descriptor.Service {
@@ -71,30 +81,22 @@ func Generate(protoAST *protoast.ProtoAST) error {
 		// generate all the messages
 		for MessageIndex, Message := range descriptor.MessageType {
 			if shouldGenerateTypeSpec(protoAST, *Message.Name, descriptor, Message) {
-				SourceInfo := protoast.GetSourceInfo(descriptor)
+
 				_, packagename := FileAndPackageNameToGenerate(descriptor, Message)
 				fn := strings.Replace(protofilename, ".proto", ".types.yaml", 1)
 				fileName = &fn
-				description := packagename + " does not have a description"
-				if SourceInfo.Messages[MessageIndex].Info.LeadingComments != nil {
-					description = cleanDescription(*SourceInfo.Messages[MessageIndex].Info.LeadingComments)
+
+				typesInFile = extractMessageType(descriptor, packagename, MessageIndex, protofilename, Message, typesInFile)
+
+				// nested enums
+				for i, _ := range typeMap[*descriptor.Package+"."+*Message.Name].Message.EnumType {
+					enumArr = append(enumArr, protoast.GetSourceInfo(descriptor).InlineEnums[i])
 				}
-
-				typeLine := []string{}
-				typeLine = append(typeLine, strings.Join(strings.Split(path.Dir(protofilename), "/"), ".")+"."+*Message.Name)
-
-				typeLine = append(typeLine, "#"+description)
-
-				typeSpec := &microtypes.MicroType{
-					Type:   strings.Join(typeLine, " "),
-					Fields: getFields(SourceInfo.Messages[MessageIndex]),
-					Target: path.Base(protofilename),
-				}
-
-				typesInFile = append(typesInFile, typeSpec)
 			}
+			typesInFile = buildNestedMessages(typesInFile, path.Base(protofilename), strings.Join(strings.Split(path.Dir(protofilename), "/"), ".")+"."+*Message.Name, Message.NestedType)
 
 		}
+
 		if fileName != nil {
 			// append the response
 			var responseFile pluginpb.CodeGeneratorResponse_File
@@ -106,9 +108,119 @@ func Generate(protoAST *protoast.ProtoAST) error {
 			protoAST.Response.File = append(protoAST.Response.File, &responseFile)
 			fileName = nil
 		}
+
+		for _, Enum := range enumArr {
+
+			fn := strings.Replace(protofilename, ".proto", ".enums.yaml", 1)
+			fileName = &fn
+			description := " does not have a description"
+			if Enum.Info.LeadingComments != nil {
+				description = cleanDescription(*Enum.Info.LeadingComments)
+			}
+
+			typeLine := []string{}
+			typeLine = append(typeLine, strings.Join(strings.Split(path.Dir(protofilename), "/"), ".")+"."+Enum.Name)
+
+			typeLine = append(typeLine, "#"+description)
+
+			enumSpec := &microenums.MicroEnum{
+				Enum:       strings.Join(typeLine, " "),
+				Values:     getEnumValues(Enum),
+				Target:     path.Base(protofilename),
+				AllowAlias: Enum.AllowAlias,
+			}
+
+			enumsInFile = append(enumsInFile, enumSpec)
+		}
+		if fileName != nil {
+			// append the response
+			var responseFile pluginpb.CodeGeneratorResponse_File
+			responseFile.Name = fileName
+			content, _ := yaml.Marshal(enumsInFile)
+			s := string(content)
+			responseFile.Content = &s
+
+			protoAST.Response.File = append(protoAST.Response.File, &responseFile)
+			fileName = nil
+		}
 	}
 
 	return nil
+}
+
+func buildNestedMessages(file []*microtypes.MicroType, target string, prefix string, nestedType []*descriptorpb.DescriptorProto) []*microtypes.MicroType {
+	for _, message := range nestedType {
+		typeLine := []string{}
+		typeLine = append(typeLine, prefix+"_"+*message.Name)
+		typeLine = append(typeLine, "# ")
+
+		typeSpec := &microtypes.MicroType{
+			Type:   strings.Join(typeLine, " "),
+			Fields: getNestedFields(message.Field),
+			Target: target,
+		}
+
+		file = append(file, typeSpec)
+		file = buildNestedMessages(file, target, prefix+"_"+*message.Name, message.NestedType)
+	}
+
+	return file
+}
+
+func getNestedFields(fields []*descriptorpb.FieldDescriptorProto) *orderedmap.OrderedMap {
+	omap := orderedmap.New()
+	for _, f := range fields {
+		fieldline := []string{}
+
+		// set repeated, must be false on maps!
+		// repeated is in f.Field.Label
+		isRepeated := false
+		if *f.Label == descriptorpb.FieldDescriptorProto_LABEL_REPEATED {
+			isRepeated = true
+		}
+
+		if isRepeated {
+			fieldline = append(fieldline, "[]")
+		}
+		fieldinfo := &protoast.FieldInfo{Field: f}
+		fieldline = append(fieldline, extractTypeNameFromField(fieldinfo)+":"+strconv.Itoa(int(*f.Number)))
+
+		fieldline = append(fieldline, "#")
+
+		field := strings.Join(fieldline, " ")
+		omap.Set(*f.Name, field)
+	}
+	return omap
+}
+
+func extractMessageType(descriptor *descriptorpb.FileDescriptorProto, packagename string, MessageIndex int, protofilename string, Message *descriptorpb.DescriptorProto, typesInFile []*microtypes.MicroType) []*microtypes.MicroType {
+	SourceInfo := protoast.GetSourceInfo(descriptor)
+	description := packagename + " does not have a description"
+	if SourceInfo.Messages[MessageIndex].Info.LeadingComments != nil {
+		description = cleanDescription(*SourceInfo.Messages[MessageIndex].Info.LeadingComments)
+	}
+	typeLine := []string{}
+	typeLine = append(typeLine, strings.Join(strings.Split(path.Dir(protofilename), "/"), ".")+"."+*Message.Name)
+
+	typeLine = append(typeLine, "#"+description)
+
+	typeSpec := &microtypes.MicroType{
+		Type:   strings.Join(typeLine, " "),
+		Fields: getFields(SourceInfo.Messages[MessageIndex]),
+		Target: path.Base(protofilename),
+	}
+
+	typesInFile = append(typesInFile, typeSpec)
+
+	return typesInFile
+}
+
+func getEnumValues(info protoast.EnumInfo) *orderedmap.OrderedMap {
+	om := orderedmap.New()
+	for _, e := range info.ValuesInfo {
+		om.Set(e.Name, e.Value)
+	}
+	return om
 }
 
 func cleanDescription(s string) string {
@@ -135,14 +247,14 @@ func getFields(messageInfo protoast.MessageInfo) *orderedmap.OrderedMap {
 		// repeated is in f.Field.Label
 		isRepeated := false
 		if *f.Field.Label == descriptorpb.FieldDescriptorProto_LABEL_REPEATED {
-			isRepeated = !strings.HasPrefix(extractTypeFromField(&f), "map<")
+			isRepeated = !strings.HasPrefix(extractTypeNameFromField(&f), "map<")
 		}
 
 		if isRepeated {
 			fieldline = append(fieldline, "[]")
 		}
 
-		fieldline = append(fieldline, extractTypeFromField(&f)+":"+strconv.Itoa(int(*f.Field.Number)))
+		fieldline = append(fieldline, extractTypeNameFromField(&f)+":"+strconv.Itoa(int(*f.Field.Number)))
 
 		if f.Field.OneofIndex != nil {
 			fieldline = append(fieldline, "["+*f.Message.OneofDecl[*f.Field.OneofIndex].Name+"]")
@@ -158,7 +270,7 @@ func getFields(messageInfo protoast.MessageInfo) *orderedmap.OrderedMap {
 	return omap
 }
 
-func extractTypeFromField(fieldinfo *protoast.FieldInfo) string {
+func extractTypeNameFromField(fieldinfo *protoast.FieldInfo) string {
 	// If type_name is set, this need not be set.  If both this and type_name
 	// are set, this must be one of TYPE_ENUM, TYPE_MESSAGE or TYPE_GROUP.
 	// --> Type *FieldDescriptorProto_Type `protobuf:"varint,5,opt,name=type,enum=google.protobuf.FieldDescriptorProto_Type" json:"type,omitempty"`
@@ -213,8 +325,23 @@ func extractTypeFromField(fieldinfo *protoast.FieldInfo) string {
 				}
 			}
 
+			// check for nested types and rewrite them to package.typename_nested_name
+
 			f := *field.TypeName
-			return f[1:len(f)]
+			return f[1:]
+
+		}
+
+		// inline enum
+		if *field.Type == descriptorpb.FieldDescriptorProto_TYPE_ENUM {
+			// name is messagename_enumnname
+
+			parts := strings.Split(*field.TypeName, ".")
+			mi := len(parts) - 2
+			fi := len(parts) - 1
+			parts[mi] = parts[mi] + "_" + parts[fi]
+			f := strings.Join(parts[:len(parts)-1], ".")
+			return f[1:]
 		}
 	}
 

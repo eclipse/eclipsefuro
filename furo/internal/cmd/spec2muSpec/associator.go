@@ -1,8 +1,10 @@
 package spec2muSpec
 
 import (
+	"github.com/eclipse/eclipsefuro/furo/pkg/ast/enumAst"
 	"github.com/eclipse/eclipsefuro/furo/pkg/ast/serviceAst"
 	"github.com/eclipse/eclipsefuro/furo/pkg/ast/typeAst"
+	"github.com/eclipse/eclipsefuro/furo/pkg/microenums"
 	"github.com/eclipse/eclipsefuro/furo/pkg/microservices"
 	"github.com/eclipse/eclipsefuro/furo/pkg/microtypes"
 	"github.com/eclipse/eclipsefuro/furo/pkg/specSpec"
@@ -15,14 +17,17 @@ type UTshadowNode struct {
 	IdentifierT          string // typename part used to idenitify all edges
 	edgeRequestTypeNode  []*typeAst.TypeAst
 	edgeTypeNode         *typeAst.TypeAst
+	edgeEnumNode         *enumAst.EnumAst
 	edgeServiceNode      *serviceAst.ServiceAst
 	edgeMicroTypeNode    *microtypes.MicroTypeAst
+	edgeMicroEnumNode    *microenums.MicroEnumAst
 	edgeMicroServiceNode *microservices.MicroServiceAst
 }
 
 type UTShadowList struct {
 	Items                 []*UTshadowNode
 	TypeItemsByName       map[string]*UTshadowNode
+	EnumItemsByName       map[string]*UTshadowNode
 	ServiceItemsByName    map[string]*UTshadowNode
 	ServiceRequestsByName map[string]*UTshadowNode
 }
@@ -31,6 +36,7 @@ func NewUTShadowList() UTShadowList {
 	return UTShadowList{
 		Items:                 []*UTshadowNode{},
 		TypeItemsByName:       map[string]*UTshadowNode{},
+		EnumItemsByName:       map[string]*UTshadowNode{},
 		ServiceItemsByName:    map[string]*UTshadowNode{},
 		ServiceRequestsByName: map[string]*UTshadowNode{},
 	}
@@ -45,6 +51,11 @@ func (s *UTShadowList) AddTypeNode(fullTypeName string, ast *typeAst.TypeAst) *U
 	return s.AddRegularTypeNode(fullTypeName, ast)
 }
 
+func (s *UTShadowList) AddEnumNode(fullEnumName string, ast *enumAst.EnumAst) *UTshadowNode {
+
+	return s.AddRegularEnumNode(fullEnumName, ast)
+}
+
 func (s *UTShadowList) AddRegularTypeNode(fullTypeName string, ast *typeAst.TypeAst) *UTshadowNode {
 	var node *UTshadowNode
 	// find item by name, nok => create
@@ -54,6 +65,18 @@ func (s *UTShadowList) AddRegularTypeNode(fullTypeName string, ast *typeAst.Type
 		node = s.TypeItemsByName[fullTypeName]
 	}
 	node.edgeTypeNode = ast
+	return node
+}
+
+func (s *UTShadowList) AddRegularEnumNode(fullEnumName string, ast *enumAst.EnumAst) *UTshadowNode {
+	var node *UTshadowNode
+	// find item by name, nok => create
+	if s.EnumItemsByName[fullEnumName] == nil {
+		node = s.CreateShadowEnumItem(fullEnumName)
+	} else {
+		node = s.EnumItemsByName[fullEnumName]
+	}
+	node.edgeEnumNode = ast
 	return node
 }
 
@@ -87,6 +110,21 @@ func (s *UTShadowList) AddMicroTypeNode(ast *microtypes.MicroTypeAst) *UTshadowN
 		node = s.TypeItemsByName[fullTypeName]
 	}
 	node.edgeMicroTypeNode = ast
+	return node
+}
+func (s *UTShadowList) AddMicroEnumNode(ast *microenums.MicroEnumAst) *UTshadowNode {
+	// check for names without package
+
+	fullEnumName := ast.Package + "." + ast.Type
+
+	var node *UTshadowNode
+	// find item by name, nok => create
+	if s.EnumItemsByName[fullEnumName] == nil {
+		node = s.CreateShadowEnumItem(fullEnumName)
+	} else {
+		node = s.EnumItemsByName[fullEnumName]
+	}
+	node.edgeMicroEnumNode = ast
 	return node
 }
 
@@ -147,6 +185,18 @@ func (s *UTShadowList) CreateShadowTypeItem(name string) *UTshadowNode {
 	n.IdentifierT = strings.Join(ta[len(ta)-1:], ".")
 	return n
 }
+
+func (s *UTShadowList) CreateShadowEnumItem(name string) *UTshadowNode {
+	n := &UTshadowNode{}
+	s.EnumItemsByName[name] = n
+	s.Items = append(s.Items, n)
+	ta := strings.Split(name, ".")
+
+	n.IdentifierP = strings.Join(ta[0:len(ta)-1], ".")
+	n.IdentifierT = strings.Join(ta[len(ta)-1:], ".")
+	return n
+}
+
 func (s *UTShadowList) CreateShadowServiceItem(name string) *UTshadowNode {
 	n := &UTshadowNode{}
 	s.ServiceItemsByName[name] = n

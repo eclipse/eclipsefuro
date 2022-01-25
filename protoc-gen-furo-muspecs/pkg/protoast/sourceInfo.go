@@ -6,8 +6,10 @@ import (
 )
 
 type SourceInfo struct {
-	Messages []MessageInfo
-	Services []ServiceInfo
+	Messages    []MessageInfo
+	Enums       []EnumInfo
+	InlineEnums []EnumInfo
+	Services    []ServiceInfo
 }
 
 type ServiceInfo struct {
@@ -36,6 +38,19 @@ type MessageInfo struct {
 	FieldInfos []FieldInfo
 	Message    descriptorpb.DescriptorProto
 }
+
+type EnumInfo struct {
+	Name       string
+	Info       *descriptorpb.SourceCodeInfo_Location
+	ValuesInfo []ValueInfo
+	AllowAlias bool
+	Message    descriptorpb.DescriptorProto
+}
+
+type ValueInfo struct {
+	Name  string
+	Value int32
+}
 type FieldInfo struct {
 	Name    string
 	Info    *descriptorpb.SourceCodeInfo_Location
@@ -45,7 +60,8 @@ type FieldInfo struct {
 
 func GetSourceInfo(descr *descriptorpb.FileDescriptorProto) SourceInfo {
 	SourceInfo := SourceInfo{}
-
+	r := descr.GetSourceCodeInfo().GetLocation()
+	r = r
 	for _, location := range descr.GetSourceCodeInfo().GetLocation() {
 
 		// 6 111 => 6 ServiceIndex
@@ -59,6 +75,7 @@ func GetSourceInfo(descr *descriptorpb.FileDescriptorProto) SourceInfo {
 				Methods: []MethodInfo{},
 			})
 		}
+
 		// Methods
 		// 6 111 2 222 4 9999 =>	 4 ServiceIndex 2 Method 4 Option
 		// for field with index 222 in Service with index 111
@@ -87,6 +104,33 @@ func GetSourceInfo(descr *descriptorpb.FileDescriptorProto) SourceInfo {
 			SourceInfo.Services[sIndex].Methods[methodIndex].HttpRule.Info = location
 		}
 
+		// 5 111 => 5 EnumIndex
+		// location info for descriptor.ServiceType[111]Field[222]
+		if len(location.GetPath()) == 2 && location.Path[0] == 5 {
+			msgIndex := location.Path[1]
+
+			alias := false
+			if descr.EnumType[msgIndex].Options != nil && descr.EnumType[msgIndex].Options.AllowAlias != nil {
+				alias = *descr.EnumType[msgIndex].Options.AllowAlias
+			}
+			// values
+			vals := []ValueInfo{}
+			for _, v := range descr.EnumType[msgIndex].Value {
+				fi := ValueInfo{
+					Name:  *v.Name,
+					Value: *v.Number,
+				}
+				vals = append(vals, fi)
+			}
+
+			SourceInfo.Enums = append(SourceInfo.Enums, EnumInfo{
+				Name:       *descr.EnumType[msgIndex].Name,
+				ValuesInfo: vals,
+				AllowAlias: alias,
+				Info:       location,
+			})
+		}
+
 		// 4 111 2 222 => 4 MessageIndex 2 FieldIndex
 		// for field with index 222 in message with index 111
 		// location info for descriptor.MessageType[111]Field[222]
@@ -98,6 +142,32 @@ func GetSourceInfo(descr *descriptorpb.FileDescriptorProto) SourceInfo {
 				Info:       location,
 				FieldInfos: []FieldInfo{},
 			})
+
+			// check for inline enums
+			for _, nestedEnum := range descr.MessageType[msgIndex].EnumType {
+
+				alias := false
+				if nestedEnum.Options != nil && nestedEnum.Options.AllowAlias != nil {
+					alias = *nestedEnum.Options.AllowAlias
+				}
+				// values
+				vals := []ValueInfo{}
+				for _, v := range nestedEnum.Value {
+					fi := ValueInfo{
+						Name:  *v.Name,
+						Value: *v.Number,
+					}
+					vals = append(vals, fi)
+				}
+
+				SourceInfo.InlineEnums = append(SourceInfo.InlineEnums, EnumInfo{
+					Name:       *descr.MessageType[msgIndex].Name + "_" + *nestedEnum.Name,
+					ValuesInfo: vals,
+					AllowAlias: alias,
+					Info:       location,
+				})
+
+			}
 		}
 
 		// 4 111 2 222 =>	 4 MessageIndex 2 FieldIndex
