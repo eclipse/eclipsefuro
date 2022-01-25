@@ -2,6 +2,7 @@ package exportAsYaml
 
 import (
 	"fmt"
+	"github.com/eclipse/eclipsefuro/furo/pkg/ast/enumAst"
 	"github.com/eclipse/eclipsefuro/furo/pkg/ast/serviceAst"
 	"github.com/eclipse/eclipsefuro/furo/pkg/ast/typeAst"
 	"github.com/eclipse/eclipsefuro/furo/pkg/util"
@@ -20,6 +21,7 @@ func Run(cmd *cobra.Command, args []string) {
 	}
 
 	allTypes := map[string]interface{}{}
+	enums := map[string]interface{}{}
 	installedTypes := map[string]interface{}{}
 	Typelist := &typeAst.Typelist{}
 	Typelist.LoadTypeSpecsFromDir(viper.GetString("specDir"))
@@ -67,6 +69,18 @@ func Run(cmd *cobra.Command, args []string) {
 		}
 	}
 
+	Enumlist := &enumAst.Enumlist{}
+	Enumlist.LoadEnumSpecsFromDir(viper.GetString("specDir"))
+	Enumlist.LoadInstalledEnumSpecsFromDir(util.GetDependencyList()...)
+
+	for k, t := range Enumlist.EnumsByName {
+		if fullExport {
+			enums[k] = t
+		} else {
+			enums[k] = t.EnumSpec
+		}
+	}
+
 	output := map[string]interface{}{}
 
 	output["config"] = viper.AllSettings()
@@ -74,6 +88,7 @@ func Run(cmd *cobra.Command, args []string) {
 	output["installedTypes"] = installedTypes
 	output["services"] = allServices
 	output["types"] = allTypes
+	output["enums"] = enums
 
 	outputstr, _ := yaml.Marshal(output)
 
