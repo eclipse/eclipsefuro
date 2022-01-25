@@ -1,5 +1,6 @@
 ---
 title: "Services"
+weight: 20
 ---
 
 # Anatomy of a service spec
