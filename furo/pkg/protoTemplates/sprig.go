@@ -17,7 +17,7 @@ type FieldMap struct {
 
 type EnumMap struct {
 	Optionname string
-	Value      *uint32
+	Value      *int32
 }
 
 func fieldpairs(orderedMap orderedmap.OrderedMap) (f []FieldMap) {
@@ -39,7 +39,7 @@ func enumpairs(orderedMap orderedmap.OrderedMap) (f []EnumMap) {
 	for p := orderedMap.Oldest(); p != nil; p = p.Next() {
 		m := EnumMap{
 			Optionname: p.Key.(string),
-			Value:      p.Value.(*uint32),
+			Value:      p.Value.(*int32),
 		}
 		f = append(f, m)
 	}
