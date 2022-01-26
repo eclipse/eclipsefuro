@@ -10,6 +10,9 @@ muSpec:
   types: # define a set of globs which matches your type definitions
     - "./muspecs/**/*types.yaml"
     - "./muspecs/*types.yaml"
+  enums: # define a set of globs which matches your type definitions
+    - "./muspecs/**/*enums.yaml"
+    - "./muspecs/*enums.yaml"
   services: # define a set of globs which matches your service definitions
     - "./muspecs/**/*services.yaml"
     - "./muspecs/*services.yaml"
