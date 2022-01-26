@@ -105,3 +105,8 @@ enum Corpus {
 }
 ```
 *enum.proto*
+
+## Enum in ES6Module (web client)
+Because js does not have enums, 
+the fields with a enum type are generated as uint32 with an optionlist in the meta. 
+The [`furo-ui5-select`](https://ui5.furo.pro/docs/components/furo-ui5-select/) component can handle this metas.
