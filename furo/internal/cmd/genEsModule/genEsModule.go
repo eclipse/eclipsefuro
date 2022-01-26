@@ -48,8 +48,8 @@ func Run(cmd *cobra.Command, args []string) {
 				field := pair.Value.(*clientspec.Field)
 
 				if allTypes[field.Type] != nil && allTypes[field.Type].Values != nil {
-					field.Meta.Options.Flags = append(field.Meta.Options.Flags, "enum")
 
+					field.Meta.Options.Flags = append(field.Meta.Options.Flags, "enum")
 					// loop all enum values to build the options
 					for enum := allTypes[field.Type].Values.Oldest(); enum != nil; enum = enum.Next() {
 						option := map[string]interface{}{}
