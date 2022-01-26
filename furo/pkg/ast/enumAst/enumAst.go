@@ -118,7 +118,7 @@ func readAndUnmarshalEnumSpec(fpath string) (s specSpec.Enum) {
 		// convert fields from yaml.Node to Field type
 		for pair := s.Values.Oldest(); pair != nil; pair = pair.Next() {
 			fieldYamlNode := pair.Value.(*yaml.Node)
-			var AstField *uint32
+			var AstField *int32
 			fieldYamlNode.Decode(&AstField)
 			pair.Value = AstField
 		}
