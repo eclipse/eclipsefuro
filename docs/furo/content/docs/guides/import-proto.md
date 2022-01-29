@@ -33,7 +33,7 @@ Spec-. furo .->Proto
 
 
 {{< hint danger >}}
-**Note:** `ENUM` types and `additional bindings` are not supported at the moment
+**Note:** `additional bindings` are not supported at the moment
 
 
 {{< /hint >}}

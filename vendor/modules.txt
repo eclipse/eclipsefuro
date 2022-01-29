@@ -15,10 +15,10 @@ github.com/davecgh/go-spew/spew
 github.com/fsnotify/fsnotify
 # github.com/gobuffalo/here v0.6.0
 github.com/gobuffalo/here
+# github.com/google/go-cmp v0.5.7
+## explicit
 # github.com/google/uuid v1.1.2
 github.com/google/uuid
-# github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.3
-## explicit
 # github.com/hashicorp/hcl v1.0.0
 github.com/hashicorp/hcl
 github.com/hashicorp/hcl/hcl/ast
@@ -109,8 +109,6 @@ golang.org/x/text/unicode/norm
 # google.golang.org/genproto v0.0.0-20220118154757-00ab72f36ad5
 ## explicit
 google.golang.org/genproto/googleapis/api/annotations
-# google.golang.org/grpc v1.43.0
-## explicit
 # google.golang.org/protobuf v1.27.1
 ## explicit
 google.golang.org/protobuf/encoding/prototext
@@ -146,6 +144,7 @@ google.golang.org/protobuf/types/pluginpb
 # gopkg.in/ini.v1 v1.51.0
 gopkg.in/ini.v1
 # gopkg.in/yaml.v2 v2.4.0
+## explicit
 gopkg.in/yaml.v2
 # gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776
 ## explicit
