@@ -7,14 +7,14 @@ This container contains all tools you need to work with a furo spec project.
 ## Usage
 Bash mode
 
-    docker run -it --rm -v `pwd`:/specs thenorstroem/furo-bec
+    docker run -it --rm -v `pwd`:/specs -v ~/.ssh:/root/.ssh thenorstroem/furo-bec:v1.34.0
     # do your stuff
     # type exit to quit
     exit
 
 Command mode
 
-    docker run -it --rm -v `pwd`:/specs thenorstroem/furo-bec build
+    docker run -it --rm -v `pwd`:/specs -v ~/.ssh:/root/.ssh thenorstroem/furo-bec:v1.34.0 build
 
 
 > TIPP: If your furo commands have to access different directories, do not forget to mount them.

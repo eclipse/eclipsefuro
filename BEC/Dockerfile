@@ -6,15 +6,19 @@ ENV GATEWAY_VERSION=2.6.0
 ENV GEN_GO_VERSION=1.27.1
 ENV GEN_GO_GRPC_VERSION=1.1.0
 ENV YQ_VERSION=4.12.2
-ENV BUF_VERSION=0.56.0
+ENV BUF_VERSION=1.0.0-rc11
 ENV GOBIN $GOPATH/bin
 ENV PATH="$PATH:$GOPATH/bin"
 ENV PATH="/usr/local/sbin:$PATH"
 ENV PS1="\e[0;34mフロー BEC \t# \e[m "
 ENV GOPRIVATE=github.com/theNorstroem
 
+# Install ssh client and git
+RUN apk add --no-cache bash openssh-client git curl wget ca-certificates openssh jq
 
-RUN apk add --no-cache bash git curl wget ca-certificates openssh jq
+# Download public key for github.com
+RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
+RUN ssh-keygen -q -t ed25519 -f /root/.ssh/id_ed25519 -N '""' -C '"furoBEC"'
 
 # install protoc
 RUN set -eux; \
