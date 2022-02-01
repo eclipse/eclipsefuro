@@ -18,7 +18,7 @@ This container contains all tools you need to work with a furo spec project.
 ## Usage
 ### Bash mode
 ```bash
-docker run -it --rm -v `pwd`:/specs thenorstroem/furo-bec
+docker run -it --rm -v `pwd`:/specs -v ~/.ssh:/root/.ssh thenorstroem/furo-bec
 # do your stuff
 # type exit to quit
 exit
@@ -28,7 +28,7 @@ exit
 Starting your container with the arguments **build** or **publish** will execute the corresponding flow.
 
 ```bash
-docker run -it --rm -v `pwd`:/specs thenorstroem/furo-bec build
+docker run -it --rm -v `pwd`:/specs -v ~/.ssh:/root/.ssh thenorstroem/furo-bec build
 ```
 
 {{< hint Info >}}

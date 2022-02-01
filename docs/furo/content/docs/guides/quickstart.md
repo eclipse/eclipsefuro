@@ -22,7 +22,7 @@ mkdir sample-spec
 cd sample-spec
 
 # 3 Start the container 
-docker run -it --rm -v `pwd`:/specs thenorstroem/furo-bec
+docker run -it --rm -v `pwd`:/specs -v ~/.ssh:/root/.ssh thenorstroem/furo-bec
 
 # 4 Run furo init
 furo init
