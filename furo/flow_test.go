@@ -18,7 +18,7 @@ func TestRunCommand(t *testing.T) {
 	rco.Execute()
 
 	require.Equal(t, true, test.FileExist(path.Join(dir, ".furo")))
-	require.Equal(t, "8099bae6915b9ce45439b1a83aa04022", test.MustMd5Sum(path.Join(dir, ".furo")))
+	require.Equal(t, "3c90654659f1898586736e290c25dd5f", test.MustMd5Sum(path.Join(dir, ".furo")))
 
 	os.Args = []string{"cmd", "install"}
 	rco.Execute()
@@ -27,7 +27,7 @@ func TestRunCommand(t *testing.T) {
 	os.Args = []string{"cmd", "run", "default"}
 	rco.Execute()
 
-	require.Equal(t, "f0fab8c3b2c45792a676b418352aa9c6", test.MustMd5Sum(path.Join(dir, "specs", "sample", "Sample.type.spec")))
+	require.Equal(t, "79f443ca59195dbd97bb60fa7e2d85fa", test.MustMd5Sum(path.Join(dir, "specs", "sample", "Sample.type.spec")))
 	require.Equal(t, "6d172492e249b527849e3f04a3c4534d", test.MustMd5Sum(path.Join(dir, "specs", "sample", "Samples.service.spec")))
 
 	require.Equal(t, true, test.FileExist(path.Join(dir, "dist", "protos")))

@@ -27,14 +27,14 @@ func TestMuSpec2SpecCommand(t *testing.T) {
 	rco.Execute()
 
 	require.Equal(t, true, test.FileExist(path.Join(dir, "specs", "sample")))
-	require.Equal(t, "f0fab8c3b2c45792a676b418352aa9c6", test.MustMd5Sum(path.Join(dir, "specs", "sample", "Sample.type.spec")))
+	require.Equal(t, "79f443ca59195dbd97bb60fa7e2d85fa", test.MustMd5Sum(path.Join(dir, "specs", "sample", "Sample.type.spec")))
 	require.Equal(t, "1a6284ebd7153476d831557f253d0757", test.MustMd5Sum(path.Join(dir, "specs", "sample", "Samples.service.spec")))
 
 	os.Args = []string{"cmd", "checkImports"}
 	rco.Execute()
 
 	require.Equal(t, true, test.FileExist(path.Join(dir, "specs", "sample")))
-	require.Equal(t, "f0fab8c3b2c45792a676b418352aa9c6", test.MustMd5Sum(path.Join(dir, "specs", "sample", "Sample.type.spec")))
+	require.Equal(t, "79f443ca59195dbd97bb60fa7e2d85fa", test.MustMd5Sum(path.Join(dir, "specs", "sample", "Sample.type.spec")))
 	require.Equal(t, "6d172492e249b527849e3f04a3c4534d", test.MustMd5Sum(path.Join(dir, "specs", "sample", "Samples.service.spec")))
 
 }
