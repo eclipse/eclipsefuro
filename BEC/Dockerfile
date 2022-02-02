@@ -22,7 +22,7 @@ RUN ssh-keygen -q -t ed25519 -f /root/.ssh/id_ed25519 -N '""' -C '"furoBEC"'
 
 # install protoc
 RUN set -eux; \
-    curl -L https://github.com/protocolbuffers/protobuf/releases/download/v3.13.0/protoc-3.13.0-linux-x86_64.zip -o /tmp/protoc.zip; \
+    curl -L https://github.com/protocolbuffers/protobuf/releases/download/v3.17.3/protoc-3.17.3-linux-x86_64.zip -o /tmp/protoc.zip; \
     unzip /tmp/protoc.zip -d /usr/local; \
     # install glibc for alpine
     wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub; \
