@@ -115,6 +115,10 @@ func Run(cmd *cobra.Command, args []string) {
 		log.Println("Error executing template :", err)
 		return
 	}
+	e := os.Rename("./go.mod.template", "./go.mod")
+	if e != nil {
+		log.Fatal(e)
+	}
 	// create .furo with defaults
 	modTemplate, _ := template.ParseFiles("go.mod")
 	modf, err := os.Create("go.mod")
