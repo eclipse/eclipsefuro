@@ -138,7 +138,7 @@ func rpcRequest(method *specSpec.Rpc) string {
 }
 
 func isNotStream(method *specSpec.Rpc) bool {
-	if strings.HasPrefix(method.Data.Request, "stream ") {
+	if strings.HasPrefix(method.Data.Request, "stream ") || method.Deeplink.Href == "" {
 		return false
 	}
 	return true
