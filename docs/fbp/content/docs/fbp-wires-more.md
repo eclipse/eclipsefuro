@@ -9,12 +9,12 @@ Therefore, furo FBP has some features to work with them too.
 
 
 ## Setting a member value
-To set a value of a component you use can be done with the **ƒ-.property**.
+To set a value of a component you use can be done with the **set-property**.
 
 <furo-demo-snippet  flow style="height:150px">
 <template>
-  <button @-click="--bntClicked">A</button>
-  <span ƒ-.inner-text="--bntClicked">click counter</span>
+  <button at-click="--bntClicked">A</button>
+  <span set-inner-text="--bntClicked">click counter</span>
 </template>
 </furo-demo-snippet>
 
@@ -29,16 +29,16 @@ why it does not expose the property.
 ## Wireing responses from method calls
 
 When the method that you have wired only returns data that you want to use, 
-you can wire the response with **@-ƒ-methodname**.
+you can wire the response with **at-fnret-methodname**.
 
 
 <furo-demo-snippet no-demo flow style="height:200px">
 <template>
    <!-- we put the value of number on the wire --calcClicked -->
-   <furo-button @-click="--calcClicked(number)"> calculate sqrt </furo-button>
-   <!-- The response of the calculate method is dispatched on @-ƒ-calculate -->    
-   <square-root ƒ-calculate="--calcClicked" @-ƒ-calculate="--calculatedSqrRoot"></square-root>
-  <display-result ƒ-show="--calculatedSqrRoot"></display-result>
+   <furo-button at-click="--calcClicked(number)"> calculate sqrt </furo-button>
+   <!-- The response of the calculate method is dispatched on at-fnret-calculate -->    
+   <square-root fn-calculate="--calcClicked" at-fnret-calculate="--calculatedSqrRoot"></square-root>
+  <display-result fn-show="--calculatedSqrRoot"></display-result>
 </template>
 </furo-demo-snippet>
 

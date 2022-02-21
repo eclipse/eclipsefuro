@@ -48,8 +48,8 @@ All that was needed was to load the precompiled scripts via CDN.
 <body>
   <h1>This is a static template, there is no bundler or bundling involved!</h1>
   
-  <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>
-  <button @-click="--lightSwitchClicked">i am a lightswitch</button>
+  <light-bulb fn-toggle="--lightSwitchClicked"></light-bulb>
+  <button at-click="--lightSwitchClicked">i am a lightswitch</button>
 </body>
 </html>
 ``` 

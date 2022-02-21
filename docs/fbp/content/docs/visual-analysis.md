@@ -44,10 +44,10 @@ If you are familiar with fbp, you should not have any problem to read the graph.
 * The **blue lines** are the wires. 
   * Hover on them to read the wire name, like `--unauthorized`.
 
-* The **small blue boxes** with an **@-** are the catched events. 
+* The **small blue boxes** with an **at-** are the catched events. 
   * Hover on them to read the used name and more.
 
-* The **small green boxes** with an **ƒ-** are the triggerer for the methods of the component.
+* The **small green boxes** with an **fn-** are the triggerer for the methods of the component.
 
 * The **small black boxes** are attributes without a value assignment.
   * These are often boolean flags like `hidden` or `readonly` which are setted.

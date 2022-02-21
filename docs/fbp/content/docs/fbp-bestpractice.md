@@ -11,10 +11,10 @@ Feel free to give us your feedback.
 ## Wire and event naming
  In fact you can use any string to name wires, but most of the users are using two dashes in front of the wire name and for the name they use camelCase notation.
  
-For the events they use the dashed-case notation, because you can not write `@-camelCase`.
+For the events they use the dashed-case notation, because you can not write `at-camelCase`.
 
 ```html
-<furo-button @-click="--buttonClicked, ^^fired-event"></furo-button>
+<furo-button at-click="--buttonClicked, ^^fired-event"></furo-button>
 ```
 With this notation they can see the difference between a **--wire** to an **event** they fire directly.
 
@@ -25,16 +25,16 @@ When you use declarative names, it would be easier to read and modify a wired pr
 
 **bad example**
 ```html
-<furo-button @-click="--closeView"></furo-button>
-<my-view ƒ-close="--closeView"></my-view>
-<data-component ƒ-save="--closeView"></data-component>
+<furo-button at-click="--closeView"></furo-button>
+<my-view fn-close="--closeView"></my-view>
+<data-component fn-save="--closeView"></data-component>
 ```
 
 **good example**
 ```html
-<furo-button @-click="--closeButtonClicked"></furo-button>
-<my-view ƒ-close="--closeButtonClicked"></my-view>
-<data-component ƒ-save="--closeButtonClicked"></data-component>
+<furo-button at-click="--closeButtonClicked"></furo-button>
+<my-view fn-close="--closeButtonClicked"></my-view>
+<data-component fn-save="--closeButtonClicked"></data-component>
 ```
 
 *It is a subtile but relevant difference between this two examles.*
@@ -49,12 +49,12 @@ When you use a set of components, you don't have to wire every single component 
 
 ```html
     <div >
-      <mole-hole key="a" @-closed="--moleClosed" @-continue="--continue" @-miss="--missed" @-whack="--whacked"></mole-hole>
-      <mole-hole key="s" @-closed="--moleClosed" @-continue="--continue" @-miss="--missed" @-whack="--whacked"></mole-hole>
-      <mole-hole key="d" @-closed="--moleClosed" @-continue="--continue" @-miss="--missed" @-whack="--whacked"></mole-hole>
-      <mole-hole key="f" @-closed="--moleClosed" @-continue="--continue" @-miss="--missed" @-whack="--whacked"></mole-hole>
-      <mole-hole key="g" @-closed="--moleClosed" @-continue="--continue" @-miss="--missed" @-whack="--whacked"></mole-hole>
-      <mole-hole key="w" @-closed="--moleClosed" @-continue="--continue" @-miss="--missed" @-whack="--whacked"></mole-hole>
+      <mole-hole key="a" at-closed="--moleClosed" at-continue="--continue" at-miss="--missed" at-whack="--whacked"></mole-hole>
+      <mole-hole key="s" at-closed="--moleClosed" at-continue="--continue" at-miss="--missed" at-whack="--whacked"></mole-hole>
+      <mole-hole key="d" at-closed="--moleClosed" at-continue="--continue" at-miss="--missed" at-whack="--whacked"></mole-hole>
+      <mole-hole key="f" at-closed="--moleClosed" at-continue="--continue" at-miss="--missed" at-whack="--whacked"></mole-hole>
+      <mole-hole key="g" at-closed="--moleClosed" at-continue="--continue" at-miss="--missed" at-whack="--whacked"></mole-hole>
+      <mole-hole key="w" at-closed="--moleClosed" at-continue="--continue" at-miss="--missed" at-whack="--whacked"></mole-hole>
     </div>
 ```
 ![without event delegation](/withoutEventDelegation.png)
@@ -62,7 +62,7 @@ When you use a set of components, you don't have to wire every single component 
 
 **with event delegation**
 ```html
-    <div @-closed="--moleClosed" @-continue="--continue" @-miss="--missed" @-whack="--whacked">
+    <div at-closed="--moleClosed" at-continue="--continue" at-miss="--missed" at-whack="--whacked">
       <mole-hole key="a"></mole-hole>
       <mole-hole key="s"></mole-hole>
       <mole-hole key="d"></mole-hole>

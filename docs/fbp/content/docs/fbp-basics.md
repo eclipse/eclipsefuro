@@ -28,8 +28,8 @@ connected by the **wire** `--lightSwitchClicked`.
 <furo-demo-snippet flow>
 <template>
   <!-- This button acts as a light switch -->
-  <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>  
-  <button @-click="--lightSwitchClicked">i am a lightswitch</button>
+  <light-bulb fn-toggle="--lightSwitchClicked"></light-bulb>  
+  <button at-click="--lightSwitchClicked">i am a lightswitch</button>
 </template>
 </furo-demo-snippet>
 
@@ -55,11 +55,11 @@ So the wire `--lightSwitchClicked` can trigger multiple targets if you want.
 
 <furo-demo-snippet flow style="height:400px">
 <template>
-  <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>
-  <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>
-  <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>
-  <button @-click="--lightSwitchClicked">i am a lightswitch</button> 
-  <light-bulb ƒ-toggle="--noSource"></light-bulb>
+  <light-bulb fn-toggle="--lightSwitchClicked"></light-bulb>
+  <light-bulb fn-toggle="--lightSwitchClicked"></light-bulb>
+  <light-bulb fn-toggle="--lightSwitchClicked"></light-bulb>
+  <button at-click="--lightSwitchClicked">i am a lightswitch</button> 
+  <light-bulb fn-toggle="--noSource"></light-bulb>
 </template>
 </furo-demo-snippet>
 
@@ -86,10 +86,10 @@ Assume that your team want to introduce some other features, like playing a anim
 
 ```html
 <!-- bad wire name-->
-<some-animation ƒ-play="--saveData"></some-animation>
+<some-animation fn-play="--saveData"></some-animation>
 
 <!-- good wire name -->
-<some-animation ƒ-play="--saveClicked"></some-animation>
+<some-animation fn-play="--saveClicked"></some-animation>
 ```   
   {{< /hint >}}
 
@@ -100,9 +100,9 @@ A wire is not limited as a point to point connection and can have multiple sourc
 
 <furo-demo-snippet flow style="height:400px">
 <template>
-  <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>
-  <button @-click="--lightSwitchClicked">lightswitch 1</button>
-  <button @-click="--lightSwitchClicked">lightswitch 2</button>
+  <light-bulb fn-toggle="--lightSwitchClicked"></light-bulb>
+  <button at-click="--lightSwitchClicked">lightswitch 1</button>
+  <button at-click="--lightSwitchClicked">lightswitch 2</button>
 </template>
 </furo-demo-snippet>
 
@@ -115,12 +115,12 @@ have multiple targets.
 
 <furo-demo-snippet source style="height:500px">
 <template>
-  <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>
-  <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>
-  <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>
-  <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>
-  <button @-click="--lightSwitchClicked">lightswitch</button>
-  <button @-click="--lightSwitchClicked">lightswitch 2</button>  
+  <light-bulb fn-toggle="--lightSwitchClicked"></light-bulb>
+  <light-bulb fn-toggle="--lightSwitchClicked"></light-bulb>
+  <light-bulb fn-toggle="--lightSwitchClicked"></light-bulb>
+  <light-bulb fn-toggle="--lightSwitchClicked"></light-bulb>
+  <button at-click="--lightSwitchClicked">lightswitch</button>
+  <button at-click="--lightSwitchClicked">lightswitch 2</button>  
 </template>
 </furo-demo-snippet>
 
@@ -131,16 +131,16 @@ the resulting flow of this example is quite complex.*
 ## Triggering multiple wires from one source event
 Sometimes you want to trigger multiple wires from one source event.
 You can do this by separating them with a comma.
-`@-click="--lightSwitchClicked, --blinkerClicked"`
+`at-click="--lightSwitchClicked, --blinkerClicked"`
 
 <furo-demo-snippet flow style="height:500px">
 <template>
-  <light-bulb ƒ-toggle="--lightSwitchClicked, --intervallPulse"></light-bulb>  
-  <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>
-  <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>
-  <button @-click="--lightSwitchClicked,--blinkerClicked">lightswitch</button> 
-  <furo-interval-pulse ƒ-start="--blinkerClicked" ƒ-stop="--stopBlinkerClicked" @-tick="--intervallPulse" interval="500"></furo-interval-pulse> 
-  <button @-click="--stopBlinkerClicked">Stop the blinking</button>
+  <light-bulb fn-toggle="--lightSwitchClicked, --intervallPulse"></light-bulb>  
+  <light-bulb fn-toggle="--lightSwitchClicked"></light-bulb>
+  <light-bulb fn-toggle="--lightSwitchClicked"></light-bulb>
+  <button at-click="--lightSwitchClicked,--blinkerClicked">lightswitch</button> 
+  <furo-interval-pulse fn-start="--blinkerClicked" fn-stop="--stopBlinkerClicked" at-tick="--intervallPulse" interval="500"></furo-interval-pulse> 
+  <button at-click="--stopBlinkerClicked">Stop the blinking</button>
 </template>
 </furo-demo-snippet>
 
@@ -151,12 +151,12 @@ You can receive from multiple wires by comma separating them.
 
 <furo-demo-snippet flow style="height:400px">
 <template>
-<light-bulb ƒ-toggle="--lightSwitchClicked, --intervallPulse"></light-bulb>  
-  <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>
-  <button @-click="--lightSwitchClicked">i am a lightswitch</button>   
-<button @-click="--blinkerClicked">blinkswitch</button>
-  <furo-interval-pulse ƒ-start="--blinkerClicked" ƒ-stop="--stopBlinkerClicked" @-tick="--intervallPulse" interval="500"></furo-interval-pulse>
-<button style="color:red" @-click="--stopBlinkerClicked">Stop the blinking</button>
+<light-bulb fn-toggle="--lightSwitchClicked, --intervallPulse"></light-bulb>  
+  <light-bulb fn-toggle="--lightSwitchClicked"></light-bulb>
+  <button at-click="--lightSwitchClicked">i am a lightswitch</button>   
+<button at-click="--blinkerClicked">blinkswitch</button>
+  <furo-interval-pulse fn-start="--blinkerClicked" fn-stop="--stopBlinkerClicked" at-tick="--intervallPulse" interval="500"></furo-interval-pulse>
+<button style="color:red" at-click="--stopBlinkerClicked">Stop the blinking</button>
 </template>
 </furo-demo-snippet>
 

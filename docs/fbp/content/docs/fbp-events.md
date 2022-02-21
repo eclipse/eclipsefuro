@@ -15,9 +15,9 @@ This is very useful when you want to trigger a event with a more specific name t
 <furo-demo-snippet no-demo source style="height:200px">
 <template>
    <!-- The inner part of the controller is not accessible from outside -->
-    <button @-click="^^playClicked">play</button>
-    <button @-click="^^pauseClicked">pause</button>
-    <button @-click="^^stopClicked">stop</button> 
+    <button at-click="^^playClicked">play</button>
+    <button at-click="^^pauseClicked">pause</button>
+    <button at-click="^^stopClicked">stop</button> 
 </template>
 </furo-demo-snippet>
 
@@ -26,14 +26,14 @@ This is very useful when you want to trigger a event with a more specific name t
 <furo-demo-snippet no-demo flow style="height:200px">
 <template>
    <!-- The inner part of the controller is not accessible from outside -->
-    <controller-component @-play-clicked="--playClicked" @-pause-clicked="--pauseClicked"></controller-component>
-    <music-player ƒ-play="--playClicked" ƒ-pause="--pauseClicked"></music-player>
+    <controller-component at-play-clicked="--playClicked" at-pause-clicked="--pauseClicked"></controller-component>
+    <music-player fn-play="--playClicked" fn-pause="--pauseClicked"></music-player>
 </template>
 </furo-demo-snippet>
 
 *Imagine a simple controller component with some buttons.*
 *Each of them will dispatch a simple `click`.*
-*Using @-click on the controller inside of the my-player can not distinguish which button was pressed.*
+*Using at-click on the controller inside of the my-player can not distinguish which button was pressed.*
 
 [learn more about events...](https://developer.mozilla.org/en-US/docs/Web/Events)
 
@@ -44,11 +44,11 @@ To fire a non-bubbling-event use **^event-name**.
 
 <furo-demo-snippet flow no-demo description="*non bubbling example">
 <template>
-<my-button @-click="--searchClicked">Search</my-button>
+<my-button at-click="--searchClicked">Search</my-button>
 <!-- when my-searcher fires the response event, the data-received event will be fired -->
 <my-searcher url="https://www.googleapis.com/youtube/v3/search"
-ƒ-search="--searchClicked"
-@-response="^data-received">                   
+fn-search="--searchClicked"
+at-response="^data-received">                   
 </my-searcher>
 </template>
 </furo-demo-snippet>
@@ -61,11 +61,11 @@ To fire a bubbling-event use **^^event-name**. Bubbling is useful if you want or
 
 <furo-demo-snippet flow no-demo description="*non bubbling example">
 <template>
-<my-button @-click="--searchClicked">Search</my-button>
+<my-button at-click="--searchClicked">Search</my-button>
 <!-- when my-searcher fires the response event, the general-error event will be fired -->
 <my-searcher url="https://www.googleapis.com/youtube/v3/search"
-ƒ-search="--searchClicked"
-@-error="^^general-error">                   
+fn-search="--searchClicked"
+at-error="^^general-error">                   
 </my-searcher>
 </template>
 </furo-demo-snippet>
@@ -82,7 +82,7 @@ You can send any host property with your event by giving the property name in br
 
 **bubbling event with custom data**
 ```html 
-   <paper-button @-click="^^some-event(_privateProperty)"> check </paper-button> 
+   <paper-button at-click="^^some-event(_privateProperty)"> check </paper-button> 
 ```
 *The click event sends usually a number for the amount of clicks with a certain time distance. So it will send 1 for a click, 2 for a doubleClick, 3 for a trippleClick,...*
 
@@ -90,12 +90,12 @@ You can send any host property with your event by giving the property name in br
 ## Sending multiple events from a single source
 You can also send multiple events from a single source. 
 ```html 
-   <paper-button @-click="^^some-event(_privateProperty),^other-event,--checkTapped"> check </paper-button> 
+   <paper-button at-click="^^some-event(_privateProperty),^other-event,--checkTapped"> check </paper-button> 
 ```
 *When the button is tapped,* ***some-event*** *and* ***other-event*** *will be fired and the wire* ***--checkTapped*** *will be triggered.* 
 
 ## Stop propagation
-To stop the event propagation to parent elements, add a **:STOP** to the event wires `@-error="--errorOccured, :STOP"`. 
+To stop the event propagation to parent elements, add a **:STOP** to the event wires `at-error="--errorOccured, :STOP"`. 
 The wires in this event-chain will be triggered. But the propagation will be stopped.
 
 ## Prevent Default

@@ -12,7 +12,6 @@ enables you to write your web applications following [the flow based programming
 {{< github_button button="star" repo="eclipsefuro-web" count="true" user="eclipse" >}}
 
 
-{{< columns >}}
 ## Fully Declarative - No "Code" needed
 
 Instead of writing hundreds of lines of code with HTML element selectors and attaching EventListeners to them to 
@@ -21,19 +20,11 @@ write another HTML element selector for calling a simple method, simply express 
 <furo-demo-snippet flow style="height: 150px">
 <template>
   <!-- This button acts as a light switch -->
-  <button @-click="--lightSwitchClicked">i am a lightswitch</button>
-  <light-bulb ƒ-toggle="--lightSwitchClicked"></light-bulb>  
+  <button at-click="--lightSwitchClicked">i am a lightswitch</button>
+  <light-bulb fn-toggle="--lightSwitchClicked"></light-bulb>  
 </template>
 </furo-demo-snippet>
 
-<--->
-## Visual application analysis
-Inspect your application logic visually.
-
-![viz](viz.png)
-
-*[read more here](/docs/visual-analysis/)*
-{{< /columns >}}
 
 {{< columns >}}
 ## Web components best friend
@@ -52,16 +43,26 @@ Furo-FBP works anywhere you use HTML, with any framework or none at all.
 
 {{< /columns >}}
 
+{{< columns >}}
+## Reduced complexity
+UIs are far too complex to write and maintain them imperatively.
+The same methodology is used by some of the most successful game engines to cope with complexity.
+
+The flow based approach is different, but the result is similar to when a programmer
+tells the machine what he wants to do, and the computer takes those instructions
+and executes them just as it would with text-based code.
+
+<--->
+## Visual application analysis
+Inspect your application logic visually.
+
+![viz](viz.png)
+
+*[read more here](/docs/visual-analysis/)*
+{{< /columns >}}
 
 
 {{< columns >}}
-## Reduced complexity
-UIs are far too complex to write and maintain them imperatively. 
-The same methodology is used by some of the most successful game engines to cope with complexity.
-
-The flow based approach is different, but the result is similar to when a programmer 
-tells the machine what he wants to do, and the computer takes those instructions 
-and executes them just as it would with text-based code.
 
 <--->
 ## Reduced development time

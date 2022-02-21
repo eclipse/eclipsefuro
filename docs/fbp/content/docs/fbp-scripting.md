@@ -58,5 +58,5 @@ class HookSample extends FBP(LitElement) {
 }
 ```
 
-> The most @-events of the furo base components will fit the ƒ-methods of the corresponding components.
+> The most at-events of the furo base components will fit the fn-methods of the corresponding components.
 It is like playing domino.
