@@ -5,6 +5,7 @@ import (
 	"github.com/c-bata/go-prompt"
 	"github.com/eclipse/eclipsefuro/furops/internal/root/expressions"
 	"github.com/eclipse/eclipsefuro/furops/internal/root/suggester"
+	"log"
 	"regexp"
 	"strconv"
 )
@@ -36,8 +37,12 @@ func queryVariables(fps FPS) map[string]interface{} {
 			fmt.Println(conf.VarName, " input kind ", conf.InputKind, " not supported")
 			continue
 		}
-		initialText := conf.Default
 
+		initialText := ""
+		if conf.Default != "" {
+			it := expressions.EvaluateExpression(res, conf.Default)
+			initialText = it.(string)
+		}
 		Clear()
 
 		for !done {
@@ -59,7 +64,7 @@ func queryVariables(fps FPS) map[string]interface{} {
 			if conf.Regexp != "" {
 				matched, err := regexp.MatchString(conf.Regexp, input)
 				if err != nil {
-					fmt.Println("regexp error for ", conf.VarName, err)
+					log.Fatal("regexp error for ", conf.VarName, err)
 				}
 				done = matched
 				if !matched {

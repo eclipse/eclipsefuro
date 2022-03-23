@@ -8,19 +8,25 @@ variables:
     regexp: "^[^\\s-]+-[^\\s-]+$"
     regexpText: "Component name must contain at least one dash (-)"
 
+  - varname: ClassName
+    default: "ToCamel(Name)"
+    prompt: "Which class name you want to use"
+    inputKind: "string"
+
+
 
   - varname: TargetDir
     prompt: "Wohin soll das file"
     inputKind: "directory"
-    default: "./output"
+    default: "'./output'"
 
   - varname: Tabs
-    default: "Tabcontainer"
+    default: "'Tabcontainer'"
     prompt: "Enter the tabs"
     inputKind: "string"
 
   - varname: NumOfRows
-    default: 4
+    default: "'4'"
     prompt: "How many rows you need?"
     inputKind: "number"
 
