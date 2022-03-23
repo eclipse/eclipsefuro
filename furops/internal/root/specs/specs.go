@@ -20,6 +20,11 @@ var Specs struct {
 }
 
 func ReadSpecs() {
+	// do nothing if specExportFile is not defined
+	if viper.GetString("specExportFile") == "" {
+		return
+	}
+
 	cwd, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
