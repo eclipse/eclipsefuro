@@ -3,6 +3,8 @@
 `furops` is a pattern scaffolding utility, which gives the ability to create templates for patterns with the use of 
 the furo specs.
 
+## Writing a template
+Take a look at the sample as a starting point.
 
 ## variables:
 
@@ -85,6 +87,23 @@ Given the following example, the variable `Small` is true if NumOfRows is smalle
 
 ```
 
+## The structure section
+In this section you define which target file is produced with wich template.
+All templates are receiving the values, defined in the variables section.
+
+```yaml
+structure:
+  - target: "'./output/view-' + Name + '.js'"
+    template: "templatefile.tpl"
+    notes: "This field is informative only"
+```
+
+### target
+The target is a expression like default or expression in the variables definition.
+You can construct a target with the variables and given functions.
+
+### template
+This field defines which template is to be used for generating the target.
 
 ## Expressions
 We follow the philosophy that the template only has to render and everything that is needed for this is resolved via the expressions.

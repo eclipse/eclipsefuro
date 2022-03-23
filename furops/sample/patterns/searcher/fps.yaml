@@ -13,8 +13,6 @@ variables:
     prompt: "Which class name you want to use"
     inputKind: "string"
 
-
-
   - varname: TargetDir
     prompt: "Wohin soll das file"
     inputKind: "directory"
