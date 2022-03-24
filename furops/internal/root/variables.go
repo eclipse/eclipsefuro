@@ -8,6 +8,7 @@ import (
 	"log"
 	"regexp"
 	"strconv"
+	"strings"
 )
 
 //func (d prompt.Document) []prompt.Suggest{}
@@ -15,12 +16,13 @@ import (
 func queryVariables(fps FPS) map[string]interface{} {
 
 	prompters := map[string]func(d prompt.Document) []prompt.Suggest{
-		"string":    suggester.Stringinput,
-		"type":      suggester.Typecompleter,
-		"service":   suggester.Servicecompleter,
-		"directory": suggester.Directory,
-		"number":    suggester.Number,
-		"bool":      suggester.Bool,
+		"string":     suggester.Stringinput,
+		"stringlist": suggester.Stringinput,
+		"type":       suggester.Typecompleter,
+		"service":    suggester.Servicecompleter,
+		"directory":  suggester.Directory,
+		"number":     suggester.Number,
+		"bool":       suggester.Bool,
 	}
 
 	res := map[string]interface{}{}
@@ -69,18 +71,45 @@ func queryVariables(fps FPS) map[string]interface{} {
 
 			// check for regexp and re query if it is not fulfilled
 			if conf.Regexp != "" {
-				matched, err := regexp.MatchString(conf.Regexp, input)
-				if err != nil {
-					log.Fatal("regexp error for ", conf.VarName, err)
+				if conf.InputKind == "stringlist" {
+					// stringlist proves each item seperate
+
+					var items = strings.Split(input, ",")
+					var errfound = false
+					for _, inputItem := range items {
+
+						matched, err := regexp.MatchString(conf.Regexp, strings.TrimSpace(inputItem))
+						if err != nil {
+							log.Fatal("regexp error for ", conf.VarName, err)
+						}
+						errfound = !matched || errfound
+						if !matched {
+							fmt.Println("Input", inputItem, " does match pattern")
+							initialText = input
+						}
+					}
+					done = !errfound
+					if errfound {
+						fmt.Println(conf.RegexpText)
+						fmt.Println("")
+					}
+
+				} else {
+					matched, err := regexp.MatchString(conf.Regexp, input)
+					if err != nil {
+						log.Fatal("regexp error for ", conf.VarName, err)
+					}
+					done = matched
+					if !matched {
+						fmt.Println("Input ", input, " does match pattern ", conf.RegexpText)
+						initialText = input
+					}
 				}
-				done = matched
-				if !matched {
-					fmt.Println("Input ", input, " does match pattern ", conf.RegexpText)
-					initialText = input
-				}
+
 			} else {
 				done = true
 			}
+
 			switch conf.InputKind {
 			case "number":
 				val, err := strconv.ParseFloat(input, 64)
@@ -97,6 +126,14 @@ func queryVariables(fps FPS) map[string]interface{} {
 				} else {
 					res[conf.VarName] = false
 				}
+
+				break
+			case "stringlist":
+				var items = strings.Split(input, ",")
+				for index, ele := range items {
+					items[index] = strings.TrimSpace(ele)
+				}
+				res[conf.VarName] = items
 
 				break
 			default:
