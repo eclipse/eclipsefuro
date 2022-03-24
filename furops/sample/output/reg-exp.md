@@ -1,3 +1,3 @@
 ## Variables
 
-- Name: reg-exp
+- .Var.Name: reg-exp

@@ -53,6 +53,13 @@ func Run(cmd *cobra.Command, args []string) {
 
 	for _, patternconfig := range pattern.Structure {
 
+		// if condition was set and results to false, skip the var
+		if patternconfig.Condition != "" {
+			if expressions.EvaluateExpression(vars, patternconfig.Condition) == false {
+				continue
+			}
+		}
+
 		cwd, err := os.Getwd()
 		if err != nil {
 			log.Fatal(err)

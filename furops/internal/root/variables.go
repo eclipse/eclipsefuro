@@ -20,11 +20,18 @@ func queryVariables(fps FPS) map[string]interface{} {
 		"service":   suggester.Servicecompleter,
 		"directory": suggester.Directory,
 		"number":    suggester.Number,
+		"bool":      suggester.Bool,
 	}
 
 	res := map[string]interface{}{}
 
 	for _, conf := range fps.Variables {
+		// if condition was set and results to false, skip the var
+		if conf.Condition != "" {
+			if expressions.EvaluateExpression(res, conf.Condition) == false {
+				continue
+			}
+		}
 
 		if conf.Expression != "" {
 			res[conf.VarName] = expressions.EvaluateExpression(res, conf.Expression)
@@ -81,6 +88,14 @@ func queryVariables(fps FPS) map[string]interface{} {
 					res[conf.VarName] = val
 				} else {
 					res[conf.VarName] = 0
+				}
+
+				break
+			case "bool":
+				if input == "true" {
+					res[conf.VarName] = true
+				} else {
+					res[conf.VarName] = false
 				}
 
 				break

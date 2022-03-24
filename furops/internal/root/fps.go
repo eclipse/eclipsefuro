@@ -19,12 +19,14 @@ type Variable struct {
 	Regexp     string `yaml:"regexp"`     // use this to validate the input
 	RegexpText string `yaml:"regexpText"` // Textual description of regexp
 	Expression string `yaml:"expression"` // expression to construct variable contents
+	Condition  string `yaml:"condition"`  // bool expression to define if var is prompted
 
 }
 
 // Structure contains the templates and filename to produce (Target)
 type Structure struct {
-	Template string `yaml:"template"`
-	Notes    string `yaml:"notes"`
-	Target   string `yaml:"target"`
+	Template  string `yaml:"template"`
+	Notes     string `yaml:"notes"`
+	Target    string `yaml:"target"`
+	Condition string `yaml:"condition"` // bool expression to define if file is generated
 }
