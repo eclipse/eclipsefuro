@@ -16,6 +16,7 @@ variables:
     inputKind: "string"
     regexp: "^[^\\s-]+-[^\\s-]+$"
     regexpText: "Component name must contain at least one dash (-)"
+    condition: null
 ```
 
 ### varname
@@ -49,6 +50,9 @@ Define the input type.
 
 **string** will treat your input as a string.
 
+**stringlist** will treat your input as a comma seprarated list of strings. 
+The value in the template is a trimmed []string.
+
 **number** will treat your input as a number (float 64).
 
 **directory** will give you a autocompletion assistant for a path. "./" is used as a starting point, if no default expression was given.
@@ -70,6 +74,9 @@ The user is only then allowed to continue, if the expression matches
     regexp: "^[^\\s-]+-[^\\s-]+$"
     regexpText: "Component name must contain at least one dash (-)"
 ```
+
+### condition
+Enter a condition which resolves to **bool** if you want to prompt or not to prompt a var. 
 
 ### expression
 With expression you can define a "calculated variable".
@@ -95,6 +102,7 @@ All templates are receiving the values, defined in the variables section.
 structure:
   - target: "'./output/view-' + Name + '.js'"
     template: "templatefile.tpl"
+    condition: null
     notes: "This field is informative only"
 ```
 
@@ -104,6 +112,10 @@ You can construct a target with the variables and given functions.
 
 ### template
 This field defines which template is to be used for generating the target.
+
+
+### condition
+Enter a condition which resolves to **bool** if you want to render or not to render the template.
 
 ## Expressions
 We follow the philosophy that the template only has to render and everything that is needed for this is resolved via the expressions.
