@@ -50,7 +50,7 @@ Modify your default flow in the .furo config file to your needs. You can set any
 	Run: func(cmd *cobra.Command, args []string) {
 		runner.Run(cmd, args)
 	},
-	Version: "1.34.2",
+	Version: "1.35.0",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

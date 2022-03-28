@@ -1,7 +1,7 @@
 FROM golang:1.16.5-alpine3.14
 
 ENV SIMPLEGENEREATOR_VERSION=1.0.1
-ENV FURO_VERSION=1.34.2
+ENV FURO_VERSION=1.35.0
 ENV GATEWAY_VERSION=2.6.0
 ENV GEN_GO_VERSION=1.27.1
 ENV GEN_GO_GRPC_VERSION=1.1.0
@@ -43,6 +43,7 @@ RUN set -eux; \
        github.com/theNorstroem/simple-generator@v$SIMPLEGENEREATOR_VERSION \
        github.com/eclipse/eclipsefuro/furo@v$FURO_VERSION \
        github.com/eclipse/eclipsefuro/furoc@v$FURO_VERSION \
+       github.com/eclipse/eclipsefuro/furops@v$FURO_VERSION \
        github.com/mikefarah/yq/v4@v$YQ_VERSION; \
     rm -rf /go/pkg; \
     rm -rf /root/.cache/*
