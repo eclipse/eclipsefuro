@@ -11,12 +11,12 @@ Take a look at the sample as a starting point.
 ```yaml
 variables:
   - varname: Name
-    default: null
+    default: ""
     prompt: "Enter the component name (xxx-xxx)"
     inputKind: "string"
     regexp: "^[^\\s-]+-[^\\s-]+$"
     regexpText: "Component name must contain at least one dash (-)"
-    condition: null
+    condition: ""
 ```
 
 ### varname
@@ -51,7 +51,7 @@ Define the input type.
 **string** will treat your input as a string.
 
 **stringlist** will treat your input as a comma seprarated list of strings. 
-The value in the template is a trimmed []string.
+The value that you will get in the template, is a trimmed []string.
 
 **number** will treat your input as a number (float 64).
 
@@ -102,7 +102,7 @@ All templates are receiving the values, defined in the variables section.
 structure:
   - target: "'./output/view-' + Name + '.js'"
     template: "templatefile.tpl"
-    condition: null
+    condition: ""
     notes: "This field is informative only"
 ```
 
@@ -128,7 +128,7 @@ We are using [Knetic/govaluate](https://github.com/Knetic/govaluate) under the h
 ```go
 s = "AnyKind of_string"
 t = "furo.fat.String"
-srv = "furo.fat.String"
+srv = "country.Countries"
 ```
 
 ### Built in functions
