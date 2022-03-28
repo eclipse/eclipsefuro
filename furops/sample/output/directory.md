@@ -1,0 +1,3 @@
+## Directory Example
+
+ Name: ../../BEC
