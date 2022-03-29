@@ -68,7 +68,7 @@ func Run(cmd *cobra.Command, args []string) {
 
 		templatefile := path.Join(pattern.Path, patternconfig.Template)
 		target := expressions.EvaluateExpression(vars, patternconfig.Target)
-		tmpl, err := template.New(patternconfig.Template).ParseFiles(templatefile)
+		tmpl, err := template.New(path.Base(patternconfig.Template)).ParseFiles(templatefile)
 		if err != nil {
 			log.Fatal(err)
 		}

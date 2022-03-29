@@ -3,14 +3,22 @@ package expressions
 import (
 	"github.com/eclipse/eclipsefuro/furops/internal/root/specs"
 	"github.com/iancoleman/strcase"
+	"github.com/iv-p/mapaccess"
 	"gopkg.in/Knetic/govaluate.v3"
 	"log"
+	"strings"
 )
 
 var functions = map[string]govaluate.ExpressionFunction{
 	"Strlen": func(args ...interface{}) (interface{}, error) {
 		length := len(args[0].(string))
 		return length, nil
+	},
+	"ToLower": func(args ...interface{}) (interface{}, error) {
+		return strings.ToLower(args[0].(string)), nil
+	},
+	"ToUpper": func(args ...interface{}) (interface{}, error) {
+		return strings.ToUpper(args[0].(string)), nil
 	},
 	"ToCamel": func(args ...interface{}) (interface{}, error) {
 		return strcase.ToCamel(args[0].(string)), nil
@@ -50,6 +58,9 @@ var functions = map[string]govaluate.ExpressionFunction{
 			servicespec = specs.Specs.InstalledTypes[args[0].(string)]
 		}
 		return servicespec, nil
+	},
+	"GetStringFromMap": func(args ...interface{}) (interface{}, error) {
+		return mapaccess.Get(args[0], args[1].(string))
 	},
 }
 

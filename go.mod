@@ -11,6 +11,7 @@ require (
 	github.com/huandu/xstrings v1.3.2 // indirect
 	github.com/iancoleman/strcase v0.2.0
 	github.com/imdario/mergo v0.3.11 // indirect
+	github.com/iv-p/mapaccess v1.0.2
 	github.com/kr/text v0.2.0 // indirect
 	github.com/markbates/pkger v0.17.1
 	github.com/mitchellh/copystructure v1.0.0 // indirect

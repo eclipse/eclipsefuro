@@ -133,18 +133,21 @@ srv = "country.Countries"
 
 ### Built in functions
 
-| Function                    | Result                          |
-|-----------------------------|---------------------------------|
-| `Strlen(s)`                 | 17                              |
-| `GetService(srv)`           | struct with spec of the service |
-| `GetType(t)`                | struct with spec of the type    |
-| `ToSnake(s)`                | `any_kind_of_string`            |
-| `ToSnakeWithIgnore(s, '.')` | `any_kind.of_string`            |
-| `ToScreamingSnake(s)`       | `ANY_KIND_OF_STRING`            |
-| `ToKebab(s)`                | `any-kind-of-string`            |
-| `ToScreamingKebab(s)`       | `ANY-KIND-OF-STRING`            |
-| `ToCamel(s)`                | `AnyKindOfString`               |
-| `ToLowerCamel(s)`           | `anyKindOfString`               |
+| Function                             | Result                             |
+|--------------------------------------|------------------------------------|
+| `Strlen(s)`                          | 17                                 |
+| `GetService(srv)`                    | struct with spec of the service    |
+| `GetType(t)`                         | struct with spec of the type       |
+| `ToUpper('string')`                  | `STRING`                           |
+| `ToLower('STRING')`                  | `string`                           |
+| `ToSnake(s)`                         | `any_kind_of_string`               |
+| `ToSnakeWithIgnore(s, '.')`          | `any_kind.of_string`               |
+| `ToScreamingSnake(s)`                | `ANY_KIND_OF_STRING`               |
+| `ToKebab(s)`                         | `any-kind-of-string`               |
+| `ToScreamingKebab(s)`                | `ANY-KIND-OF-STRING`               |
+| `ToCamel(s)`                         | `AnyKindOfString`                  |
+| `ToLowerCamel(s)`                    | `anyKindOfString`                  |
+| `GetStringFromMap(Object,'foo.bar')` | `String value` from Object.foo.bar |
 
 
 Functions cannot be passed as parameters, they must be known at the time when the expression is parsed, and are unchangeable after parsing.
