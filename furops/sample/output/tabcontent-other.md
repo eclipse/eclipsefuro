@@ -6,4 +6,4 @@
     1 => other
 
 
-<no value>
+OTHER

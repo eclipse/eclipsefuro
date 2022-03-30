@@ -3,16 +3,23 @@ description: "Demonstration of the stringlist"
 variables:
 
   - varname: Tabs
-    default: "'main, '"
+    default: "'main, other'"
     prompt: "Please enter the tab names"
     inputKind: "stringlist"
     regexp: "^[^\\s-]+$"
     regexpText: "No whitespaces allowed"
 
-
 structure:
-  - target: "'./output/stringlist.md'"
+  - target: "'STDOUT'"
     template: "sample.md.tpl"
     notes: "Just to show the stringlist feature"
 
 
+  - target: "'./output/tabcontent-' + Tab + '.md'"
+    template: "sample.md.tpl"
+    notes: "Just to show the stringlist feature"
+    repeatBy: "Tabs"
+    repeatAs: "Tab"
+    condition: "Tab != 'main'"
+    expressions:
+      upper: "ToUpper(Tab)"

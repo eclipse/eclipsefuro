@@ -1,23 +1,12 @@
 package root
 
 import (
-	"bufio"
 	"fmt"
 	"github.com/c-bata/go-prompt"
-	"github.com/eclipse/eclipsefuro/furops/internal/root/expressions"
 	"github.com/eclipse/eclipsefuro/furops/internal/root/specs"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
-	"log"
 	"os"
-	"path"
-	"text/template"
 )
-
-type templatedata struct {
-	Var  map[string]interface{}
-	Conf FPS
-}
 
 func Run(cmd *cobra.Command, args []string) {
 	ResolvePatterns()
@@ -45,53 +34,7 @@ func Run(cmd *cobra.Command, args []string) {
 
 	Clear()
 
-	// execute the templates with the collected data
-	tdata := templatedata{
-		Var:  vars,
-		Conf: pattern,
-	}
-
-	for _, patternconfig := range pattern.Structure {
-
-		// if condition was set and results to false, skip the var
-		if patternconfig.Condition != "" {
-			if expressions.EvaluateExpression(vars, patternconfig.Condition) == false {
-				continue
-			}
-		}
-
-		cwd, err := os.Getwd()
-		if err != nil {
-			log.Fatal(err)
-		}
-		os.Chdir(path.Dir(viper.ConfigFileUsed()))
-
-		templatefile := path.Join(pattern.Path, patternconfig.Template)
-		target := expressions.EvaluateExpression(vars, patternconfig.Target)
-		tmpl, err := template.New(path.Base(patternconfig.Template)).ParseFiles(templatefile)
-		if err != nil {
-			log.Fatal(err)
-		}
-		os.Chdir(cwd)
-
-		tpath := path.Dir(target.(string))
-		err = os.MkdirAll(tpath, os.ModePerm)
-		if err != nil {
-			log.Println(err)
-		}
-
-		f, err := os.Create(target.(string))
-		if err != nil {
-			log.Fatal(err)
-		}
-		w := bufio.NewWriter(f)
-		err = tmpl.Execute(w, tdata)
-		if err != nil {
-			log.Fatal(err)
-		}
-		w.Flush()
-
-	}
+	RenderTemplates(vars, pattern)
 }
 
 func exit(buffer *prompt.Buffer) {
