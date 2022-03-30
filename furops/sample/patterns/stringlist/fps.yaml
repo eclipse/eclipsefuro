@@ -17,9 +17,9 @@ structure:
 
   - target: "'./output/tabcontent-' + Tab + '.md'"
     template: "sample.md.tpl"
-    notes: "Just to show the stringlist feature"
+    notes: "Just to show the repeat feature"
     repeatBy: "Tabs"
     repeatAs: "Tab"
     condition: "Tab != 'main'"
-    expressions:
+    repeatExpressions:
       upper: "ToUpper(Tab)"

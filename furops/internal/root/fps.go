@@ -28,8 +28,8 @@ type Structure struct {
 	Template    string            `yaml:"template"`
 	Notes       string            `yaml:"notes"`
 	Target      string            `yaml:"target"`
-	Condition   string            `yaml:"condition"`   // bool expression to define if file is generated
-	RepeatBy    string            `yaml:"repeatBy"`    // name of a stringlist var
-	RepeatAs    string            `yaml:"repeatAs"`    // varname of the stringlist item
-	Expressions map[string]string `yaml:"expressions"` // expression to construct variable contents
+	Condition   string            `yaml:"condition"`         // bool expression to define if file is generated
+	RepeatBy    string            `yaml:"repeatBy"`          // name of a stringlist var
+	RepeatAs    string            `yaml:"repeatAs"`          // varname of the stringlist item
+	Expressions map[string]string `yaml:"repeatExpressions"` // expression to construct variable contents
 }

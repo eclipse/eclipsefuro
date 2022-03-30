@@ -104,11 +104,17 @@ structure:
     template: "templatefile.tpl"
     condition: ""
     notes: "This field is informative only"
+    repeatBy: ""
+    repeatAs: ""
+    repeatExpressions:
+      UTab: "ToUpper(Tab)"
 ```
 
 ### target
 The target is a expression like default or expression in the variables definition.
 You can construct a target with the variables and given functions.
+
+Use `target: "'STDOUT'"` to write to STDOUT
 
 ### template
 This field defines which template is to be used for generating the target.
@@ -116,6 +122,24 @@ This field defines which template is to be used for generating the target.
 
 ### condition
 Enter a condition which resolves to **bool** if you want to render or not to render the template.
+
+### repeatBy, repeatAs, repeatExpressions
+You can repeat a template file generation with the values of a stringlist.
+
+The following example will repeat the *stringlist* **Tabs** where the variable **Tab** will contain the string content.
+By using the repeatExpressions you can create more variables, based on the iteration.
+The variable that you have defined in **repeatAs** is usable in the complete structure definition.
+
+```yaml
+  - target: "'./output/tabcontent-' + Tab + '.md'"
+    template: "sample.md.tpl"
+    notes: "Just to show the repeat feature"
+    repeatBy: "Tabs"
+    repeatAs: "Tab"
+    condition: "Tab != 'main'"
+    repeatExpressions:
+      upper: "ToUpper(Tab)"
+```
 
 ## Expressions
 We follow the philosophy that the template only has to render and everything that is needed for this is resolved via the expressions.
