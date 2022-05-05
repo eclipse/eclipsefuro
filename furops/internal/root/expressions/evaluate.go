@@ -1,11 +1,13 @@
 package expressions
 
 import (
+	"fmt"
 	"github.com/eclipse/eclipsefuro/furops/internal/root/specs"
 	"github.com/iancoleman/strcase"
 	"github.com/iv-p/mapaccess"
 	"gopkg.in/Knetic/govaluate.v3"
 	"log"
+	"reflect"
 	"strings"
 )
 
@@ -60,7 +62,16 @@ var functions = map[string]govaluate.ExpressionFunction{
 		return servicespec, nil
 	},
 	"GetStringFromMap": func(args ...interface{}) (interface{}, error) {
-		return mapaccess.Get(args[0], args[1].(string))
+
+		res, err := mapaccess.Get(args[0], args[1].(string))
+		if err != nil {
+			return "", fmt.Errorf("Error in ", args[1])
+		}
+		typeof := reflect.TypeOf(res)
+		if typeof.String() != "string" {
+			return "", err
+		}
+		return res, err
 	},
 }
 
