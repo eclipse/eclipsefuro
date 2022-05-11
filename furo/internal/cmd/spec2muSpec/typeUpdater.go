@@ -56,7 +56,7 @@ func updateAndStoreMicroTypes(typeItems map[string]*UTshadowNode) {
 				}
 				fieldline = append(fieldline, f.Type+":"+strconv.Itoa(int(f.XProto.Number)))
 
-				if f.Meta.Default != "" {
+				if f.Meta != nil && f.Meta.Default != "" {
 					fieldline = append(fieldline, "= "+f.Meta.Default)
 				}
 				if f.XProto.Oneof != "" {
