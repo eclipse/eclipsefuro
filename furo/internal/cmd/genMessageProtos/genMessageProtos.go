@@ -91,6 +91,16 @@ func Run(cmd *cobra.Command, args []string) {
 		// typename is not the filename
 		s := strings.Split(typeName, ".")
 		filepath := strings.Join(s[:len(s)-1], "/") + "/" + enumAST.EnumSpec.XProto.Targetfile
+
+		if protoTplData[filepath] == nil {
+			protoTplData[filepath] = &singleTplData{
+				preImport: map[string]bool{},
+			}
+		}
+
+		protoTplData[filepath].Package = enumAST.EnumSpec.XProto.Package
+		protoTplData[filepath].Options = enumAST.EnumSpec.XProto.Options
+
 		protoTplData[filepath].Enums = append(protoTplData[filepath].Enums, enumAST.EnumSpec)
 	}
 

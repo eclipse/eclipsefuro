@@ -161,7 +161,7 @@ func GetSourceInfo(descr *descriptorpb.FileDescriptorProto) SourceInfo {
 				}
 
 				SourceInfo.InlineEnums = append(SourceInfo.InlineEnums, EnumInfo{
-					Name:       *descr.MessageType[msgIndex].Name + "_" + *nestedEnum.Name,
+					Name:       *descr.MessageType[msgIndex].Name + "." + *nestedEnum.Name,
 					ValuesInfo: vals,
 					AllowAlias: alias,
 					Info:       location,

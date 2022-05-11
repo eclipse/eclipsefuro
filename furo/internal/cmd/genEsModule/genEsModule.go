@@ -41,7 +41,7 @@ func Run(cmd *cobra.Command, args []string) {
 	allServices := clientspec.GetAllServices()
 
 	// check for enum fields in types and add the options
-	for k, t := range allTypes {
+	for _, t := range allTypes {
 		if t.Fields != nil {
 			// convert fields from yaml.Node to Field type
 			for pair := t.Fields.Oldest(); pair != nil; pair = pair.Next() {
@@ -60,7 +60,7 @@ func Run(cmd *cobra.Command, args []string) {
 						field.Meta.Options.List = append(field.Meta.Options.List, &option)
 					}
 
-					fmt.Println(k, allTypes[field.Type].Values)
+					// fmt.Println(k, allTypes[field.Type].Values)
 				}
 			}
 		}
