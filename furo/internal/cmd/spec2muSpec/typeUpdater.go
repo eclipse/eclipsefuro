@@ -64,12 +64,14 @@ func updateAndStoreMicroTypes(typeItems map[string]*UTshadowNode) {
 				}
 				fieldline = append(fieldline, "#"+f.Description)
 				fields.Set(iKey, strings.Join(fieldline, " "))
+
 			})
 
 			muType := &microtypes.MicroType{
 				Type:   strings.Join(typeLine, " "), //type: "sample.Sample  #Sample"
 				Fields: fields,
-				Target: shadowNode.edgeMicroTypeNode.Target,
+				//Target: shadowNode.edgeMicroTypeNode.Target,
+				Target: shadowNode.edgeTypeNode.TypeSpec.XProto.Targetfile,
 			}
 
 			// add type to "file"
