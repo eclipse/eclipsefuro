@@ -126,7 +126,7 @@ func Generate(protoAST *protoast.ProtoAST) error {
 			enumSpec := &microenums.MicroEnum{
 				Enum:       strings.Join(typeLine, " "),
 				Values:     getEnumValues(Enum),
-				Target:     path.Base(protofilename),
+				Target:     "ENUM_" + path.Base(protofilename),
 				AllowAlias: Enum.AllowAlias,
 			}
 
@@ -151,7 +151,7 @@ func Generate(protoAST *protoast.ProtoAST) error {
 func buildNestedMessages(file []*microtypes.MicroType, target string, prefix string, nestedType []*descriptorpb.DescriptorProto) []*microtypes.MicroType {
 	for _, message := range nestedType {
 		typeLine := []string{}
-		typeLine = append(typeLine, prefix+"_"+*message.Name)
+		typeLine = append(typeLine, prefix+"."+*message.Name)
 		typeLine = append(typeLine, "# ")
 
 		typeSpec := &microtypes.MicroType{
@@ -161,7 +161,7 @@ func buildNestedMessages(file []*microtypes.MicroType, target string, prefix str
 		}
 
 		file = append(file, typeSpec)
-		file = buildNestedMessages(file, target, prefix+"_"+*message.Name, message.NestedType)
+		file = buildNestedMessages(file, target, prefix+"."+*message.Name, message.NestedType)
 	}
 
 	return file
@@ -339,7 +339,7 @@ func extractTypeNameFromField(fieldinfo *protoast.FieldInfo) string {
 			parts := strings.Split(*field.TypeName, ".")
 			mi := len(parts) - 2
 			fi := len(parts) - 1
-			parts[mi] = parts[mi] + "_" + parts[fi]
+			parts[mi] = parts[mi] + "." + parts[fi]
 			f := strings.Join(parts[:len(parts)-1], ".")
 			return f[1:]
 		}

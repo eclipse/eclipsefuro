@@ -44,7 +44,7 @@ func NewUTShadowList() UTShadowList {
 
 func (s *UTShadowList) AddTypeNode(fullTypeName string, ast *typeAst.TypeAst) *UTshadowNode {
 
-	if strings.HasSuffix(fullTypeName, viper.GetString("muSpec.requestTypeSuffix")) {
+	if viper.GetString("muSpec.requestTypeSuffix") != "" && strings.HasSuffix(fullTypeName, viper.GetString("muSpec.requestTypeSuffix")) {
 		return s.AddRequestTypeNode(ast)
 	}
 

@@ -56,7 +56,7 @@ func updateAndStoreMicroTypes(typeItems map[string]*UTshadowNode) {
 				}
 				fieldline = append(fieldline, f.Type+":"+strconv.Itoa(int(f.XProto.Number)))
 
-				if f.Meta.Default != "" {
+				if f.Meta != nil && f.Meta.Default != "" {
 					fieldline = append(fieldline, "= "+f.Meta.Default)
 				}
 				if f.XProto.Oneof != "" {
@@ -64,12 +64,14 @@ func updateAndStoreMicroTypes(typeItems map[string]*UTshadowNode) {
 				}
 				fieldline = append(fieldline, "#"+f.Description)
 				fields.Set(iKey, strings.Join(fieldline, " "))
+
 			})
 
 			muType := &microtypes.MicroType{
 				Type:   strings.Join(typeLine, " "), //type: "sample.Sample  #Sample"
 				Fields: fields,
-				Target: shadowNode.edgeMicroTypeNode.Target,
+				//Target: shadowNode.edgeMicroTypeNode.Target,
+				Target: shadowNode.edgeTypeNode.TypeSpec.XProto.Targetfile,
 			}
 
 			// add type to "file"
