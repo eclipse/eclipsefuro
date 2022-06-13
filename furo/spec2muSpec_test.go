@@ -47,9 +47,9 @@ func TestSpec2muSpecCommand(t *testing.T) {
 	require.Equal(t, true, test.FileExist(path.Join(dir, "muspecs")))
 
 	// initial were 2 files in muspec, spec2Muspec creates one file per spec, so we have 4 files now
-	require.Equal(t, "f9456cc68a2b69691d5cbca5a7fcb5aa", test.MustMd5Sum(path.Join(dir, "muspecs", "sample", "Sample.types.yaml")))
-	require.Equal(t, "102b3562851cc4bac750b6d409344f6e", test.MustMd5Sum(path.Join(dir, "muspecs", "sample", "SampleCollection.types.yaml")))
-	require.Equal(t, "cecdceb48471dc1b2ebc958ce30e97bb", test.MustMd5Sum(path.Join(dir, "muspecs", "sample", "SampleEntity.types.yaml")))
+	require.Equal(t, "6e90ff428e600c214b2d54b649f3e29f", test.MustMd5Sum(path.Join(dir, "muspecs", "sample", "Sample.types.yaml")))
+	require.Equal(t, "cbbcb8c070aebbaf7d7db052c77065cf", test.MustMd5Sum(path.Join(dir, "muspecs", "sample", "SampleCollection.types.yaml")))
+	require.Equal(t, "744327bcc82804c191f9c85c0d2f37be", test.MustMd5Sum(path.Join(dir, "muspecs", "sample", "SampleEntity.types.yaml")))
 	require.Equal(t, "32ab721229ebbea7fe4fc42bc4a34a1a", test.MustMd5Sum(path.Join(dir, "muspecs", "sample", "Samples.services.yaml")))
 
 }

@@ -51,6 +51,7 @@ func Run(cmd *cobra.Command, args []string) {
 
 					field.Meta.Options.Flags = append(field.Meta.Options.Flags, "enum")
 					// loop all enum values to build the options
+					isenum := false
 					for enum := allTypes[field.Type].Values.Oldest(); enum != nil; enum = enum.Next() {
 						option := map[string]interface{}{}
 						option["display_name"] = strings.ToLower("enum." + field.Type + "." + enum.Key.(string) + ".label")
@@ -58,10 +59,16 @@ func Run(cmd *cobra.Command, args []string) {
 						option["@type"] = "type.googleapis.com/furo.Optionitem"
 						option["selected"] = false
 						field.Meta.Options.List = append(field.Meta.Options.List, &option)
+						isenum = true
 					}
 
-					// fmt.Println(k, allTypes[field.Type].Values)
+					// set the type on the field to enum
+					if isenum {
+						field.Meta.Typespecific = &map[string]interface{}{"enum": field.Type}
+						field.Type = "enum"
+					}
 				}
+
 			}
 		}
 
