@@ -18,7 +18,7 @@ muSpec:
   dir: "muspecs" # the folder where you save the µSpecs
   forceSync: true # This will delete specs which are deleted in muSpec, this is very useful during prototyping
   requestTypeSuffix: "Request" # Suffix for the generated request type specs
-translationPrefix: "namespace." # prefixes the enum , label, placeholder text keys
+labelPrefix: "namespace." # prefixes the enum , label, placeholder text keys
 commands: #camelCase is not allowed, command scripts can only be executed from a flow
   clean_dist : "./scripts/cleanUpDist.sh" # Deletes the dist folder
 flows:

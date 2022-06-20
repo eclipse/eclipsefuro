@@ -119,8 +119,8 @@ func (l *MicroTypelist) UpateTypelist(typelist *typeAst.Typelist, deleteSpecs bo
 						Meta: &specSpec.FieldMeta{
 							Default:     "",
 							Hint:        "",
-							Placeholder: viper.GetString("translationPrefix") + strings.Replace(strings.ToLower(strings.Join([]string{mType.Package, mType.Type, mFieldname, "placeholder"}, ".")), "_", "", -1),
-							Label:       viper.GetString("translationPrefix") + strings.Replace(strings.ToLower(strings.Join([]string{mType.Package, mType.Type, mFieldname, "label"}, ".")), "_", "", -1),
+							Placeholder: viper.GetString("labelPrefix") + strings.Replace(strings.ToLower(strings.Join([]string{mType.Package, mType.Type, mFieldname, "placeholder"}, ".")), "_", "", -1),
+							Label:       viper.GetString("labelPrefix") + strings.Replace(strings.ToLower(strings.Join([]string{mType.Package, mType.Type, mFieldname, "label"}, ".")), "_", "", -1),
 							Options:     &specSpec.Fieldoption{},
 							Readonly:    false,
 							Repeated:    false,
@@ -149,7 +149,7 @@ func (l *MicroTypelist) UpateTypelist(typelist *typeAst.Typelist, deleteSpecs bo
 					// create constraint if it does not exist
 					AstField.Constraints["required"] = &specSpec.FieldConstraint{
 						Is:      "true",
-						Message: viper.GetString("translationPrefix") + strings.Replace(strings.ToLower(strings.Join([]string{mType.Package, mType.Type, mFieldname, "constraint.required.message"}, ".")), "_", "", -1),
+						Message: viper.GetString("labelPrefix") + strings.Replace(strings.ToLower(strings.Join([]string{mType.Package, mType.Type, mFieldname, "constraint.required.message"}, ".")), "_", "", -1),
 					}
 				}
 			} else {
@@ -167,8 +167,8 @@ func (l *MicroTypelist) UpateTypelist(typelist *typeAst.Typelist, deleteSpecs bo
 			AstField.Meta.Repeated = mField.Repeated
 
 			if viper.GetBool("muSpec.forceLabels") {
-				AstField.Meta.Placeholder = viper.GetString("translationPrefix") + strings.Replace(strings.ToLower(strings.Join([]string{mType.Package, mType.Type, mFieldname, "placeholder"}, ".")), "_", "", -1)
-				AstField.Meta.Label = viper.GetString("translationPrefix") + strings.Replace(strings.ToLower(strings.Join([]string{mType.Package, mType.Type, mFieldname, "label"}, ".")), "_", "", -1)
+				AstField.Meta.Placeholder = viper.GetString("labelPrefix") + strings.Replace(strings.ToLower(strings.Join([]string{mType.Package, mType.Type, mFieldname, "placeholder"}, ".")), "_", "", -1)
+				AstField.Meta.Label = viper.GetString("labelPrefix") + strings.Replace(strings.ToLower(strings.Join([]string{mType.Package, mType.Type, mFieldname, "label"}, ".")), "_", "", -1)
 			}
 
 			// Assign to Node again
