@@ -166,6 +166,11 @@ func (l *MicroTypelist) UpateTypelist(typelist *typeAst.Typelist, deleteSpecs bo
 			AstField.Meta.Readonly = mField.Readonly
 			AstField.Meta.Repeated = mField.Repeated
 
+			if viper.GetBool("muSpec.forceLabels") {
+				AstField.Meta.Placeholder = viper.GetString("translationPrefix") + strings.Replace(strings.ToLower(strings.Join([]string{mType.Package, mType.Type, mFieldname, "placeholder"}, ".")), "_", "", -1)
+				AstField.Meta.Label = viper.GetString("translationPrefix") + strings.Replace(strings.ToLower(strings.Join([]string{mType.Package, mType.Type, mFieldname, "label"}, ".")), "_", "", -1)
+			}
+
 			// Assign to Node again
 			AstType.TypeSpec.Fields.Set(mFieldname, AstField)
 		}
