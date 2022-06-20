@@ -38,7 +38,9 @@ muSpec:
   javaPackagePrefix: "com.example.tutorial."
   dir: "muspecs" # the folder where you save the µSpecs
   forceSync: true # This will delete specs which are deleted in muSpec, this is very useful during prototyping
+  forceLabels: true # This will overwrite the label and placeholder texts during muSpec2Spec command
   requestTypeSuffix: "Request" # Suffix for the generated request type specs
+labelPrefix: "" # prefixe for the enum, label, placeholder text keys.
 commands: #camelCase is not allowed, command scripts can only be executed from a flow
   gen_transcoder: "./scripts/gprcgateway/generate.sh" # shell script to generate a half grpc gateway
   buf_generate: "./scripts/buf_generate.sh"

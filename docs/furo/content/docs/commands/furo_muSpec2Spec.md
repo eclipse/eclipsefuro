@@ -34,9 +34,10 @@ muSpec:
   goPackageBase: "github.com/yourname/sample-specs/dist/pb/" # this is used to prefix the go package option
   javaPackagePrefix: "com.example.tutorial."
   dir: "muspecs" # the folder where you save the µSpecs
-  forceSync: true # This will delete specs which are deleted in muSpec, this is very useful during prototyping
+  forceSync: true # This will delete specs which are deleted in muSpec, this is very useful during prototyping  
+  forceLabels: true # This will overwrite the label and placeholder texts during muSpec2Spec command
   requestTypeSuffix: "Request" # Suffix for the generated request type specs
-
+labelPrefix: "" # prefix for the enum , label, placeholder text keys
 ```
 
 
