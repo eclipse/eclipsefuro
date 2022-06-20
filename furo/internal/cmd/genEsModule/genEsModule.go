@@ -54,7 +54,7 @@ func Run(cmd *cobra.Command, args []string) {
 					isenum := false
 					for enum := allTypes[field.Type].Values.Oldest(); enum != nil; enum = enum.Next() {
 						option := map[string]interface{}{}
-						option["display_name"] = strings.ToLower("enum." + field.Type + "." + enum.Key.(string) + ".label")
+						option["display_name"] = viper.GetString("translationPrefix") + strings.ToLower("enum."+field.Type+"."+enum.Key.(string)+".label")
 						option["id"] = enum.Value.(*int32)
 						option["@type"] = "type.googleapis.com/furo.Optionitem"
 						option["selected"] = false
