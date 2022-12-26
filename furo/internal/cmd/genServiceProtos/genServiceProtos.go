@@ -96,9 +96,13 @@ func Run(cmd *cobra.Command, args []string) {
 				rpc := r.(*specSpec.Rpc)
 				reqType := protoTplData[filepath].Package + "." + rpc.RpcName + viper.GetString("muSpec.requestTypeSuffix")
 				// Services.sampleservice.UpdateSampleRequest
-				_, ok := Typelist.AllAvailabeTypes[reqType].TypeSpec.Fields.Get("update_mask")
+				ts, ok := Typelist.AllAvailabeTypes[reqType]
 				if ok {
-					protoTplData[filepath].GenAdditionalBinding = true
+					_, hasMask := ts.TypeSpec.Fields.Get("update_mask")
+					if hasMask {
+						protoTplData[filepath].GenAdditionalBinding = true
+					}
+
 				}
 
 			}
