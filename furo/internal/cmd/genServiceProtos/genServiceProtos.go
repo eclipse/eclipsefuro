@@ -102,7 +102,6 @@ func Run(cmd *cobra.Command, args []string) {
 					if hasMask {
 						protoTplData[filepath].GenAdditionalBinding = true
 					}
-
 				}
 
 			}
