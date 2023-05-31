@@ -89,12 +89,20 @@ func Generate(protoAST *protoast.ProtoAST) error {
 				typesInFile = extractMessageType(descriptor, packagename, MessageIndex, protofilename, Message, typesInFile)
 
 				// nested enums
-				for i, _ := range typeMap[*descriptor.Package+"."+*Message.Name].Message.EnumType {
-					enumArr = append(enumArr, protoast.GetSourceInfo(descriptor).InlineEnums[i])
-				}
+				//for i, _ := range typeMap[*descriptor.Package+"."+*Message.Name].Message.EnumType {
+				//	inline := protoast.GetSourceInfo(descriptor).InlineEnums
+				//	v := inline[i]
+				//	enumArr = append(enumArr, v)
+				//}
 			}
+
 			typesInFile = buildNestedMessages(typesInFile, path.Base(protofilename), strings.Join(strings.Split(path.Dir(protofilename), "/"), ".")+"."+*Message.Name, Message.NestedType)
 
+		}
+		// nested enums
+		inline := protoast.GetSourceInfo(descriptor).InlineEnums
+		if len(inline) > 0 {
+			enumArr = append(enumArr, inline...)
 		}
 
 		if fileName != nil {
@@ -196,11 +204,12 @@ func getNestedFields(fields []*descriptorpb.FieldDescriptorProto) *orderedmap.Or
 func extractMessageType(descriptor *descriptorpb.FileDescriptorProto, packagename string, MessageIndex int, protofilename string, Message *descriptorpb.DescriptorProto, typesInFile []*microtypes.MicroType) []*microtypes.MicroType {
 	SourceInfo := protoast.GetSourceInfo(descriptor)
 	description := packagename + " does not have a description"
+
 	if SourceInfo.Messages[MessageIndex].Info.LeadingComments != nil {
 		description = cleanDescription(*SourceInfo.Messages[MessageIndex].Info.LeadingComments)
 	}
 	typeLine := []string{}
-	typeLine = append(typeLine, strings.Join(strings.Split(path.Dir(protofilename), "/"), ".")+"."+*Message.Name)
+	typeLine = append(typeLine, *descriptor.Package+"."+*Message.Name)
 
 	typeLine = append(typeLine, "#"+description)
 

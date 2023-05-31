@@ -253,7 +253,7 @@ func (mt MicroService) ToMicroServiceAst() *MicroServiceAst {
 		regex := regexp.MustCompile(`^([^:]+):\s?([A-Z]*)\s?([^\s]*)\s?([^#]*)\s?,\s?([^#]*)\s?#?(?s:(.*))$`)
 		matches := regex.FindStringSubmatch(def.Md)
 		if len(matches) == 0 {
-			fmt.Println("typeline not parseable", def.Md)
+			fmt.Println("service typeline not parseable", def.Md)
 		}
 		// trim all matches
 		for i, m := range matches {

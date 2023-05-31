@@ -61,7 +61,10 @@ func loadServiceSpecsFromDir(specDir string) (servicesMap map[string]*ServiceAst
 
 			if !info.IsDir() && strings.HasSuffix(fpath, "service.spec") {
 				filename := path.Base(fpath)
-				sdlen := len(strings.Split(path.Dir(specDir), "/"))
+				sdlen := len(strings.Split(specDir, "/"))
+				if strings.HasPrefix(specDir, "./") {
+					sdlen--
+				}
 
 				relativePath := path.Dir(strings.Join(strings.Split(fpath, "/")[sdlen:], "/"))
 				AstService := &ServiceAst{

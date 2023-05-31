@@ -30,7 +30,7 @@ func checkQueryParams(microServicesByName map[string]*microservices.MicroService
 		ms.SourceFile = ""
 
 		for sIndex, rpc := range ms.Methods {
-			regex := regexp.MustCompile(`^([^:]+):\s?([A-Z]*)\s?([^\s]*) ?([^,\s]*)\s?,\s?([^#\s]*)\s?#?(.*)$`)
+			regex := regexp.MustCompile(`^([^:]+):\s?([A-Z]*)\s?([^\s]*)\s?([^#]*)\s?,\s?([^#]*)\s?#?(?s:(.*))$`)
 			matches := regex.FindStringSubmatch(rpc.Md)
 			if len(matches) == 0 {
 				fmt.Println("typeline not parseable", rpc.Md)
