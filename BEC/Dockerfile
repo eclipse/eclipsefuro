@@ -44,6 +44,11 @@ RUN set -eux; \
     github.com/eclipse/eclipsefuro/furoc@v$FURO_VERSION \
     github.com/eclipse/eclipsefuro/furops@v$FURO_VERSION
 
+RUN set -eux; \
+    go install \
+    github.com/eclipse/eclipsefuro/protoc-gen-furo-muspecs@latest \
+    github.com/eclipse/eclipsefuro/protoc-gen-furo-specs@latest
+
 
 RUN set -eux; \
     GO111MODULE=on go install \
