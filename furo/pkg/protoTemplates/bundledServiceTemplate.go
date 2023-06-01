@@ -21,8 +21,12 @@ service {{$serviceName}} {
   rpc {{$method.RpcName}} ({{if $method | isNotStream}}{{$Services.Package}}.{{end}}{{$method | rpcRequest}}) returns ({{$method.Data.Response}}){
 {{- if $method.Deeplink.Href}}	
 {{if $method.Deeplink.Description}}//{{$method.Deeplink.Description | replace "\n" "\n// "}}{{else}}// developer was to lazy to describe the rpc, sorry{{end}}
-	option (google.api.http) = {
-		{{ lower $method.Deeplink.Method}}: "{{$method.Deeplink.Href}}"{{ if $method.Data.Request}}
+    option (google.api.http) = {
+{{- if or (eq $method.Deeplink.Method "POST") (eq $method.Deeplink.Method "DELETE") (eq $method.Deeplink.Method "GET") (eq $method.Deeplink.Method "PATCH") (eq $method.Deeplink.Method "PUT")}}
+      {{ lower $method.Deeplink.Method}}: "{{$method.Deeplink.Href}}"
+{{else}}
+      custom: {kind:"{{ lower $method.Deeplink.Method}}", path:"{{$method.Deeplink.Href}}"}
+{{end}}{{- if $method.Data.Request}}
 		{{ if or (eq $method.Deeplink.Method "POST") (eq $method.Deeplink.Method "PATCH") (eq $method.Deeplink.Method "PUT")}}body: "{{$method.Data.Bodyfield}}"{{end}}{{end}}
 		{{- if and (eq $method.Deeplink.Method "PUT") (eq $GenAdditionalBinding true)  }}
 		additional_bindings {

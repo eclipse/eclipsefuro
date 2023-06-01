@@ -155,6 +155,9 @@ func (l *MicroServiceList) UpateServicelist(servicelist *serviceAst.Servicelist,
 			if targetRPC.Data.Bodyfield == "" && !strings.HasPrefix(targetRPC.Data.Request, "stream ") {
 				targetRPC.Data.Bodyfield = "body"
 			}
+			if targetRPC.Data.Request == "stream google.api.HttpBody" {
+				targetRPC.Data.Bodyfield = "*"
+			}
 			if sourceRPC.Data.Request == "*" {
 				targetRPC.Data.Bodyfield = "*"
 				targetRPC.Data.Request = "*"
