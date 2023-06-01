@@ -1,7 +1,7 @@
 FROM golang:1.18.3-alpine3.16
 
 ENV SIMPLEGENEREATOR_VERSION=1.0.1
-ENV FURO_VERSION=1.37.0
+ENV FURO_VERSION=1.38.0
 ENV GATEWAY_VERSION=2.10.3
 ENV GEN_GO_VERSION=1.28.0
 ENV GEN_GO_GRPC_VERSION=1.2.0
@@ -46,8 +46,8 @@ RUN set -eux; \
 
 RUN set -eux; \
     go install \
-    github.com/eclipse/eclipsefuro/protoc-gen-furo-muspecs@latest \
-    github.com/eclipse/eclipsefuro/protoc-gen-furo-specs@latest
+    github.com/eclipse/eclipsefuro/protoc-gen-furo-muspecs@v$FURO_VERSION \
+    github.com/eclipse/eclipsefuro/protoc-gen-furo-specs@v$FURO_VERSION
 
 
 RUN set -eux; \
