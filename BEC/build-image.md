@@ -1,6 +1,8 @@
 ```bash
-docker build -t thenorstroem/furo-bec:v1.38.0-amd64 --build-arg ARCH=amd64/ .
-docker build -t thenorstroem/furo-bec:v1.38.0-arm64v8 --build-arg ARCH=arm64v8/ .
+docker build --pull -t thenorstroem/furo-bec:v1.38.0-amd64 .
+```
+```bash
+docker build --pull -t thenorstroem/furo-bec:v1.38.0-arm64v8 --platform=linux/arm/v7 .
 ```
 
 ```bash
