@@ -96,7 +96,7 @@ func Generate(protoAST *protoast.ProtoAST) error {
 				//}
 			}
 
-			typesInFile = buildNestedMessages(typesInFile, path.Base(protofilename), strings.Join(strings.Split(path.Dir(protofilename), "/"), ".")+"."+*Message.Name, Message.NestedType)
+			typesInFile = buildNestedMessages(&enumArr, typesInFile, path.Base(protofilename), strings.Join(strings.Split(path.Dir(protofilename), "/"), ".")+"."+*Message.Name, Message.NestedType)
 
 		}
 		// nested enums
@@ -156,7 +156,7 @@ func Generate(protoAST *protoast.ProtoAST) error {
 	return nil
 }
 
-func buildNestedMessages(file []*microtypes.MicroType, target string, prefix string, nestedType []*descriptorpb.DescriptorProto) []*microtypes.MicroType {
+func buildNestedMessages(enumArr *[]protoast.EnumInfo, file []*microtypes.MicroType, target string, prefix string, nestedType []*descriptorpb.DescriptorProto) []*microtypes.MicroType {
 	for _, message := range nestedType {
 		typeLine := []string{}
 		typeLine = append(typeLine, prefix+"."+*message.Name)
@@ -169,7 +169,26 @@ func buildNestedMessages(file []*microtypes.MicroType, target string, prefix str
 		}
 
 		file = append(file, typeSpec)
-		file = buildNestedMessages(file, target, prefix+"."+*message.Name, message.NestedType)
+		file = buildNestedMessages(enumArr, file, target, prefix+"."+*message.Name, message.NestedType)
+		vals := []protoast.ValueInfo{}
+		for _, nestedEnum := range message.EnumType {
+			for _, v := range nestedEnum.Value {
+				fi := protoast.ValueInfo{
+					Name:  *v.Name,
+					Value: *v.Number,
+				}
+				vals = append(vals, fi)
+			}
+
+			*enumArr = append(*enumArr, protoast.EnumInfo{
+				Name:       prefix + "." + *message.Name + "." + *nestedEnum.Name,
+				Info:       &descriptorpb.SourceCodeInfo_Location{}, // todo fill real info
+				ValuesInfo: vals,
+				AllowAlias: nestedEnum.Options.GetAllowAlias(),
+				Message:    descriptorpb.DescriptorProto{},
+			})
+
+		}
 	}
 
 	return file

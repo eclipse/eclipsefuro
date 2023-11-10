@@ -18,7 +18,7 @@ func main() {
 	data, err := ioutil.ReadAll(os.Stdin)
 
 	// enable next line to save stdin to a file. This file can be used for debugging.
-	// ioutil.WriteFile("protocdata", data, 755)
+	// err = ioutil.WriteFile("protocdata", data, 777)
 
 	// debug mode
 	// enable next line to read the file instead using stdin.
