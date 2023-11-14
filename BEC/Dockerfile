@@ -1,4 +1,4 @@
-FROM golang:1.18.3-alpine3.16
+FROM golang:1.20-alpine3.17
 
 ENV SIMPLEGENEREATOR_VERSION=1.0.1
 ENV FURO_VERSION=1.39.1
@@ -7,7 +7,7 @@ ENV GEN_GO_VERSION=1.28.1
 ENV GEN_GO_GRPC_VERSION=1.2.0
 ENV YQ_VERSION=4.25.2
 ENV BUF_VERSION=1.7.0
-ENV PROTOC_VERSION=3.21.4
+ENV PROTOC_VERSION=23.2
 ENV GOBIN $GOPATH/bin
 ENV PATH="$PATH:$GOPATH/bin"
 ENV PATH="/usr/local/sbin:$PATH"
@@ -25,10 +25,10 @@ RUN ssh-keygen -q -t ed25519 -f /root/.ssh/id_ed25519 -N '""' -C '"furoBEC"'
 RUN set -eux; \
     curl -L https://github.com/protocolbuffers/protobuf/releases/download/v$PROTOC_VERSION/protoc-$PROTOC_VERSION-linux-x86_64.zip -o /tmp/protoc.zip; \
     unzip /tmp/protoc.zip -d /usr/local; \
-    # install glibc for alpine
+    # install glibc for alpine \
     wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub; \
-    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.32-r0/glibc-2.32-r0.apk; \
-    apk add glibc-2.32-r0.apk; \
+    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r1/glibc-2.35-r1.apk; \
+    apk add glibc-2.35-r1.apk; \
     rm -rf /tmp/*
 
 # install the tools
