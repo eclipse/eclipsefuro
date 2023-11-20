@@ -22,7 +22,15 @@ func Generate(protoAST *protoast.ProtoAST) error {
 	for _, descriptor := range protoAST.ProtoMap {
 		si := protoast.GetSourceInfo(descriptor)
 		for i, message := range descriptor.MessageType {
-			typeMap[*descriptor.Package+"."+*message.Name] = si.Messages[i]
+
+			if descriptor.Package == nil {
+				// if package was not set, try out java package
+				// todo: check for better solution (maybe folder structure)
+				typeMap[*descriptor.Options.JavaPackage+"."+*message.Name] = si.Messages[i]
+			} else {
+				typeMap[*descriptor.Package+"."+*message.Name] = si.Messages[i]
+			}
+
 		}
 	}
 
