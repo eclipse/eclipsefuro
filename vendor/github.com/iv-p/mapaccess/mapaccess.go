@@ -32,9 +32,9 @@ func get(data interface{}, key token) (interface{}, error) {
 			if res, ok := state[key.val]; ok {
 				return res, nil
 			}
-			return nil, fmt.Errorf("key not found")
+			return nil, fmt.Errorf("key not found " + key.val)
 		default:
-			return nil, fmt.Errorf("key not found")
+			return nil, fmt.Errorf("key not found " + key.val)
 		}
 	case []interface{}:
 		switch key.typ {
@@ -48,7 +48,7 @@ func get(data interface{}, key token) (interface{}, error) {
 			}
 			return state[index], nil
 		default:
-			return nil, fmt.Errorf("key not found")
+			return nil, fmt.Errorf("key not found "+ key.val)
 		}
 	case nil:
 		return nil, fmt.Errorf("key <%s> not found", key.val)
