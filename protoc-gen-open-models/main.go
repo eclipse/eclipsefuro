@@ -30,7 +30,6 @@ import (
 	"os"
 	"os/exec"
 	"protoc-gen-open-models/pkg/generator"
-	"protoc-gen-open-models/pkg/sourceinfo"
 )
 
 const version = "0.0.1"
@@ -95,12 +94,7 @@ func handle(
 	// plugin, but protoc will error if it encounters a proto3 file with an optional but the
 	// plugin has not indicated it will support it.
 	responseWriter.SetFeatureProto3Optional()
-
-	for _, fileDescriptorProto := range request.FileDescriptorProtosToGenerate() {
-		// collect source infos like messages,enums,services,... including comments
-		si := sourceinfo.GetSourceInfo(fileDescriptorProto)
-		generator.Generate(si, responseWriter, request)
-	}
+	generator.GenerateAll(responseWriter, request)
 
 	return nil
 }

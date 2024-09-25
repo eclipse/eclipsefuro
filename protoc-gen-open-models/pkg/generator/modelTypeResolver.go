@@ -7,34 +7,53 @@ import (
 	"strings"
 )
 
-var PrimitivesMap = map[string]string{
-	"TYPE_STRING":   "string",
-	"TYPE_BYTES":    "string",
-	"TYPE_BOOL":     "boolean",
-	"TYPE_INT32":    "number",
-	"TYPE_INT64":    "number",
-	"TYPE_DOUBLE":   "number",
-	"TYPE_FLOAT":    "number",
-	"TYPE_UINT32":   "number",
-	"TYPE_UINT64":   "number",
-	"TYPE_FIXED32":  "number",
-	"TYPE_FIXED64":  "number",
-	"TYPE_SFIXED32": "number",
-	"TYPE_SFIXED64": "number",
-	"TYPE_SINT32":   "number",
-	"TYPE_SINT64":   "number",
+var WellKnownTypesMap = map[string]string{
+	"StringValue": "string",
+	"BytesValue":  "string",
+	"BoolValue":   "boolean",
+	"Int32Value":  "number",
+	"Int64Value":  "number",
+	"FloatValue":  "number",
+	"DoubleValue": "number",
+	"UInt32Value": "number",
+	"UInt64Value": "number",
 }
 
-func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPrefix string) string {
+var ModelTypesMap = map[string]string{
+	"TYPE_STRING":   "STRING",
+	"TYPE_BYTES":    "BYTES",
+	"TYPE_BOOL":     "BOOLEAN",
+	"TYPE_INT32":    "INT32",
+	"TYPE_INT64":    "INT64",
+	"TYPE_DOUBLE":   "DOUBLE",
+	"TYPE_FLOAT":    "FLOAT",
+	"TYPE_UINT32":   "UINT32",
+	"TYPE_UINT64":   "UINT64",
+	"TYPE_FIXED32":  "FIXED32",
+	"TYPE_FIXED64":  "FIXED64",
+	"TYPE_SFIXED32": "SFIXED32",
+	"TYPE_SFIXED64": "SFIXED64",
+	"TYPE_SINT32":   "SINT32",
+	"TYPE_SINT64":   "SINT64",
+}
+
+func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (ModelType string, SetterCommand string, SetterType string, GetterType string, MapValueConstructor string) {
 	tn := field.Field.GetTypeName()
 
 	fieldType := field.Field.Type.String()
 
-	if t, ok := PrimitivesMap[fieldType]; ok {
+	if t, ok := ModelTypesMap[fieldType]; ok {
+		primitiveType := PrimitivesMap[fieldType]
 		if field.Field.Label.String() == "LABEL_REPEATED" {
-			return t + "[]"
+			imports.AddImport("@furo/open-models/dist/index", "ARRAY")
+			return "ARRAY<" + t + ", " + primitiveType + ">",
+				"__TypeSetter",
+				primitiveType + "[]",
+				"ARRAY<" + t + ", " + primitiveType + ">",
+				"" // ARRAY is uses a typesetter
 		}
-		return t
+		imports.AddImport("@furo/open-models/dist/index", ModelTypesMap[fieldType])
+		return t, "__PrimitivesSetter", primitiveType, t, ""
 	}
 
 	// Maps
@@ -59,8 +78,14 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 							panic("implement map<string,MESSAGETYPE>")
 						}
 					}
-					return "{ [key: string]: " + PrimitivesMap[maptype] + " }"
 					// for model types return "MAP<string, STRING, string>;"
+					imports.AddImport("@furo/open-models/dist/index", "MAP")
+					return "MAP<" + PrimitivesMap[maptype] + "," + ModelTypesMap[maptype] + "," + PrimitivesMap[maptype] + ">",
+						"__TypeSetter",
+						"{ [key: string]: " + PrimitivesMap[maptype] + " }",
+						"MAP<" + PrimitivesMap[maptype] + "," + ModelTypesMap[maptype] + "," + PrimitivesMap[maptype] + ">",
+						ModelTypesMap[maptype]
+
 				}
 			}
 		}
@@ -72,15 +97,16 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 			ts := strings.Split(tn, ".")
 			typeName := ts[len(ts)-1]
 
+			// ANY
 			if typeName == "Any" {
 				imports.AddImport("@furo/open-models/dist/index", "type IAny")
-				return "IAny"
+				imports.AddImport("@furo/open-models/dist/index", "ANY")
+				return "ANY", "__TypeSetter", "IAny", "ANY", ""
 			}
+			primitiveType := WellKnownTypesMap[typeName]
 			imports.AddImport("@furo/open-models/dist/index", typeName)
-			return typeName
+			return typeName, "__TypeSetter", primitiveType + "| null", typeName, ""
 		}
-
-		// ANY
 
 		// MESSAGE
 		t := field.Field.GetTypeName()
@@ -90,18 +116,17 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 		if strings.HasPrefix(t, field.Package) {
 			// we are in the same package
 			// import is just ./[TypeName]
-
 			ss := strings.Split(field.Field.GetTypeName(), ".")
 			importFile := ss[len(ss)-1]
-			t = fullQualifiedName(t, "")
-			// add imports for Transport, Literal and Model
 			// do not add import for the same file (direct recursion types)
+			t = fullQualifiedName(t, "")
 			if field.Message.GetName() != importFile {
-
-				imports.AddImport("./"+importFile, kindPrefix+t)
+				imports.AddImport("./"+importFile, t)
 			}
-			return kindPrefix + t
+			return t, "__TypeSetter", "L" + t, t, ""
 		}
+
+		// find relative path to import target,
 
 		if _, ok := projectFiles[typenameToPath(tn)]; ok {
 			// definition is in project root
@@ -115,12 +140,12 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 			// do not add import for the same file (direct recursion types)
 			t = fullQualifiedName(t, "")
 			if field.Message.GetName() != importFile {
-				imports.AddImport(rel+"/"+importFile, kindPrefix+t)
+				imports.AddImport(rel+"/"+importFile, t)
 			}
-			return kindPrefix + t
+			return t, "__TypeSetter", "L" + t, t, ""
 		}
 
-		return field.Field.GetTypeName()
+		return field.Field.GetTypeName(), "__TypeSetter", "todo:resolve dependency", "???", ""
 	}
 	if fieldType == "TYPE_ENUM" {
 		t := field.Field.GetTypeName()
@@ -133,12 +158,17 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 			ss := strings.Split(field.Field.GetTypeName(), ".")
 			importFile := ss[len(ss)-1]
 			t = fullQualifiedName(t, "")
-			// enum are without prefix
+
+			imports.AddImport("@furo/open-models/dist/index", "ENUM")
 			imports.AddImport("./"+importFile, t)
-			return t
+			return "ENUM<" + t + ">", "__TypeSetter", t, "ENUM<" + t + ">", ""
 		}
-		return "ENUM:UNRECOGNIZED"
+		return "ENUM:UNRECOGNIZED", "__TypeSetter", "???", "???", ""
 	}
 
-	return "UNRECOGNIZED"
+	return "UNRECOGNIZED", "UNRECOGNIZED", "UNRECOGNIZED", "UNRECOGNIZED", ""
+}
+
+func typenameToPath(tn string) string {
+	return strings.Replace(tn[1:], ".", "/", -1)
 }
