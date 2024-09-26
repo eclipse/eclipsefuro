@@ -126,6 +126,7 @@ func prepareModelType(message *sourceinfo.MessageInfo, imports ImportMap, si sou
 			enumDefault = resolveFirstEnumOptionForField(field, si, request)
 		}
 		m, sc, st, gt, mapValueConstructor := resolveModelType(imports, field)
+
 		modelType.Fields = append(modelType.Fields, ModelFields{
 			LeadingComments:     multilineComment(field.Info.GetLeadingComments()),
 			TrailingComment:     field.Info.GetTrailingComments(),

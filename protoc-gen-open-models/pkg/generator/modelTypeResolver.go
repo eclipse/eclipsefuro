@@ -80,10 +80,11 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (ModelType 
 					}
 					// for model types return "MAP<string, STRING, string>;"
 					imports.AddImport("@furo/open-models/dist/index", "MAP")
-					return "MAP<" + PrimitivesMap[maptype] + "," + ModelTypesMap[maptype] + "," + PrimitivesMap[maptype] + ">",
+					imports.AddImport("@furo/open-models/dist/index", ModelTypesMap[maptype])
+					return "MAP<string," + ModelTypesMap[maptype] + "," + PrimitivesMap[maptype] + ">",
 						"__TypeSetter",
 						"{ [key: string]: " + PrimitivesMap[maptype] + " }",
-						"MAP<" + PrimitivesMap[maptype] + "," + ModelTypesMap[maptype] + "," + PrimitivesMap[maptype] + ">",
+						"MAP<string," + ModelTypesMap[maptype] + "," + PrimitivesMap[maptype] + ">",
 						ModelTypesMap[maptype]
 
 				}
