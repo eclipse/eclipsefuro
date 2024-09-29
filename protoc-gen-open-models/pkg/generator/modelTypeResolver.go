@@ -37,7 +37,8 @@ var ModelTypesMap = map[string]string{
 	"TYPE_SINT64":   "SINT64",
 }
 
-func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (ModelType string, SetterCommand string, SetterType string, GetterType string, MapValueConstructor string) {
+func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
+	ModelType string, SetterCommand string, SetterType string, GetterType string, MapValueConstructor string, FieldConstructor string) {
 	tn := field.Field.GetTypeName()
 
 	fieldType := field.Field.Type.String()
@@ -50,10 +51,11 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (ModelType 
 				"__TypeSetter",
 				primitiveType + "[]",
 				"ARRAY<" + t + ", " + primitiveType + ">",
-				"" // ARRAY is uses a typesetter
+				"", // ARRAY is uses a typesetter
+				primitiveType
 		}
 		imports.AddImport("@furo/open-models/dist/index", ModelTypesMap[fieldType])
-		return t, "__PrimitivesSetter", primitiveType, t, ""
+		return t, "__PrimitivesSetter", primitiveType, t, "", t
 	}
 
 	// Maps
@@ -85,7 +87,8 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (ModelType 
 						"__TypeSetter",
 						"{ [key: string]: " + PrimitivesMap[maptype] + " }",
 						"MAP<string," + ModelTypesMap[maptype] + "," + PrimitivesMap[maptype] + ">",
-						ModelTypesMap[maptype]
+						ModelTypesMap[maptype],
+						"MAP<string," + ModelTypesMap[maptype] + "," + PrimitivesMap[maptype] + ">"
 
 				}
 			}
@@ -102,11 +105,11 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (ModelType 
 			if typeName == "Any" {
 				imports.AddImport("@furo/open-models/dist/index", "type IAny")
 				imports.AddImport("@furo/open-models/dist/index", "ANY")
-				return "ANY", "__TypeSetter", "IAny", "ANY", ""
+				return "ANY", "__TypeSetter", "IAny", "ANY", "", "ANY"
 			}
 			primitiveType := WellKnownTypesMap[typeName]
 			imports.AddImport("@furo/open-models/dist/index", typeName)
-			return typeName, "__TypeSetter", primitiveType + "| null", typeName, ""
+			return typeName, "__TypeSetter", primitiveType + "| null", typeName, "", typeName
 		}
 
 		// MESSAGE
@@ -124,7 +127,29 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (ModelType 
 			if field.Message.GetName() != importFile {
 				imports.AddImport("./"+importFile, t)
 			}
-			return t, "__TypeSetter", "L" + t, t, ""
+
+			if field.Field.Label.String() == "LABEL_REPEATED" {
+				imports.AddImport("@furo/open-models/dist/index", "ARRAY")
+				return "ARRAY<" + t + ", L" + t + ">",
+					"__TypeSetter",
+					"L" + t + "[]",
+					"ARRAY<" + t + ", L" + t + ">",
+					"",
+					t
+			}
+			// if a field type equals the package name + message type we have a direct recusrion
+			if field.Field.GetTypeName() == "."+field.Package+"."+field.Message.GetName() {
+				imports.AddImport("@furo/open-models/dist/index", "RECURSION")
+				return "RECURSION<" + t + ", L" + t + ">",
+					"__TypeSetter",
+					"L" + t,
+					"RECURSION<" + t + ", L" + t + ">",
+					"",
+					t
+			}
+			// todo: check for deep recursion
+
+			return t, "__TypeSetter", "L" + t, t, "", t
 		}
 
 		// find relative path to import target,
@@ -143,10 +168,10 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (ModelType 
 			if field.Message.GetName() != importFile {
 				imports.AddImport(rel+"/"+importFile, t)
 			}
-			return t, "__TypeSetter", "L" + t, t, ""
+			return t, "__TypeSetter", "L" + t, t, "", t
 		}
 
-		return field.Field.GetTypeName(), "__TypeSetter", "todo:resolve dependency", "???", ""
+		return field.Field.GetTypeName(), "__TypeSetter", "todo:resolve dependency", "???", "", field.Field.GetTypeName()
 	}
 	if fieldType == "TYPE_ENUM" {
 		t := field.Field.GetTypeName()
@@ -162,12 +187,12 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (ModelType 
 
 			imports.AddImport("@furo/open-models/dist/index", "ENUM")
 			imports.AddImport("./"+importFile, t)
-			return "ENUM<" + t + ">", "__TypeSetter", t, "ENUM<" + t + ">", ""
+			return "ENUM<" + t + ">", "__TypeSetter", t, "ENUM<" + t + ">", "", "ENUM<" + t + ">"
 		}
-		return "ENUM:UNRECOGNIZED", "__TypeSetter", "???", "???", ""
+		return "ENUM:UNRECOGNIZED", "__TypeSetter", "???", "???", "", "ENUM<" + t + ">"
 	}
 
-	return "UNRECOGNIZED", "UNRECOGNIZED", "UNRECOGNIZED", "UNRECOGNIZED", ""
+	return "UNRECOGNIZED", "UNRECOGNIZED", "UNRECOGNIZED", "UNRECOGNIZED", "", "UNRECOGNIZED"
 }
 
 func typenameToPath(tn string) string {

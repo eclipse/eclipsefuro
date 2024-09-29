@@ -26,6 +26,7 @@ type ModelFields struct {
 	Kind                string // proto field type like TYPE_MESSAGE
 	EnumDefault         string // Name of the first enum option
 	MAPValueConstructor string // value constructor for MAP
+	FieldConstructor    string // constructor for the field / usually it is the same as ModelType
 }
 
 var ModelTypeTemplate = `{{if .LeadingComments}}{{range $i, $commentLine := .LeadingComments}}
@@ -51,7 +52,7 @@ export class {{.Name}} extends FieldNode {
       {
         fieldName: '{{.FieldName}}',
         jsonName: '{{.FieldTransportName}}',
-        FieldConstructor: {{.ModelType}},
+        FieldConstructor: {{.FieldConstructor}},
         {{- if ne .MAPValueConstructor ""}}
         ValueConstructor: {{.MAPValueConstructor}},{{end}}
         // constraints: { max_items: 4, required: true },
@@ -125,7 +126,7 @@ func prepareModelType(message *sourceinfo.MessageInfo, imports ImportMap, si sou
 		if field.Field.Type.String() == "TYPE_ENUM" {
 			enumDefault = resolveFirstEnumOptionForField(field, si, request)
 		}
-		m, sc, st, gt, mapValueConstructor := resolveModelType(imports, field)
+		m, sc, st, gt, mapValueConstructor, fc := resolveModelType(imports, field)
 
 		modelType.Fields = append(modelType.Fields, ModelFields{
 			LeadingComments:     multilineComment(field.Info.GetLeadingComments()),
@@ -139,6 +140,7 @@ func prepareModelType(message *sourceinfo.MessageInfo, imports ImportMap, si sou
 			Kind:                field.Field.Type.String(),
 			EnumDefault:         enumDefault,
 			MAPValueConstructor: mapValueConstructor,
+			FieldConstructor:    fc,
 		})
 	}
 	return modelType
