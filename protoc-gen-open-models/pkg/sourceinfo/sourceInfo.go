@@ -1,6 +1,7 @@
 package sourceinfo
 
 import (
+	"github.com/google/gnostic/openapiv3"
 	options "google.golang.org/genproto/googleapis/api/annotations"
 	"google.golang.org/protobuf/types/descriptorpb"
 	"path/filepath"
@@ -38,11 +39,12 @@ type ApiOptionInfo struct {
 }
 
 type MessageInfo struct {
-	Name       string
-	Info       *descriptorpb.SourceCodeInfo_Location
-	FieldInfos []FieldInfo
-	Message    descriptorpb.DescriptorProto
-	Package    string
+	Name          string
+	Info          *descriptorpb.SourceCodeInfo_Location
+	FieldInfos    []FieldInfo
+	Message       descriptorpb.DescriptorProto
+	Package       string
+	OpenApiSchema *openapi_v3.Schema
 }
 
 type EnumInfo struct {
@@ -60,18 +62,17 @@ type ValueInfo struct {
 	Info  *descriptorpb.SourceCodeInfo_Location
 }
 type FieldInfo struct {
-	Name    string
-	Info    *descriptorpb.SourceCodeInfo_Location
-	Field   *descriptorpb.FieldDescriptorProto
-	Message *descriptorpb.DescriptorProto
-	Package string
+	Name              string
+	Info              *descriptorpb.SourceCodeInfo_Location
+	Field             *descriptorpb.FieldDescriptorProto
+	Message           *descriptorpb.DescriptorProto
+	Package           string
+	OpenApiProperties *openapi_v3.Schema
 }
 
 func GetSourceInfo(descr *descriptorpb.FileDescriptorProto) SourceInfo {
 	sourceInfo := SourceInfo{FileDescriptorProto: descr, Package: descr.GetPackage(), Path: filepath.Dir(descr.GetName())}
 
-	r := descr.GetSourceCodeInfo().GetLocation()
-	r = r
 	for _, location := range descr.GetSourceCodeInfo().GetLocation() {
 
 		// 6 111 => 6 ServiceIndex
@@ -155,12 +156,14 @@ func GetSourceInfo(descr *descriptorpb.FileDescriptorProto) SourceInfo {
 		// location info for descriptor.MessageType[111]Field[222]
 		if len(location.GetPath()) == 2 && location.Path[0] == 4 {
 			msgIndex := location.Path[1]
+			OpenApiProps, _ := ExtractOpenApiMessageOptions(descr.MessageType[msgIndex])
 			sourceInfo.Messages = append(sourceInfo.Messages, MessageInfo{
-				Name:       *descr.MessageType[msgIndex].Name,
-				Message:    *descr.MessageType[msgIndex],
-				Info:       location,
-				FieldInfos: []FieldInfo{},
-				Package:    descr.GetPackage(),
+				Name:          *descr.MessageType[msgIndex].Name,
+				Message:       *descr.MessageType[msgIndex],
+				Info:          location,
+				FieldInfos:    []FieldInfo{},
+				Package:       descr.GetPackage(),
+				OpenApiSchema: OpenApiProps,
 			})
 
 			// check for inline enums
@@ -196,13 +199,17 @@ func GetSourceInfo(descr *descriptorpb.FileDescriptorProto) SourceInfo {
 		if len(location.GetPath()) == 4 && location.Path[0] == 4 && location.Path[2] == 2 {
 			msgIndex := location.Path[1]
 			fieldIndex := location.Path[3]
+			OpenApiProps, _ := ExtractOpenApiFieldOptions(descr.MessageType[msgIndex].Field[fieldIndex])
+
 			fi := FieldInfo{
-				Name:    *descr.MessageType[msgIndex].Field[fieldIndex].Name,
-				Info:    location,
-				Field:   descr.MessageType[msgIndex].Field[fieldIndex],
-				Message: descr.MessageType[msgIndex],
-				Package: descr.GetPackage(),
+				Name:              *descr.MessageType[msgIndex].Field[fieldIndex].Name,
+				Info:              location,
+				Field:             descr.MessageType[msgIndex].Field[fieldIndex],
+				Message:           descr.MessageType[msgIndex],
+				Package:           descr.GetPackage(),
+				OpenApiProperties: OpenApiProps,
 			}
+
 			sourceInfo.Messages[msgIndex].FieldInfos = append(sourceInfo.Messages[msgIndex].FieldInfos, fi)
 		}
 

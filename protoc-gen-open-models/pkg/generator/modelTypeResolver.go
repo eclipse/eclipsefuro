@@ -52,7 +52,7 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 				primitiveType + "[]",
 				"ARRAY<" + t + ", " + primitiveType + ">",
 				"", // ARRAY is uses a typesetter
-				primitiveType
+				t
 		}
 		imports.AddImport("@furo/open-models/dist/index", ModelTypesMap[fieldType])
 		return t, "__PrimitivesSetter", primitiveType, t, "", t

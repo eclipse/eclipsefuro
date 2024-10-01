@@ -100,6 +100,9 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 
 				imports.AddImport("./"+importFile, kindPrefix+t)
 			}
+			if field.Field.Label.String() == "LABEL_REPEATED" {
+				return kindPrefix + t + "[]"
+			}
 			return kindPrefix + t
 		}
 
@@ -116,6 +119,9 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 			t = fullQualifiedName(t, "")
 			if field.Message.GetName() != importFile {
 				imports.AddImport(rel+"/"+importFile, kindPrefix+t)
+			}
+			if field.Field.Label.String() == "LABEL_REPEATED" {
+				return kindPrefix + t + "[]"
 			}
 			return kindPrefix + t
 		}
@@ -135,6 +141,9 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 			t = fullQualifiedName(t, "")
 			// enum are without prefix
 			imports.AddImport("./"+importFile, t)
+			if field.Field.Label.String() == "LABEL_REPEATED" {
+				return t + "[]"
+			}
 			return t
 		}
 		return "ENUM:UNRECOGNIZED"

@@ -2,8 +2,12 @@ package generator
 
 import (
 	"bytes"
+	"encoding/json"
 	"github.com/bufbuild/protoplugin"
+	openapi_v3 "github.com/google/gnostic/openapiv3"
 	"protoc-gen-open-models/pkg/sourceinfo"
+	"slices"
+	"strings"
 	"text/template"
 )
 
@@ -12,6 +16,8 @@ type ModelType struct {
 	Fields          []ModelFields
 	LeadingComments []string
 	MetaTypeName    string
+	RequiredFields  string
+	ReadonlyFields  string
 }
 
 type ModelFields struct {
@@ -27,6 +33,32 @@ type ModelFields struct {
 	EnumDefault         string // Name of the first enum option
 	MAPValueConstructor string // value constructor for MAP
 	FieldConstructor    string // constructor for the field / usually it is the same as ModelType
+	Constraints         string // Openapi Constraints as json literal
+}
+
+type FieldConstraints struct {
+	Nullable         bool    `json:"nullable,omitempty"`
+	ReadOnly         bool    `json:"read_only,omitempty"`
+	WriteOnly        bool    `json:"write_only,omitempty"`
+	Deprecated       bool    `json:"deprecated,omitempty"`
+	Title            string  `json:"title,omitempty"`
+	MultipleOf       float64 `json:"multiple_of,omitempty"`
+	Maximum          float64 `json:"maximum,omitempty"`
+	ExclusiveMaximum bool    `json:"exclusive_maximum,omitempty"`
+	Minimum          float64 `json:"minimum,omitempty"`
+	ExclusiveMinimum bool    `json:"exclusive_minimum,omitempty"`
+	MaxLength        int64   `json:"max_length,omitempty"`
+	MinLength        int64   `json:"min_length,omitempty"`
+	Pattern          string  `json:"pattern,omitempty"`
+	MaxItems         int64   `json:"max_items,omitempty"`
+	MinItems         int64   `json:"min_items,omitempty"`
+	UniqueItems      bool    `json:"unique_items,omitempty"`
+	MaxProperties    int64   `json:"max_properties,omitempty"`
+	MinProperties    int64   `json:"min_properties,omitempty"`
+	Required         bool    `json:"required,omitempty"`
+	Type             string  `json:"type,omitempty"`
+	Description      string  `json:"description,omitempty"`
+	Format           string  `json:"format,omitempty"`
 }
 
 var ModelTypeTemplate = `{{if .LeadingComments}}{{range $i, $commentLine := .LeadingComments}}
@@ -54,8 +86,8 @@ export class {{.Name}} extends FieldNode {
         jsonName: '{{.FieldTransportName}}',
         FieldConstructor: {{.FieldConstructor}},
         {{- if ne .MAPValueConstructor ""}}
-        ValueConstructor: {{.MAPValueConstructor}},{{end}}
-        // constraints: { max_items: 4, required: true },
+        ValueConstructor: {{.MAPValueConstructor}},{{end}}{{if .Constraints}}
+        constraints: {{.Constraints}},{{end}}
       }{{end}}
     ];
 
@@ -64,6 +96,21 @@ export class {{.Name}} extends FieldNode {
     // {{$commentLine}}{{end}}{{end}}
     this._{{.FieldName}} = new {{.ModelType}}(undefined,{{if eq .Kind "TYPE_ENUM"}}{{.SetterType}}, {{.SetterType}}.{{.EnumDefault}}, {{end}} this, '{{.FieldName}}'); 
 {{end}}
+
+
+    // Set required fields
+    [{{.RequiredFields}}].forEach(fieldName => {
+      (
+        this[fieldName as keyof {{.Name}}] as FieldNode
+      ).__meta.required = true;
+    });
+
+    // Set readonly fields
+    [{{.ReadonlyFields}}].forEach(fieldName => {
+      (
+        this[fieldName as keyof {{.Name}}] as FieldNode
+      ).__readonly = true;
+    });
 
     // Default values from openAPI annotations
     this.__defaultValues = {};
@@ -74,6 +121,8 @@ export class {{.Name}} extends FieldNode {
     } else {
       this.__fromLiteral(this.__defaultValues);
     }
+
+    this.__meta.isPristine = true;
   }
 {{range .Fields}}
 {{if .LeadingComments}}{{range $i, $commentLine := .LeadingComments}}
@@ -115,19 +164,56 @@ func (r *ModelType) Render() string {
 }
 
 func prepareModelType(message *sourceinfo.MessageInfo, imports ImportMap, si sourceinfo.SourceInfo, request protoplugin.Request) ModelType {
+	reqFields := []string{}
+	if message.OpenApiSchema != nil {
+		reqFields = message.OpenApiSchema.Required
+	}
+	readonlyFields := []string{}
+
 	modelType := ModelType{
 		Name:            fullQualifiedName(message.Package, message.Name),
 		Fields:          nil,
 		LeadingComments: multilineComment(message.Info.GetLeadingComments()),
 		MetaTypeName:    message.Package + "." + message.Name,
 	}
+
+	defaults := map[string]openapi_v3.DefaultType{}
+
+	if len(reqFields) > 0 {
+		modelType.RequiredFields = "'" + strings.Join(reqFields, "', '") + "'"
+	}
+
 	for _, field := range message.FieldInfos {
 		enumDefault := ""
 		if field.Field.Type.String() == "TYPE_ENUM" {
 			enumDefault = resolveFirstEnumOptionForField(field, si, request)
 		}
 		m, sc, st, gt, mapValueConstructor, fc := resolveModelType(imports, field)
+		var constraints string
+		if field.OpenApiProperties != nil {
+			// check for readonly fields
+			if field.OpenApiProperties.ReadOnly {
+				readonlyFields = append(readonlyFields, field.Field.GetJsonName())
+			}
+			if field.OpenApiProperties.Default != nil {
+				// collect the defaults
+				defaults[field.Field.GetJsonName()] = *field.OpenApiProperties.Default
+				// do not put the defaults in to the constraints
+				field.OpenApiProperties.Default = nil
+			}
 
+			c, err := json.Marshal(field.OpenApiProperties)
+			if err == nil {
+				fieldConstraints := FieldConstraints{}
+				json.Unmarshal(c, &fieldConstraints)
+				if slices.Contains(reqFields, field.Field.GetName()) {
+					fieldConstraints.Required = true
+				}
+				fieldConstraintsJson, _ := json.Marshal(fieldConstraints)
+				constraints = string(fieldConstraintsJson)
+			}
+
+		}
 		modelType.Fields = append(modelType.Fields, ModelFields{
 			LeadingComments:     multilineComment(field.Info.GetLeadingComments()),
 			TrailingComment:     field.Info.GetTrailingComments(),
@@ -141,8 +227,13 @@ func prepareModelType(message *sourceinfo.MessageInfo, imports ImportMap, si sou
 			EnumDefault:         enumDefault,
 			MAPValueConstructor: mapValueConstructor,
 			FieldConstructor:    fc,
+			Constraints:         constraints,
 		})
 	}
+	if len(readonlyFields) > 0 {
+		modelType.ReadonlyFields = "'" + strings.Join(readonlyFields, "', '") + "'"
+	}
+
 	return modelType
 }
 
