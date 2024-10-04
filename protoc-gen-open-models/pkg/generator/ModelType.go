@@ -3,6 +3,7 @@ package generator
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"github.com/bufbuild/protoplugin"
 	openapi_v3 "github.com/google/gnostic/openapiv3"
 	"protoc-gen-open-models/pkg/sourceinfo"
@@ -18,6 +19,7 @@ type ModelType struct {
 	MetaTypeName    string
 	RequiredFields  string
 	ReadonlyFields  string
+	DefaultValues   *map[string]string // deviated from openapi_v3.DefaultType
 }
 
 type ModelFields struct {
@@ -34,6 +36,7 @@ type ModelFields struct {
 	MAPValueConstructor string // value constructor for MAP
 	FieldConstructor    string // constructor for the field / usually it is the same as ModelType
 	Constraints         string // Openapi Constraints as json literal
+
 }
 
 type FieldConstraints struct {
@@ -113,7 +116,10 @@ export class {{.Name}} extends FieldNode {
     });
 
     // Default values from openAPI annotations
-    this.__defaultValues = {};
+    this.__defaultValues = {
+	{{- if .DefaultValues}}{{range $fn, $value := .DefaultValues}}
+      {{$fn}}:{{$value}},{{end}}{{end}}
+    };
 
     // Initialize the fields with init data
     if (initData !== undefined) {
@@ -177,7 +183,7 @@ func prepareModelType(message *sourceinfo.MessageInfo, imports ImportMap, si sou
 		MetaTypeName:    message.Package + "." + message.Name,
 	}
 
-	defaults := map[string]openapi_v3.DefaultType{}
+	defaultValuesMap := map[string]string{}
 
 	if len(reqFields) > 0 {
 		modelType.RequiredFields = "'" + strings.Join(reqFields, "', '") + "'"
@@ -190,6 +196,7 @@ func prepareModelType(message *sourceinfo.MessageInfo, imports ImportMap, si sou
 		}
 		m, sc, st, gt, mapValueConstructor, fc := resolveModelType(imports, field)
 		var constraints string
+
 		if field.OpenApiProperties != nil {
 			// check for readonly fields
 			if field.OpenApiProperties.ReadOnly {
@@ -197,7 +204,27 @@ func prepareModelType(message *sourceinfo.MessageInfo, imports ImportMap, si sou
 			}
 			if field.OpenApiProperties.Default != nil {
 				// collect the defaults
-				defaults[field.Field.GetJsonName()] = *field.OpenApiProperties.Default
+
+				switch d := field.OpenApiProperties.Default.Oneof.(type) {
+				case *openapi_v3.DefaultType_String_:
+					if json.Valid([]byte(d.String_)) {
+						defaultValuesMap[field.Field.GetJsonName()] = d.String_
+					} else {
+						defaultValuesMap[field.Field.GetJsonName()] = "\"" + d.String_ + "\""
+					}
+
+					break
+				case *openapi_v3.DefaultType_Number:
+					defaultValuesMap[field.Field.GetJsonName()] = fmt.Sprintf("%f", d.Number)
+					break
+				case *openapi_v3.DefaultType_Boolean:
+					if d.Boolean {
+						defaultValuesMap[field.Field.GetJsonName()] = "true"
+					} else {
+						defaultValuesMap[field.Field.GetJsonName()] = "false"
+					}
+
+				}
 				// do not put the defaults in to the constraints
 				field.OpenApiProperties.Default = nil
 			}
@@ -214,6 +241,11 @@ func prepareModelType(message *sourceinfo.MessageInfo, imports ImportMap, si sou
 			}
 
 		}
+
+		if len(defaultValuesMap) > 0 {
+			modelType.DefaultValues = &defaultValuesMap
+		}
+
 		modelType.Fields = append(modelType.Fields, ModelFields{
 			LeadingComments:     multilineComment(field.Info.GetLeadingComments()),
 			TrailingComment:     field.Info.GetTrailingComments(),
