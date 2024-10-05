@@ -76,8 +76,11 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 				imports.AddImport("@furo/open-models/dist/index", "type IAny")
 				return "IAny"
 			}
-			imports.AddImport("@furo/open-models/dist/index", typeName)
-			return typeName
+
+			// well known types are using primitives
+			primitiveType := WellKnownTypesMap[typeName]
+			// imports.AddImport("@furo/open-models/dist/index", typeName)
+			return primitiveType
 		}
 
 		// ANY
