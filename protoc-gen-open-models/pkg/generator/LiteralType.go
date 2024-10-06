@@ -13,14 +13,14 @@ type LiteralType struct {
 }
 
 type LiteralFields struct {
-	LeadingComments    []string
-	TrailingComment    string
-	FieldName          string // name of the field in interface types and models
-	FieldTransportName string // name of the field in transport types
-	Type               string
+	LeadingComments []string
+	TrailingComment string
+	FieldName       string // name of the field in interface types and models
+	FieldProtoName  string // name of the field in transport types
+	Type            string
 }
 
-var LiteralTypeTemplate = `export interface L{{.Name}} {
+var LiteralTypeTemplate = `export interface I{{.Name}} {
 {{- range .Fields}}{{if .LeadingComments}}{{range $i, $commentLine := .LeadingComments}}
   // {{$commentLine}}{{end}}{{end}}
   {{.FieldName}}?: {{.Type}};{{if .TrailingComment}} // {{.TrailingComment}}{{end}}{{end}}
@@ -49,11 +49,11 @@ func prepareLiteralType(message *sourceinfo.MessageInfo, imports ImportMap) Lite
 	}
 	for _, field := range message.FieldInfos {
 		literalType.Fields = append(literalType.Fields, LiteralFields{
-			LeadingComments:    multilineComment(field.Info.GetLeadingComments()),
-			TrailingComment:    field.Info.GetTrailingComments(),
-			FieldName:          field.Field.GetJsonName(), // todo: check preserve proto names
-			FieldTransportName: field.Field.GetName(),     // todo: check  preserve proto names
-			Type:               resolveInterfaceType(imports, field, "L"),
+			LeadingComments: multilineComment(field.Info.GetLeadingComments()),
+			TrailingComment: field.Info.GetTrailingComments(),
+			FieldName:       field.Field.GetJsonName(), // todo: check preserve proto names
+			FieldProtoName:  field.Field.GetName(),     // todo: check  preserve proto names
+			Type:            resolveInterfaceType(imports, field, "I"),
 		})
 	}
 	return literalType

@@ -77,14 +77,14 @@ func prepareServiceType(service sourceinfo.ServiceInfo, imports ImportMap) Servi
 		responseType := baseTypeName(method.Method.GetOutputType())
 		responseTypeFQ := fullQualifiedTypeName(method.Method.GetOutputType())
 
-		imports.AddImport("./"+requestType, "L"+requestTypeFQ)
-		imports.AddImport("./"+responseType, "L"+responseTypeFQ)
+		imports.AddImport("./"+requestType, "I"+requestTypeFQ)
+		imports.AddImport("./"+responseType, "I"+responseTypeFQ)
 
 		verb, path := extractPathAndPattern(method.HttpRule.ApiOptions)
 		serviceMethods := ServiceMethods{
 			Name:                method.Name,
-			RequestTypeLiteral:  "L" + requestTypeFQ,
-			ResponseTypeLiteral: "L" + responseTypeFQ,
+			RequestTypeLiteral:  "I" + requestTypeFQ,
+			ResponseTypeLiteral: "I" + responseTypeFQ,
 			Verb:                verb,
 			Path:                path,
 			Body:                method.HttpRule.ApiOptions.GetBody(),

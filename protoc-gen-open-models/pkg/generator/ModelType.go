@@ -26,7 +26,7 @@ type ModelFields struct {
 	LeadingComments     []string
 	TrailingComment     string
 	FieldName           string // name of the field in interface types and models
-	FieldTransportName  string // name of the field in transport types
+	FieldProtoName      string // name of the field in transport types
 	ModelType           string // like STRING, ENUM<SomeTHING>, Int32Value, FuroTypeMessage
 	SetterCommand       string // for primitive or typesetter
 	SetterType          string // string or LFuroTypeMessage
@@ -72,10 +72,10 @@ export class {{.Name}} extends FieldNode {
   // {{$commentLine}}{{end}}{{end}}
   private _{{.FieldName}}: {{.ModelType}}; // trailing comment
 {{end}}
- public __defaultValues: L{{.Name}};
+ public __defaultValues: I{{.Name}};
 
   constructor(
-    initData?: L{{.Name}},
+    initData?: I{{.Name}},
     parent?: FieldNode,
     parentAttributeName?: string,
   ) {
@@ -86,7 +86,7 @@ export class {{.Name}} extends FieldNode {
 {{- $first := true }}{{range .Fields}}{{if not $first}}, {{else}}{{$first = false}}{{end}}
       {
         fieldName: '{{.FieldName}}',
-        jsonName: '{{.FieldTransportName}}',
+        protoName: '{{.FieldProtoName}}',
         FieldConstructor: {{.FieldConstructor}},
         {{- if ne .MAPValueConstructor ""}}
         ValueConstructor: {{.MAPValueConstructor}},{{end}}{{if .Constraints}}
@@ -142,11 +142,11 @@ export class {{.Name}} extends FieldNode {
   }
 {{end}}
 
-  fromLiteral(data: L{{.Name}}) {
+  fromLiteral(data: I{{.Name}}) {
     super.__fromLiteral(data);
   }
 
-  toLiteral(): L{{.Name}} {
+  toLiteral(): I{{.Name}} {
     return super.__toLiteral();
   }
 }
@@ -259,7 +259,7 @@ func prepareModelType(message *sourceinfo.MessageInfo, imports ImportMap, si sou
 			LeadingComments:     multilineComment(field.Info.GetLeadingComments()),
 			TrailingComment:     field.Info.GetTrailingComments(),
 			FieldName:           field.Field.GetJsonName(), // todo: check preserve proto names
-			FieldTransportName:  field.Field.GetName(),     // todo: check  preserve proto names
+			FieldProtoName:      field.Field.GetName(),     // todo: check  preserve proto names
 			ModelType:           m,
 			SetterCommand:       sc,
 			SetterType:          st,

@@ -12,11 +12,11 @@ type TransportType struct {
 }
 
 type TransportFields struct {
-	LeadingComments    []string
-	TrailingComment    string
-	FieldName          string // name of the field in interface types and models
-	FieldTransportName string // name of the field in transport types
-	Type               string
+	LeadingComments []string
+	TrailingComment string
+	FieldName       string // name of the field in interface types and models
+	FieldProtoName  string // name of the field in transport types
+	Type            string
 }
 
 func (r *TransportType) Render() string {
@@ -37,7 +37,7 @@ func (r *TransportType) Render() string {
 var TransportTypeTemplate = `export interface T{{.Name}} {
 {{- range .Fields}}{{if .LeadingComments}}{{range $i, $commentLine := .LeadingComments}}
   // {{$commentLine}}{{end}}{{end}}
-  {{.FieldTransportName}}?: {{.Type}};{{if .TrailingComment}} // {{.TrailingComment}}{{end}}{{end}}
+  {{.FieldProtoName}}?: {{.Type}};{{if .TrailingComment}} // {{.TrailingComment}}{{end}}{{end}}
 }
 `
 
@@ -48,11 +48,11 @@ func prepareTransportType(message *sourceinfo.MessageInfo, imports ImportMap) Tr
 	}
 	for _, field := range message.FieldInfos {
 		transportType.Fields = append(transportType.Fields, TransportFields{
-			LeadingComments:    multilineComment(field.Info.GetLeadingComments()),
-			TrailingComment:    field.Info.GetTrailingComments(),
-			FieldName:          field.Field.GetJsonName(), // todo: check preserve proto names
-			FieldTransportName: field.Field.GetName(),     // todo: check  preserve proto names
-			Type:               resolveInterfaceType(imports, field, "T"),
+			LeadingComments: multilineComment(field.Info.GetLeadingComments()),
+			TrailingComment: field.Info.GetTrailingComments(),
+			FieldName:       field.Field.GetJsonName(), // todo: check preserve proto names
+			FieldProtoName:  field.Field.GetName(),     // todo: check  preserve proto names
+			Type:            resolveInterfaceType(imports, field, "T"),
 		})
 	}
 	return transportType

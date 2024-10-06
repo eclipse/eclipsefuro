@@ -130,35 +130,35 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 
 			if field.Field.Label.String() == "LABEL_REPEATED" {
 				imports.AddImport("@furo/open-models/dist/index", "ARRAY")
-				return "ARRAY<" + t + ", L" + t + ">",
+				return "ARRAY<" + t + ", I" + t + ">",
 					"__TypeSetter",
-					"L" + t + "[]",
-					"ARRAY<" + t + ", L" + t + ">",
+					"I" + t + "[]",
+					"ARRAY<" + t + ", I" + t + ">",
 					"",
 					t
 			}
 			// if a field type equals the package name + message type we have a direct recusrion
 			if field.Field.GetTypeName() == "."+field.Package+"."+field.Message.GetName() {
 				imports.AddImport("@furo/open-models/dist/index", "RECURSION")
-				return "RECURSION<" + t + ", L" + t + ">",
+				return "RECURSION<" + t + ", I" + t + ">",
 					"__TypeSetter",
-					"L" + t,
-					"RECURSION<" + t + ", L" + t + ">",
+					"I" + t,
+					"RECURSION<" + t + ", I" + t + ">",
 					"",
 					t
 			}
 			// todo: check for deep recursion
 			if deepRecursionCheck(field.Field.GetTypeName()) {
 				imports.AddImport("@furo/open-models/dist/index", "RECURSION")
-				return "RECURSION<" + t + ", L" + t + ">",
+				return "RECURSION<" + t + ", I" + t + ">",
 					"__TypeSetter",
-					"L" + t,
-					"RECURSION<" + t + ", L" + t + ">",
+					"I" + t,
+					"RECURSION<" + t + ", I" + t + ">",
 					"",
 					t
 			}
 
-			return t, "__TypeSetter", "L" + t, t, "", t
+			return t, "__TypeSetter", "I" + t, t, "", t
 		}
 
 		// find relative path to import target,
@@ -177,7 +177,7 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 			if field.Message.GetName() != importFile {
 				imports.AddImport(rel+"/"+importFile, t)
 			}
-			return t, "__TypeSetter", "L" + t, t, "", t
+			return t, "__TypeSetter", "I" + t, t, "", t
 		}
 
 		return field.Field.GetTypeName(), "__TypeSetter", "todo:resolve dependency", "???", "", field.Field.GetTypeName()
