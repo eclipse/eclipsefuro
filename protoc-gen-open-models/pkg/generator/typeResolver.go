@@ -147,7 +147,7 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 			if field.Field.Label.String() == "LABEL_REPEATED" {
 				return t + "[]"
 			}
-			return t
+			return t + " | string"
 		}
 		return "ENUM:UNRECOGNIZED"
 	}

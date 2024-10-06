@@ -2,11 +2,10 @@ Missing Features:
 - OneOf
 - ?? Index Files
 - Nested Messages Support https://protobuf.dev/programming-guides/proto3/#nested
-- Deep Recursion Support
 - **FULL** Spectrum of Well Known Types https://protobuf.dev/reference/protobuf/google.protobuf/#index
 - ~~Dependency management when needed~~ 
 - Build Parameter **ApiBaseURL** with a default of "/api" ???
-- Additional Bindings (look below)
+- Additional bindings for services (look below)
 
 ```
 service Messaging {

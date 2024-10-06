@@ -148,6 +148,15 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 					t
 			}
 			// todo: check for deep recursion
+			if deepRecursionCheck(field.Field.GetTypeName()) {
+				imports.AddImport("@furo/open-models/dist/index", "RECURSION")
+				return "RECURSION<" + t + ", L" + t + ">",
+					"__TypeSetter",
+					"L" + t,
+					"RECURSION<" + t + ", L" + t + ">",
+					"",
+					t
+			}
 
 			return t, "__TypeSetter", "L" + t, t, "", t
 		}
@@ -193,6 +202,23 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 	}
 
 	return "UNRECOGNIZED", "UNRECOGNIZED", "UNRECOGNIZED", "UNRECOGNIZED", "", "UNRECOGNIZED"
+}
+
+func deepRecursionCheck(typename string) bool {
+	return deepRecursionCheckRecursion(typename, typename)
+}
+func deepRecursionCheckRecursion(startAt string, lookFor string) bool {
+
+	for _, info := range allTypes[startAt].FieldInfos {
+		if info.Field.GetTypeName() == lookFor {
+			return true
+		}
+		if info.Field.Type.String() == "TYPE_MESSAGE" {
+			return deepRecursionCheckRecursion(info.Field.GetTypeName(), lookFor)
+		}
+
+	}
+	return false
 }
 
 func typenameToPath(tn string) string {

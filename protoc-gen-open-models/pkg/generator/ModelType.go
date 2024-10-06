@@ -45,11 +45,11 @@ type FieldConstraints struct {
 	WriteOnly        bool    `json:"write_only,omitempty"`
 	Deprecated       bool    `json:"deprecated,omitempty"`
 	Title            string  `json:"title,omitempty"`
-	MultipleOf       float64 `json:"multiple_of,omitempty"`
 	Maximum          float64 `json:"maximum,omitempty"`
-	ExclusiveMaximum bool    `json:"exclusive_maximum,omitempty"`
 	Minimum          float64 `json:"minimum,omitempty"`
+	ExclusiveMaximum bool    `json:"exclusive_maximum,omitempty"`
 	ExclusiveMinimum bool    `json:"exclusive_minimum,omitempty"`
+	MultipleOf       float64 `json:"multiple_of,omitempty"`
 	MaxLength        int64   `json:"max_length,omitempty"`
 	MinLength        int64   `json:"min_length,omitempty"`
 	Pattern          string  `json:"pattern,omitempty"`
@@ -58,10 +58,10 @@ type FieldConstraints struct {
 	UniqueItems      bool    `json:"unique_items,omitempty"`
 	MaxProperties    int64   `json:"max_properties,omitempty"`
 	MinProperties    int64   `json:"min_properties,omitempty"`
-	Required         bool    `json:"required,omitempty"`
 	Type             string  `json:"type,omitempty"`
 	Description      string  `json:"description,omitempty"`
 	Format           string  `json:"format,omitempty"`
+	Required         bool    `json:"required,omitempty"`
 }
 
 var ModelTypeTemplate = `{{if .LeadingComments}}{{range $i, $commentLine := .LeadingComments}}
@@ -171,9 +171,7 @@ func (r *ModelType) Render() string {
 
 func prepareModelType(message *sourceinfo.MessageInfo, imports ImportMap, si sourceinfo.SourceInfo, request protoplugin.Request) ModelType {
 	reqFields := []string{}
-	if message.OpenApiSchema != nil {
-		reqFields = message.OpenApiSchema.Required
-	}
+
 	readonlyFields := []string{}
 
 	modelType := ModelType{
@@ -185,18 +183,21 @@ func prepareModelType(message *sourceinfo.MessageInfo, imports ImportMap, si sou
 
 	defaultValuesMap := map[string]string{}
 
-	if len(reqFields) > 0 {
-		modelType.RequiredFields = "'" + strings.Join(reqFields, "', '") + "'"
-	}
-
 	for _, field := range message.FieldInfos {
+		// check if field is in required list
+		if message.OpenApiSchema != nil {
+			if slices.Contains(message.OpenApiSchema.Required, field.Name) {
+				reqFields = append(reqFields, field.Field.GetJsonName())
+			}
+		}
+
 		enumDefault := ""
 		if field.Field.Type.String() == "TYPE_ENUM" {
 			enumDefault = resolveFirstEnumOptionForField(field, si, request)
 		}
 		m, sc, st, gt, mapValueConstructor, fc := resolveModelType(imports, field)
 		var constraints string
-
+		fieldConstraints := FieldConstraints{}
 		if field.OpenApiProperties != nil {
 			// check for readonly fields
 			if field.OpenApiProperties.ReadOnly {
@@ -231,16 +232,24 @@ func prepareModelType(message *sourceinfo.MessageInfo, imports ImportMap, si sou
 
 			c, err := json.Marshal(field.OpenApiProperties)
 			if err == nil {
-				fieldConstraints := FieldConstraints{}
 				json.Unmarshal(c, &fieldConstraints)
-				if slices.Contains(reqFields, field.Field.GetName()) {
-					fieldConstraints.Required = true
+				if message.OpenApiSchema != nil {
+					if slices.Contains(message.OpenApiSchema.Required, field.Name) {
+						fieldConstraints.Required = true
+					}
 				}
-				fieldConstraintsJson, _ := json.Marshal(fieldConstraints)
-				constraints = string(fieldConstraintsJson)
 			}
 
+		} else {
+			// check for required constraints only, when no other constraints are given
+			if message.OpenApiSchema != nil {
+				if slices.Contains(message.OpenApiSchema.Required, field.Name) {
+					fieldConstraints.Required = true
+				}
+			}
 		}
+		fieldConstraintsJson, _ := json.Marshal(fieldConstraints)
+		constraints = string(fieldConstraintsJson)
 
 		if len(defaultValuesMap) > 0 {
 			modelType.DefaultValues = &defaultValuesMap
@@ -262,6 +271,11 @@ func prepareModelType(message *sourceinfo.MessageInfo, imports ImportMap, si sou
 			Constraints:         constraints,
 		})
 	}
+
+	if len(reqFields) > 0 {
+		modelType.RequiredFields = "'" + strings.Join(reqFields, "', '") + "'"
+	}
+
 	if len(readonlyFields) > 0 {
 		modelType.ReadonlyFields = "'" + strings.Join(readonlyFields, "', '") + "'"
 	}

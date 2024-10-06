@@ -9,6 +9,8 @@ import (
 
 var projectFiles = map[string]string{}
 
+var allTypes = map[string]sourceinfo.MessageInfo{}
+
 func GenerateAll(responseWriter protoplugin.ResponseWriter, request protoplugin.Request) {
 
 	for _, fileDescriptorProto := range request.AllFileDescriptorProtos() {
@@ -27,6 +29,7 @@ func GenerateAll(responseWriter protoplugin.ResponseWriter, request protoplugin.
 		}
 		for _, message := range sourceInfo.Messages {
 			projectFiles[path.Join(sourceInfo.Path, message.Name)] = "MESSAGE"
+			allTypes["."+message.Package+"."+message.Message.GetName()] = message
 		}
 	}
 
