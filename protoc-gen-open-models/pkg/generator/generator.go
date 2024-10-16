@@ -2,8 +2,8 @@ package generator
 
 import (
 	"github.com/bufbuild/protoplugin"
+	"github.com/eclipse/eclipsefuro/protoc-gen-open-models/pkg/sourceinfo"
 	"path"
-	"protoc-gen-open-models/pkg/sourceinfo"
 	"strings"
 )
 
