@@ -6,11 +6,11 @@ import (
 	"errors"
 	"fmt"
 	"github.com/bufbuild/protoplugin"
+	"github.com/eclipse/eclipsefuro/protoc-gen-open-models/pkg/generator"
 	"io"
 	"log"
 	"os"
 	"os/exec"
-	"protoc-gen-open-models/pkg/generator"
 )
 
 const version = "0.0.1"

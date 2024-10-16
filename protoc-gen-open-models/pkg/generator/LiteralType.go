@@ -2,7 +2,7 @@ package generator
 
 import (
 	"bytes"
-	"protoc-gen-open-models/pkg/sourceinfo"
+	"github.com/eclipse/eclipsefuro/protoc-gen-open-models/pkg/sourceinfo"
 	"strings"
 	"text/template"
 )

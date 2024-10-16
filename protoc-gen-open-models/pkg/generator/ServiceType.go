@@ -2,8 +2,8 @@ package generator
 
 import (
 	"bytes"
+	"github.com/eclipse/eclipsefuro/protoc-gen-open-models/pkg/sourceinfo"
 	"google.golang.org/genproto/googleapis/api/annotations"
-	"protoc-gen-open-models/pkg/sourceinfo"
 	"strings"
 	"text/template"
 )
