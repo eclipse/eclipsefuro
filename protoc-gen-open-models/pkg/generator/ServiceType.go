@@ -12,6 +12,7 @@ type ServiceType struct {
 	Name            string
 	Methods         []ServiceMethods
 	LeadingComments []string
+	Package         string
 }
 
 type ServiceMethods struct {
@@ -28,7 +29,7 @@ type ServiceMethods struct {
 var ServiceTemplate = `{{if .LeadingComments}}{{range $i, $commentLine := .LeadingComments}}
 // {{$commentLine}}{{end}}{{end}}
 
-export class FuroCubeCubeService {
+export class {{.Name}} {
 
 {{range $i, $method := .Methods}}{{if .LeadingComments}}{{range $i, $commentLine := .LeadingComments}}
   // {{$commentLine}}{{end}}{{end}}
@@ -64,9 +65,10 @@ func prepareServiceType(service sourceinfo.ServiceInfo, imports ImportMap) Servi
 	imports.AddImport("../API_OPTIONS", "API_OPTIONS")
 
 	serviceType := ServiceType{
-		Name:            service.Name,
+		Name:            fullQualifiedName(service.Package, service.Name),
 		Methods:         make([]ServiceMethods, 0, len(service.Methods)),
 		LeadingComments: multilineComment(service.Info.GetLeadingComments()),
+		Package:         service.Package,
 	}
 
 	for _, method := range service.Methods {

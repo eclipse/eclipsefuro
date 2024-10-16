@@ -70,7 +70,7 @@ export class {{.Name}} extends FieldNode {
 {{range .Fields}}
   {{if .LeadingComments}}{{range $i, $commentLine := .LeadingComments}}
   // {{$commentLine}}{{end}}{{end}}
-  private _{{.FieldName}}: {{.ModelType}}; // trailing comment
+  private _{{.FieldName}}: {{.ModelType}};{{if .TrailingComment}} // {{.TrailingComment}}{{end}}
 {{end}}
  public __defaultValues: I{{.Name}};
 
@@ -108,13 +108,7 @@ export class {{.Name}} extends FieldNode {
       ).__meta.required = true;
     });
 
-    // Set readonly fields
-    [{{.ReadonlyFields}}].forEach(fieldName => {
-      (
-        this[fieldName as keyof {{.Name}}] as FieldNode
-      ).__readonly = true;
-    });
-
+    
     // Default values from openAPI annotations
     this.__defaultValues = {
 	{{- if .DefaultValues}}{{range $fn, $value := .DefaultValues}}
@@ -127,6 +121,13 @@ export class {{.Name}} extends FieldNode {
     } else {
       this.__fromLiteral(this.__defaultValues);
     }
+    
+    // Set readonly fields after the init, so child nodes are readonly too
+    [{{.ReadonlyFields}}].forEach(fieldName => {
+      (
+        this[fieldName as keyof {{.Name}}] as FieldNode
+      ).__readonly = true;
+    });
 
     this.__meta.isPristine = true;
   }
