@@ -76,6 +76,29 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 							// message
 							m := *nested.Field[1].TypeName
 							maptype = m[1:len(m)]
+							// WELL KNOWN
+							if strings.HasPrefix(tn, ".google.protobuf.") {
+								ts := strings.Split(tn, ".")
+								typeName := ts[len(ts)-1]
+
+								// ANY
+								if typeName == "Any" {
+									imports.AddImport("@furo/open-models/dist/index", "type IAny")
+									imports.AddImport("@furo/open-models/dist/index", "ANY")
+									return "ANY", "__TypeSetter", "IAny", "ANY", "", "ANY"
+								}
+								primitiveMapType := WellKnownTypesMap[typeName]
+
+								// for model types return "MAP<string, STRING, string>;"
+								imports.AddImport("@furo/open-models/dist/index", "MAP")
+								imports.AddImport("@furo/open-models/dist/index", ModelTypesMap[primitiveMapType])
+								return "MAP<string," + ModelTypesMap[primitiveMapType] + "," + PrimitivesMap[primitiveMapType] + ">",
+									"__TypeSetter",
+									"{ [key: string]: " + PrimitivesMap[primitiveMapType] + " }",
+									"MAP<string," + ModelTypesMap[primitiveMapType] + "," + PrimitivesMap[primitiveMapType] + ">",
+									ModelTypesMap[primitiveMapType],
+									"MAP<string," + ModelTypesMap[primitiveMapType] + "," + PrimitivesMap[primitiveMapType] + ">"
+							}
 							// todo:implement map<string,MESSAGETYPE>
 							panic("implement map<string,MESSAGETYPE>")
 						}
@@ -213,7 +236,8 @@ func deepRecursionCheckRecursion(startAt string, lookFor string) bool {
 		if info.Field.GetTypeName() == lookFor {
 			return true
 		}
-		if info.Field.Type.String() == "TYPE_MESSAGE" {
+
+		if info.Field.Type.String() == "TYPE_MESSAGE" && info.Field.Label.String() != "LABEL_REPEATED" {
 			return deepRecursionCheckRecursion(info.Field.GetTypeName(), lookFor)
 		}
 

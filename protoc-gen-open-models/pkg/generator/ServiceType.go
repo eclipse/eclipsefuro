@@ -2,6 +2,7 @@ package generator
 
 import (
 	"bytes"
+	"errors"
 	"github.com/eclipse/eclipsefuro/protoc-gen-open-models/pkg/sourceinfo"
 	"google.golang.org/genproto/googleapis/api/annotations"
 	"strings"
@@ -82,19 +83,22 @@ func prepareServiceType(service sourceinfo.ServiceInfo, imports ImportMap) Servi
 		imports.AddImport("./"+requestType, "I"+requestTypeFQ)
 		imports.AddImport("./"+responseType, "I"+responseTypeFQ)
 
-		verb, path := extractPathAndPattern(method.HttpRule.ApiOptions)
-		serviceMethods := ServiceMethods{
-			Name:                method.Name,
-			RequestTypeLiteral:  "I" + requestTypeFQ,
-			ResponseTypeLiteral: "I" + responseTypeFQ,
-			Verb:                verb,
-			Path:                path,
-			Body:                method.HttpRule.ApiOptions.GetBody(),
-			LeadingComments:     multilineComment(method.Info.GetLeadingComments()),
-			TrailingComment:     method.Info.GetTrailingComments(),
-		}
+		verb, path, err := extractPathAndPattern(method.HttpRule.ApiOptions)
+		// on err, we have no REST endpoints
+		if err == nil {
+			serviceMethods := ServiceMethods{
+				Name:                method.Name,
+				RequestTypeLiteral:  "I" + requestTypeFQ,
+				ResponseTypeLiteral: "I" + responseTypeFQ,
+				Verb:                verb,
+				Path:                path,
+				Body:                method.HttpRule.ApiOptions.GetBody(),
+				LeadingComments:     multilineComment(method.Info.GetLeadingComments()),
+				TrailingComment:     method.Info.GetTrailingComments(),
+			}
 
-		serviceType.Methods = append(serviceType.Methods, serviceMethods)
+			serviceType.Methods = append(serviceType.Methods, serviceMethods)
+		}
 	}
 
 	return serviceType
@@ -113,27 +117,30 @@ func fullQualifiedTypeName(typeName string) string {
 	return strings.Join(p, "")
 }
 
-func extractPathAndPattern(rule *annotations.HttpRule) (path string, pattern string) {
+func extractPathAndPattern(rule *annotations.HttpRule) (path string, pattern string, err error) {
+	if rule == nil {
+		return "", "", errors.New("No REST endpoint available")
+	}
 	switch r := rule.Pattern.(type) {
 	case *annotations.HttpRule_Get:
-		return "GET", r.Get
+		return "GET", r.Get, nil
 
 	case *annotations.HttpRule_Put:
-		return "PUT", r.Put
+		return "PUT", r.Put, nil
 
 	case *annotations.HttpRule_Post:
-		return "POST", r.Post
+		return "POST", r.Post, nil
 
 	case *annotations.HttpRule_Patch:
-		return "PATCH", r.Patch
+		return "PATCH", r.Patch, nil
 
 	case *annotations.HttpRule_Delete:
-		return "DELETE", r.Delete
+		return "DELETE", r.Delete, nil
 
 	case *annotations.HttpRule_Custom:
-		return r.Custom.Kind, r.Custom.Path
+		return r.Custom.Kind, r.Custom.Path, nil
 
 	}
 	// should not happen
-	return "", ""
+	return "", "", errors.New("No match")
 }

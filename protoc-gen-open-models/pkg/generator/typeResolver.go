@@ -55,6 +55,23 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 							// message
 							m := *nested.Field[1].TypeName
 							maptype = m[1:len(m)]
+
+							// WELL KNOWN
+							if strings.HasPrefix(tn, ".google.protobuf.") {
+								ts := strings.Split(tn, ".")
+								typeName := ts[len(ts)-1]
+
+								if typeName == "Any" {
+									imports.AddImport("@furo/open-models/dist/index", "type IAny")
+									return "IAny"
+								}
+
+								// well known types are using primitives
+								primitiveMapType := WellKnownTypesMap[typeName]
+								// imports.AddImport("@furo/open-models/dist/index", typeName)
+								return "{ [key: string]: " + PrimitivesMap[primitiveMapType] + " }"
+							}
+
 							// todo:implement map<string,MESSAGETYPE>
 							panic("implement map<string,MESSAGETYPE>")
 						}
