@@ -19,6 +19,7 @@ var WellKnownTypesMap = map[string]string{
 	"UInt64Value": "number",
 	"Timestamp":   "string",
 	"Duration":    "string",
+	"Struct":      "{}",
 	"Empty":       "null",
 }
 
@@ -81,7 +82,8 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 							m := *nested.Field[1].TypeName
 							maptype = m[1:len(m)]
 							// WELL KNOWN
-							if strings.HasPrefix(tn, ".google.protobuf.") {
+
+							if isWellKnownType(tn) {
 								ts := strings.Split(tn, ".")
 								typeName := ts[len(ts)-1]
 
@@ -103,8 +105,21 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 									ModelTypesMap[primitiveMapType],
 									"MAP<string," + ModelTypesMap[primitiveMapType] + "," + PrimitivesMap[primitiveMapType] + ">"
 							}
-							// todo:implement map<string,MESSAGETYPE>
-							panic("implement map<string,MESSAGETYPE>")
+
+							fieldPackage := strings.Split("."+field.Package, ".")
+							rel, _ := filepath.Rel(strings.Join(fieldPackage, "/"), "/"+typenameToPath(m))
+							if !strings.HasPrefix(rel, "..") {
+								rel = "./" + rel
+							}
+							imports.AddImport(rel, fullQualifiedName(maptype, ""))
+							imports.AddImport("@furo/open-models/dist/index", "MAP")
+
+							return "MAP<string," + fullQualifiedName(maptype, "") + "," + fullQualifiedName(maptype, "") + ">",
+								"__TypeSetter",
+								"{ [key: string]: " + fullQualifiedName(maptype, "") + " }",
+								"MAP<string," + fullQualifiedName(maptype, "") + "," + fullQualifiedName(maptype, "") + ">",
+								fullQualifiedName(maptype, ""),
+								"MAP<string," + fullQualifiedName(maptype, "") + "," + fullQualifiedName(maptype, "") + ">"
 						}
 					}
 					// for model types return "MAP<string, STRING, string>;"
@@ -124,8 +139,8 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 
 	if fieldType == "TYPE_MESSAGE" {
 		// WELL KNOWN
-		if strings.HasPrefix(tn, ".google.protobuf.") && !strings.HasPrefix(field.Package, "google.protobuf") {
 
+		if isWellKnownType(tn) {
 			ts := strings.Split(tn, ".")
 			typeName := ts[len(ts)-1]
 
@@ -197,14 +212,12 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 			ss := strings.Split(field.Field.GetTypeName(), ".")
 			importFile := ss[len(ss)-1]
 			fieldPackage := strings.Split("."+field.Package, ".")
-			importPackage := ss[0 : len(ss)-1]
-
-			rel, _ := filepath.Rel(strings.Join(fieldPackage, "/"), strings.Join(importPackage, "/"))
+			rel, _ := filepath.Rel(strings.Join(fieldPackage, "/"), "/"+typenameToPath(tn))
 
 			// do not add import for the same file (direct recursion types)
 			t = fullQualifiedName(t, "")
 			if field.Message.GetName() != importFile {
-				imports.AddImport(rel+"/"+importFile, t)
+				imports.AddImport(rel, t)
 			}
 			return t, "__TypeSetter", "I" + t, t, "", t
 		}
@@ -228,10 +241,78 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 
 			return "ENUM<" + fqn + ">", "__TypeSetter", fqn, "ENUM<" + fqn + ">", "", "ENUM<" + fqn + ">"
 		}
+		if _, ok := projectFiles[typenameToPath(tn)]; ok {
+
+			fieldPackage := strings.Split("."+field.Package, ".")
+			rel, _ := filepath.Rel(strings.Join(fieldPackage, "/"), "/"+typenameToPath(tn))
+
+			fqn := fullQualifiedName(t, "")
+
+			// enum are without prefix
+			imports.AddImport("@furo/open-models/dist/index", "ENUM")
+			imports.AddImport(rel, fqn)
+			if field.Field.Label.String() == "LABEL_REPEATED" {
+				return "ENUM<" + fqn + ">", "__TypeSetter", fqn, "ENUM<" + fqn + ">", "", "ENUM<" + fqn + ">"
+			}
+			return "ENUM<" + fqn + ">", "__TypeSetter", fqn, "ENUM<" + fqn + ">", "", "ENUM<" + fqn + ">"
+		}
 		return "ENUM:UNRECOGNIZED", "__TypeSetter", "???", "???", "", "ENUM<" + t + ">"
 	}
 
 	return "UNRECOGNIZED", "UNRECOGNIZED", "UNRECOGNIZED", "UNRECOGNIZED", "", "UNRECOGNIZED"
+}
+
+func isWellKnownType(tn string) bool {
+	if strings.HasSuffix(tn, "ReservedRange") {
+		a := 3
+		a = a
+	}
+	return strings.HasPrefix(tn, ".google.protobuf.") &&
+		tn != ".google.protobuf.Api" &&
+		tn != ".google.protobuf.ListValue" &&
+		tn != ".google.protobuf.Value" &&
+		tn != ".google.protobuf.Type" &&
+		tn != ".google.protobuf.Descriptor" &&
+		tn != ".google.protobuf.Enum" &&
+		tn != ".google.protobuf.ExtensionRangeOptions" &&
+		tn != ".google.protobuf.ExtensionRangeOptions.Declaration" &&
+		tn != ".google.protobuf.EnumValue" &&
+		tn != ".google.protobuf.EnumValueOptions" &&
+		tn != ".google.protobuf.UninterpretedOption" &&
+		tn != ".google.protobuf.FeatureSet" &&
+		tn != ".google.protobuf.EnumOptions" &&
+		tn != ".google.protobuf.EnumReservedRange" &&
+		tn != ".google.protobuf.FieldOptions" &&
+		tn != ".google.protobuf.FieldOptions.EditionDefault" &&
+		tn != ".google.protobuf.EnumValueDescriptorProto" &&
+		tn != ".google.protobuf.EnumDescriptorProto.EnumReservedRange" &&
+		tn != ".google.protobuf.Mixin" &&
+		tn != ".google.protobuf.SourceCodeInfo.Location" &&
+		tn != ".google.protobuf.Method" &&
+		tn != ".google.protobuf.Option" &&
+		tn != ".google.protobuf.MethodOptions" &&
+		tn != ".google.protobuf.FileOptions" &&
+		tn != ".google.protobuf.Field" &&
+		tn != ".google.protobuf.FeatureSetDefaults.FeatureSetEditionDefault" &&
+		tn != ".google.protobuf.Struct.FieldsEntry" &&
+		tn != ".google.protobuf.ServiceDescriptorProto" &&
+		tn != ".google.protobuf.SourceCodeInfo" &&
+		tn != ".google.protobuf.SourceContext" &&
+		tn != ".google.protobuf.FileDescriptorProto" &&
+		tn != ".google.protobuf.DescriptorProto" &&
+		tn != ".google.protobuf.GeneratedCodeInfo.Annotation" &&
+		tn != ".google.protobuf.EnumDescriptorProto" &&
+		tn != ".google.protobuf.DescriptorProto.ExtensionRange" &&
+		tn != ".google.protobuf.FieldDescriptorProto" &&
+		tn != ".google.protobuf.ExtensionRange" &&
+		tn != ".google.protobuf.UninterpretedOption.NamePart" &&
+		tn != ".google.protobuf.MethodDescriptorProto" &&
+		tn != ".google.protobuf.ServiceOptions" &&
+		tn != ".google.protobuf.OneofOptions" &&
+		tn != ".google.protobuf.MessageOptions" &&
+		tn != ".google.protobuf.OneofDescriptorProto" &&
+		tn != ".google.protobuf.DescriptorProto.ReservedRange" &&
+		tn != ".google.protobuf.Syntax"
 }
 
 func deepRecursionCheck(typename string) bool {
@@ -253,5 +334,10 @@ func deepRecursionCheckRecursion(startAt string, lookFor string) bool {
 }
 
 func typenameToPath(tn string) string {
+	info := allTypes[tn]
+	if info.ParentOfNested != nil {
+		ret := strings.Replace(info.ParentOfNested.Package, ".", "/", -1)
+		return ret + "/" + info.Name
+	}
 	return strings.Replace(tn[1:], ".", "/", -1)
 }

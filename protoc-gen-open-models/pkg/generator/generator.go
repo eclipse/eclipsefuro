@@ -10,6 +10,7 @@ import (
 var projectFiles = map[string]string{}
 
 var allTypes = map[string]sourceinfo.MessageInfo{}
+var allEnums = map[string]sourceinfo.EnumInfo{}
 
 func GenerateAll(responseWriter protoplugin.ResponseWriter, request protoplugin.Request) {
 
@@ -22,6 +23,7 @@ func GenerateAll(responseWriter protoplugin.ResponseWriter, request protoplugin.
 		// build a list of project files
 		for _, enum := range sourceInfo.Enums {
 			projectFiles[path.Join(sourceInfo.Path, enum.Name)] = "ENUM"
+			allEnums["."+enum.Package+"."+enum.Name] = enum
 		}
 		for _, service := range sourceInfo.Services {
 			projectFiles[path.Join(sourceInfo.Path, service.Name)] = "SERVICE"
@@ -31,8 +33,10 @@ func GenerateAll(responseWriter protoplugin.ResponseWriter, request protoplugin.
 			projectFiles[path.Join(sourceInfo.Path, message.Name)] = "MESSAGE"
 			allTypes["."+message.Package+"."+message.Message.GetName()] = message
 			for _, nestedMessage := range message.NestedMessages {
+				projectFiles[path.Join(sourceInfo.Path, nestedMessage.Name)] = "MESSAGE"
 				allTypes["."+nestedMessage.Package+"."+nestedMessage.Name] = nestedMessage
 			}
+
 		}
 
 	}

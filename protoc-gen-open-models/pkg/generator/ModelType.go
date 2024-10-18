@@ -321,5 +321,9 @@ Exit:
 		}
 	}
 
-	return "----"
+	if enum, ok := allEnums[fqn]; ok {
+		return enum.Message.Value[0].GetName()
+	}
+
+	return "/ ModelType.go line 327"
 }

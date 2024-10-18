@@ -57,7 +57,7 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 							maptype = m[1:len(m)]
 
 							// WELL KNOWN
-							if strings.HasPrefix(tn, ".google.protobuf.") {
+							if isWellKnownType(tn) {
 								ts := strings.Split(tn, ".")
 								typeName := ts[len(ts)-1]
 
@@ -68,12 +68,16 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 
 								// well known types are using primitives
 								primitiveMapType := WellKnownTypesMap[typeName]
-								// imports.AddImport("@furo/open-models/dist/index", typeName)
+								imports.AddImport("@furo/open-models/dist/index", typeName)
 								return "{ [key: string]: " + PrimitivesMap[primitiveMapType] + " }"
 							}
-
-							// todo:implement map<string,MESSAGETYPE>
-							panic("implement map<string,MESSAGETYPE>")
+							fieldPackage := strings.Split("."+field.Package, ".")
+							rel, _ := filepath.Rel(strings.Join(fieldPackage, "/"), "/"+typenameToPath(m))
+							if !strings.HasPrefix(rel, "..") {
+								rel = "./" + rel
+							}
+							imports.AddImport(rel, kindPrefix+fullQualifiedName(maptype, ""))
+							return "{ [key: string]: " + kindPrefix + fullQualifiedName(maptype, "") + " }"
 						}
 					}
 					return "{ [key: string]: " + PrimitivesMap[maptype] + " }"
@@ -86,7 +90,7 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 
 	if fieldType == "TYPE_MESSAGE" {
 		// WELL KNOWN
-		if strings.HasPrefix(tn, ".google.protobuf.") && field.Package != "google.protobuf" {
+		if isWellKnownType(tn) {
 			ts := strings.Split(tn, ".")
 			typeName := ts[len(ts)-1]
 
@@ -97,7 +101,7 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 
 			// well known types are using primitives
 			primitiveType := WellKnownTypesMap[typeName]
-			// imports.AddImport("@furo/open-models/dist/index", typeName)
+			imports.AddImport("@furo/open-models/dist/index", typeName)
 			return primitiveType
 		}
 
@@ -131,14 +135,12 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 			ss := strings.Split(field.Field.GetTypeName(), ".")
 			importFile := ss[len(ss)-1]
 			fieldPackage := strings.Split("."+field.Package, ".")
-			importPackage := ss[0 : len(ss)-1]
-
-			rel, _ := filepath.Rel(strings.Join(fieldPackage, "/"), strings.Join(importPackage, "/"))
+			rel, _ := filepath.Rel(strings.Join(fieldPackage, "/"), "/"+typenameToPath(tn))
 
 			// do not add import for the same file (direct recursion types)
 			t = fullQualifiedName(t, "")
 			if field.Message.GetName() != importFile {
-				imports.AddImport(rel+"/"+importFile, kindPrefix+t)
+				imports.AddImport(rel, kindPrefix+t)
 			}
 			if field.Field.Label.String() == "LABEL_REPEATED" {
 				return kindPrefix + t + "[]"
@@ -161,6 +163,21 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 
 			// enum are without prefix
 			imports.AddImport("./"+importFile, fqn)
+			if field.Field.Label.String() == "LABEL_REPEATED" {
+				return fqn + "[]"
+			}
+			return fqn + " | string"
+		}
+		if _, ok := projectFiles[typenameToPath(tn)]; ok {
+
+			fieldPackage := strings.Split("."+field.Package, ".")
+			rel, _ := filepath.Rel(strings.Join(fieldPackage, "/"), "/"+typenameToPath(tn))
+
+			fqn := fullQualifiedName(t, "")
+
+			// enum are without prefix
+			imports.AddImport("@furo/open-models/dist/index", "ENUM")
+			imports.AddImport(rel, fqn)
 			if field.Field.Label.String() == "LABEL_REPEATED" {
 				return fqn + "[]"
 			}

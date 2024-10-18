@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/eclipse/eclipsefuro/protoc-gen-open-models/pkg/sourceinfo"
 	"google.golang.org/genproto/googleapis/api/annotations"
+	"path/filepath"
 	"strings"
 	"text/template"
 )
@@ -80,14 +81,21 @@ func prepareServiceType(service sourceinfo.ServiceInfo, imports ImportMap) Servi
 
 	for _, method := range service.Methods {
 
-		requestType := baseTypeName(method.Method.GetInputType())
 		requestTypeFQ := fullQualifiedTypeName(method.Method.GetInputType())
-
-		responseType := baseTypeName(method.Method.GetOutputType())
 		responseTypeFQ := fullQualifiedTypeName(method.Method.GetOutputType())
 
-		imports.AddImport("./"+requestType, "I"+requestTypeFQ)
-		imports.AddImport("./"+responseType, "I"+responseTypeFQ)
+		fieldPackage := strings.Split("."+service.Package, ".")
+
+		relIn, _ := filepath.Rel(strings.Join(fieldPackage, "/"), "/"+typenameToPath(method.Method.GetInputType()))
+		relOut, _ := filepath.Rel(strings.Join(fieldPackage, "/"), "/"+typenameToPath(method.Method.GetOutputType()))
+		if !strings.HasPrefix(relIn, "..") {
+			relIn = "./" + relIn
+		}
+		if !strings.HasPrefix(relOut, "..") {
+			relOut = "./" + relOut
+		}
+		imports.AddImport(relIn, "I"+requestTypeFQ)
+		imports.AddImport(relOut, "I"+responseTypeFQ)
 
 		verb, path, err := extractPathAndPattern(method.HttpRule.ApiOptions)
 		// on err, we have no REST endpoints
