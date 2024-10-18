@@ -263,10 +263,7 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 }
 
 func isWellKnownType(tn string) bool {
-	if strings.HasSuffix(tn, "ReservedRange") {
-		a := 3
-		a = a
-	}
+
 	return strings.HasPrefix(tn, ".google.protobuf.") &&
 		tn != ".google.protobuf.Api" &&
 		tn != ".google.protobuf.ListValue" &&

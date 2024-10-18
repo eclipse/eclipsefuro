@@ -251,6 +251,34 @@ func GetSourceInfo(descr *descriptorpb.FileDescriptorProto) SourceInfo {
 					sourceInfo.InlineMessages = append(sourceInfo.InlineMessages, mi)
 
 				}
+
+				// check for nested inline enums
+				for _, nestedEnum := range nestedMessage.EnumType {
+
+					alias := false
+					if nestedEnum.Options != nil && nestedEnum.Options.AllowAlias != nil {
+						alias = *nestedEnum.Options.AllowAlias
+					}
+					// values
+					vals := []ValueInfo{}
+					for _, v := range nestedEnum.Value {
+						fi := ValueInfo{
+							Name:  *v.Name,
+							Value: *v.Number,
+						}
+						vals = append(vals, fi)
+					}
+
+					sourceInfo.InlineEnums = append(sourceInfo.InlineEnums, EnumInfo{
+						Name:       *descr.MessageType[msgIndex].Name + "." + *nestedMessage.Name + "." + *nestedEnum.Name,
+						ValuesInfo: vals,
+						AllowAlias: alias,
+						Info:       location,
+						Message:    *nestedEnum,
+						Package:    descr.GetPackage(),
+					})
+
+				}
 			}
 		}
 
