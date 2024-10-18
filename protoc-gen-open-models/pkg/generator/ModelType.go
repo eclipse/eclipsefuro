@@ -304,5 +304,22 @@ Exit:
 			return info.ValuesInfo[0].Name
 		}
 	}
-	return "could not resolve " + field.Name
+
+	if field.Field.DefaultValue != nil {
+		return *field.Field.DefaultValue
+	}
+
+	// field.Package           // google.protobuf
+	// field.Message.GetName() // FieldDescriptorProto
+	fqn := *field.Field.TypeName // .google.protobuf.FieldDescriptorProto.Type
+	ss := strings.Split(fqn, ".")
+	enumName := ss[len(ss)-1]
+
+	for _, enumType := range field.Message.EnumType {
+		if enumType.GetName() == enumName {
+			return enumType.Value[0].GetName()
+		}
+	}
+
+	return "----"
 }

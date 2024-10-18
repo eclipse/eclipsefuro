@@ -55,7 +55,7 @@ type EnumInfo struct {
 	Info       *descriptorpb.SourceCodeInfo_Location
 	ValuesInfo []ValueInfo
 	AllowAlias bool
-	Message    descriptorpb.DescriptorProto
+	Message    descriptorpb.EnumDescriptorProto
 	Package    string
 }
 
@@ -142,6 +142,7 @@ func GetSourceInfo(descr *descriptorpb.FileDescriptorProto) SourceInfo {
 				ValuesInfo: vals,
 				AllowAlias: alias,
 				Info:       location,
+				Message:    *descr.EnumType[msgIndex],
 				Package:    descr.GetPackage(),
 			})
 		}
@@ -192,18 +193,19 @@ func GetSourceInfo(descr *descriptorpb.FileDescriptorProto) SourceInfo {
 					ValuesInfo: vals,
 					AllowAlias: alias,
 					Info:       location,
+					Message:    *nestedEnum,
+					Package:    descr.GetPackage(),
 				})
 
 			}
 
 			// check for nested messages
-			for _, nestedMessage := range descr.MessageType[msgIndex].NestedType {
-
+			for nmi, nestedMessage := range descr.MessageType[msgIndex].NestedType {
 				mi := MessageInfo{
 					Name:           *descr.MessageType[msgIndex].Name + "." + *nestedMessage.Name,
 					Info:           nil,
 					FieldInfos:     []FieldInfo{},
-					Message:        descriptorpb.DescriptorProto{},
+					Message:        *nestedMessage,
 					Package:        descr.GetPackage(),
 					OpenApiSchema:  nil,
 					ParentOfNested: &sourceInfo.Messages[msgIndex],
@@ -223,6 +225,32 @@ func GetSourceInfo(descr *descriptorpb.FileDescriptorProto) SourceInfo {
 				sourceInfo.Messages[msgIndex].NestedMessages = append(sourceInfo.Messages[msgIndex].NestedMessages, mi)
 				sourceInfo.InlineMessages = append(sourceInfo.InlineMessages, mi)
 
+				for _, nestedNestedMessage := range nestedMessage.NestedType {
+					mi := MessageInfo{
+						Name:           *descr.MessageType[msgIndex].Name + "." + *nestedMessage.Name + "." + *nestedNestedMessage.Name,
+						Info:           nil,
+						FieldInfos:     []FieldInfo{},
+						Message:        *nestedNestedMessage,
+						Package:        descr.GetPackage(),
+						OpenApiSchema:  nil,
+						ParentOfNested: &sourceInfo.Messages[msgIndex].NestedMessages[nmi],
+					}
+
+					for _, field := range nestedNestedMessage.Field {
+						fi := FieldInfo{
+							Name:    field.GetName(),
+							Info:    location, // maybe the wrong one
+							Field:   field,
+							Message: nestedNestedMessage,
+							Package: descr.GetPackage(),
+						}
+						mi.FieldInfos = append(mi.FieldInfos, fi)
+					}
+
+					//	sourceInfo.Messages[msgIndex].NestedMessages[i].NestedMessages = append(sourceInfo.Messages[msgIndex].NestedMessages[i].NestedMessages, mi)
+					sourceInfo.InlineMessages = append(sourceInfo.InlineMessages, mi)
+
+				}
 			}
 		}
 

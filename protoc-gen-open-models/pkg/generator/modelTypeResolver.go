@@ -17,6 +17,9 @@ var WellKnownTypesMap = map[string]string{
 	"DoubleValue": "number",
 	"UInt32Value": "number",
 	"UInt64Value": "number",
+	"Timestamp":   "string",
+	"Duration":    "string",
+	"Empty":       "null",
 }
 
 var ModelTypesMap = map[string]string{
@@ -47,6 +50,7 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 		primitiveType := PrimitivesMap[fieldType]
 		if field.Field.Label.String() == "LABEL_REPEATED" {
 			imports.AddImport("@furo/open-models/dist/index", "ARRAY")
+			imports.AddImport("@furo/open-models/dist/index", ModelTypesMap[fieldType])
 			return "ARRAY<" + t + ", " + primitiveType + ">",
 				"__TypeSetter",
 				primitiveType + "[]",
@@ -120,7 +124,8 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 
 	if fieldType == "TYPE_MESSAGE" {
 		// WELL KNOWN
-		if strings.HasPrefix(tn, ".google.protobuf.") {
+		if strings.HasPrefix(tn, ".google.protobuf.") && !strings.HasPrefix(field.Package, "google.protobuf") {
+
 			ts := strings.Split(tn, ".")
 			typeName := ts[len(ts)-1]
 
@@ -143,15 +148,7 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 		if strings.HasPrefix(t, field.Package) {
 			// we are in the same package
 			// import is just ./[TypeName]
-			ss := strings.Split(field.Field.GetTypeName(), ".")
-			importFile := ss[len(ss)-1]
-			// create correct importFile for nested types
-			msg, found := allTypes[field.Field.GetTypeName()]
-			if found {
-				if msg.ParentOfNested != nil {
-					importFile = msg.Name
-				}
-			}
+			importFile := t[len(field.Package)+1:]
 
 			// do not add import for the same file (direct recursion types)
 			t = fullQualifiedName(t, "")
@@ -161,6 +158,7 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 
 			if field.Field.Label.String() == "LABEL_REPEATED" {
 				imports.AddImport("@furo/open-models/dist/index", "ARRAY")
+
 				return "ARRAY<" + t + ", I" + t + ">",
 					"__TypeSetter",
 					"I" + t + "[]",
@@ -220,14 +218,15 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 		}
 		if strings.HasPrefix(t, field.Package) {
 			// we are in the same package
-			// import is just ./[TypeName]
-			ss := strings.Split(field.Field.GetTypeName(), ".")
-			importFile := ss[len(ss)-1]
-			t = fullQualifiedName(t, "")
+			// import is just ./[TypeName.Nested]
+			importFile := t[len(field.Package)+1:]
+			fqn := fullQualifiedName(t, "")
 
 			imports.AddImport("@furo/open-models/dist/index", "ENUM")
-			imports.AddImport("./"+importFile, t)
-			return "ENUM<" + t + ">", "__TypeSetter", t, "ENUM<" + t + ">", "", "ENUM<" + t + ">"
+			imports.AddImport("./"+importFile, fqn)
+			// create correct importFile for nested types
+
+			return "ENUM<" + fqn + ">", "__TypeSetter", fqn, "ENUM<" + fqn + ">", "", "ENUM<" + fqn + ">"
 		}
 		return "ENUM:UNRECOGNIZED", "__TypeSetter", "???", "???", "", "ENUM<" + t + ">"
 	}

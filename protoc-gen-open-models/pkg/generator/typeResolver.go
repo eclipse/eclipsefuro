@@ -86,7 +86,7 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 
 	if fieldType == "TYPE_MESSAGE" {
 		// WELL KNOWN
-		if strings.HasPrefix(tn, ".google.protobuf.") {
+		if strings.HasPrefix(tn, ".google.protobuf.") && field.Package != "google.protobuf" {
 			ts := strings.Split(tn, ".")
 			typeName := ts[len(ts)-1]
 
@@ -110,17 +110,8 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 		}
 		if strings.HasPrefix(t, field.Package) {
 			// we are in the same package
-			// import is just ./[TypeName]
-
-			ss := strings.Split(field.Field.GetTypeName(), ".")
-			importFile := ss[len(ss)-1]
-			// create correct importFile for nested types
-			msg, found := allTypes[field.Field.GetTypeName()]
-			if found {
-				if msg.ParentOfNested != nil {
-					importFile = msg.Name
-				}
-			}
+			// import is just ./[TypeName.Nested]
+			importFile := t[len(field.Package)+1:]
 
 			t = fullQualifiedName(t, "")
 			// add imports for Transport, Literal and Model
@@ -165,15 +156,15 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 		if strings.HasPrefix(t, field.Package) {
 			// we are in the same package
 			// import is just ./[TypeName]
-			ss := strings.Split(field.Field.GetTypeName(), ".")
-			importFile := ss[len(ss)-1]
-			t = fullQualifiedName(t, "")
+			importFile := t[len(field.Package)+1:]
+			fqn := fullQualifiedName(t, "")
+
 			// enum are without prefix
-			imports.AddImport("./"+importFile, t)
+			imports.AddImport("./"+importFile, fqn)
 			if field.Field.Label.String() == "LABEL_REPEATED" {
-				return t + "[]"
+				return fqn + "[]"
 			}
-			return t + " | string"
+			return fqn + " | string"
 		}
 		return "ENUM:UNRECOGNIZED"
 	}
