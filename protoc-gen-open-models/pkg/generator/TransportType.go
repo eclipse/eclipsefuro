@@ -43,7 +43,7 @@ var TransportTypeTemplate = `export interface T{{.Name}} {
 
 func prepareTransportType(message *sourceinfo.MessageInfo, imports ImportMap) TransportType {
 	transportType := TransportType{
-		Name:   fullQualifiedName(message.Package, message.Name),
+		Name:   fullQualifiedName(message.Package, fullQualifiedName(message.Name, "")),
 		Fields: nil,
 	}
 	for _, field := range message.FieldInfos {

@@ -63,7 +63,13 @@ func (r *ServiceType) Render() string {
 func prepareServiceType(service sourceinfo.ServiceInfo, imports ImportMap) ServiceType {
 
 	imports.AddImport("@furo/open-models/dist/Fetcher", "Fetcher")
-	imports.AddImport("../API_OPTIONS", "API_OPTIONS")
+
+	pathSegments := strings.Split(service.Package, ".")
+	for i, _ := range pathSegments {
+		pathSegments[i] = ".."
+	}
+
+	imports.AddImport(strings.Join(pathSegments, "/")+"/API_OPTIONS", "API_OPTIONS")
 
 	serviceType := ServiceType{
 		Name:            fullQualifiedName(service.Package, service.Name),

@@ -80,6 +80,7 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 					// for model types return "MAP<string, STRING, string>;"
 				}
 			}
+
 		}
 	}
 
@@ -113,6 +114,14 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 
 			ss := strings.Split(field.Field.GetTypeName(), ".")
 			importFile := ss[len(ss)-1]
+			// create correct importFile for nested types
+			msg, found := allTypes[field.Field.GetTypeName()]
+			if found {
+				if msg.ParentOfNested != nil {
+					importFile = msg.Name
+				}
+			}
+
 			t = fullQualifiedName(t, "")
 			// add imports for Transport, Literal and Model
 			// do not add import for the same file (direct recursion types)

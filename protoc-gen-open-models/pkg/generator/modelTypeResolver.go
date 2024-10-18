@@ -145,6 +145,14 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 			// import is just ./[TypeName]
 			ss := strings.Split(field.Field.GetTypeName(), ".")
 			importFile := ss[len(ss)-1]
+			// create correct importFile for nested types
+			msg, found := allTypes[field.Field.GetTypeName()]
+			if found {
+				if msg.ParentOfNested != nil {
+					importFile = msg.Name
+				}
+			}
+
 			// do not add import for the same file (direct recursion types)
 			t = fullQualifiedName(t, "")
 			if field.Message.GetName() != importFile {

@@ -30,7 +30,11 @@ func GenerateAll(responseWriter protoplugin.ResponseWriter, request protoplugin.
 		for _, message := range sourceInfo.Messages {
 			projectFiles[path.Join(sourceInfo.Path, message.Name)] = "MESSAGE"
 			allTypes["."+message.Package+"."+message.Message.GetName()] = message
+			for _, nestedMessage := range message.NestedMessages {
+				allTypes["."+nestedMessage.Package+"."+nestedMessage.Name] = nestedMessage
+			}
 		}
+
 	}
 
 	for _, fileDescriptorProto := range request.FileDescriptorProtosToGenerate() {
@@ -66,6 +70,15 @@ func Generate(sourceInfo sourceinfo.SourceInfo, responseWriter protoplugin.Respo
 
 	// build model files, they include the Literal, Transport and Model
 	for _, message := range sourceInfo.Messages {
+		// Add the response file to the response.
+		responseWriter.AddFile(
+			path.Join(sourceInfo.Path, message.Name+".ts"),
+			createOpenModel(sourceInfo, &message, request),
+		)
+	}
+
+	// build model files, they include the Literal, Transport and Model
+	for _, message := range sourceInfo.InlineMessages {
 		// Add the response file to the response.
 		responseWriter.AddFile(
 			path.Join(sourceInfo.Path, message.Name+".ts"),

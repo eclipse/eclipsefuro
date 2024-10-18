@@ -44,7 +44,7 @@ func (r *LiteralType) Render() string {
 
 func prepareLiteralType(message *sourceinfo.MessageInfo, imports ImportMap) LiteralType {
 	literalType := LiteralType{
-		Name:   fullQualifiedName(message.Package, message.Name),
+		Name:   fullQualifiedName(message.Package, fullQualifiedName(message.Name, "")),
 		Fields: nil,
 	}
 	for _, field := range message.FieldInfos {

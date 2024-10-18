@@ -176,7 +176,7 @@ func prepareModelType(message *sourceinfo.MessageInfo, imports ImportMap, si sou
 	readonlyFields := []string{}
 
 	modelType := ModelType{
-		Name:            fullQualifiedName(message.Package, message.Name),
+		Name:            fullQualifiedName(message.Package, fullQualifiedName(message.Name, "")),
 		Fields:          nil,
 		LeadingComments: multilineComment(message.Info.GetLeadingComments()),
 		MetaTypeName:    message.Package + "." + message.Name,
