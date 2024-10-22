@@ -15,9 +15,10 @@ var allEnums = map[string]sourceinfo.EnumInfo{}
 func GenerateAll(responseWriter protoplugin.ResponseWriter, request protoplugin.Request) {
 
 	for _, fileDescriptorProto := range request.AllFileDescriptorProtos() {
-		if strings.HasPrefix(fileDescriptorProto.GetPackage(), "openapi.v3") {
+		/*if strings.HasPrefix(fileDescriptorProto.GetPackage(), "openapi.v3") {
 			continue
-		}
+		}*/
+
 		// collect source infos like messages,enums,services,... including comments
 		sourceInfo := sourceinfo.GetSourceInfo(fileDescriptorProto)
 		// build a list of project files
@@ -42,9 +43,9 @@ func GenerateAll(responseWriter protoplugin.ResponseWriter, request protoplugin.
 	}
 
 	for _, fileDescriptorProto := range request.FileDescriptorProtosToGenerate() {
-		if strings.HasPrefix(fileDescriptorProto.GetPackage(), "openapi.v3") {
+		/*if strings.HasPrefix(fileDescriptorProto.GetPackage(), "openapi.v3") {
 			continue
-		}
+		}*/
 		// collect source infos like messages,enums,services,... including comments
 		si := sourceinfo.GetSourceInfo(fileDescriptorProto)
 		Generate(si, responseWriter, request)
