@@ -26,6 +26,11 @@ func GenerateAll(responseWriter protoplugin.ResponseWriter, request protoplugin.
 			projectFiles[path.Join(sourceInfo.Path, enum.Name)] = "ENUM"
 			allEnums["."+enum.Package+"."+enum.Name] = enum
 		}
+		for _, enum := range sourceInfo.InlineEnums {
+			projectFiles[path.Join(sourceInfo.Path, enum.Name)] = "ENUM"
+			allEnums["."+enum.Package+"."+enum.Name] = enum
+		}
+
 		for _, service := range sourceInfo.Services {
 			projectFiles[path.Join(sourceInfo.Path, service.Name)] = "SERVICE"
 
@@ -33,10 +38,22 @@ func GenerateAll(responseWriter protoplugin.ResponseWriter, request protoplugin.
 		for _, message := range sourceInfo.Messages {
 			projectFiles[path.Join(sourceInfo.Path, message.Name)] = "MESSAGE"
 			allTypes["."+message.Package+"."+message.Message.GetName()] = message
+
 			for _, nestedMessage := range message.NestedMessages {
 				projectFiles[path.Join(sourceInfo.Path, nestedMessage.Name)] = "MESSAGE"
 				allTypes["."+nestedMessage.Package+"."+nestedMessage.Name] = nestedMessage
+
+				for _, nestedNestedMessage := range nestedMessage.NestedMessages {
+					projectFiles[path.Join(sourceInfo.Path, nestedNestedMessage.Name)] = "MESSAGE"
+					allTypes["."+nestedMessage.Package+"."+nestedNestedMessage.Name] = nestedNestedMessage
+
+				}
 			}
+
+		}
+		for _, message := range sourceInfo.InlineMessages {
+			projectFiles[path.Join(sourceInfo.Path, message.Name)] = "MESSAGE"
+			allTypes["."+message.Package+"."+message.Message.GetName()] = message
 
 		}
 

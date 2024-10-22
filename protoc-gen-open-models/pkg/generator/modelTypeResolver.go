@@ -160,7 +160,7 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 		if strings.HasPrefix(t, ".") {
 			t = t[1:]
 		}
-		if strings.HasPrefix(t, field.Package) {
+		if allTypes[tn].Package == field.Package {
 			// we are in the same package
 			// import is just ./[TypeName]
 			importFile := t[len(field.Package)+1:]
@@ -213,6 +213,9 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 			importFile := ss[len(ss)-1]
 			fieldPackage := strings.Split("."+field.Package, ".")
 			rel, _ := filepath.Rel(strings.Join(fieldPackage, "/"), "/"+typenameToPath(tn))
+			if !strings.HasPrefix(rel, "..") {
+				rel = "./" + rel
+			}
 
 			// do not add import for the same file (direct recursion types)
 			t = fullQualifiedName(t, "")
@@ -229,7 +232,7 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 		if strings.HasPrefix(t, ".") {
 			t = t[1:]
 		}
-		if strings.HasPrefix(t, field.Package) {
+		if allEnums[tn].Package == field.Package {
 			// we are in the same package
 			// import is just ./[TypeName.Nested]
 			importFile := t[len(field.Package)+1:]
@@ -245,7 +248,9 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 
 			fieldPackage := strings.Split("."+field.Package, ".")
 			rel, _ := filepath.Rel(strings.Join(fieldPackage, "/"), "/"+typenameToPath(tn))
-
+			if !strings.HasPrefix(rel, "..") {
+				rel = "./" + rel
+			}
 			fqn := fullQualifiedName(t, "")
 
 			// enum are without prefix

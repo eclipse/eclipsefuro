@@ -247,7 +247,7 @@ func GetSourceInfo(descr *descriptorpb.FileDescriptorProto) SourceInfo {
 						mi.FieldInfos = append(mi.FieldInfos, fi)
 					}
 
-					//	sourceInfo.Messages[msgIndex].NestedMessages[i].NestedMessages = append(sourceInfo.Messages[msgIndex].NestedMessages[i].NestedMessages, mi)
+					sourceInfo.Messages[msgIndex].NestedMessages[nmi].NestedMessages = append(sourceInfo.Messages[msgIndex].NestedMessages[nmi].NestedMessages, mi)
 					sourceInfo.InlineMessages = append(sourceInfo.InlineMessages, mi)
 
 				}
