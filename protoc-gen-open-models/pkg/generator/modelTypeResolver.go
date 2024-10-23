@@ -19,8 +19,8 @@ var WellKnownTypesMap = map[string]string{
 	"UInt64Value": "number",
 	"Timestamp":   "string",
 	"Duration":    "string",
-	"Struct":      "{}",
-	"Empty":       "null",
+	"Struct":      "object",
+	"Empty":       "Record<string, never>",
 }
 
 var ModelTypesMap = map[string]string{
