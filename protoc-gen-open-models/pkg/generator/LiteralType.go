@@ -8,8 +8,9 @@ import (
 )
 
 type LiteralType struct {
-	Name   string
-	Fields []LiteralFields
+	Name            string
+	Fields          []LiteralFields
+	LeadingComments []string
 }
 
 type LiteralFields struct {
@@ -20,10 +21,16 @@ type LiteralFields struct {
 	Type            string
 }
 
-var LiteralTypeTemplate = `export interface I{{.Name}} {
-{{- range .Fields}}{{if .LeadingComments}}{{range $i, $commentLine := .LeadingComments}}
-  // {{$commentLine}}{{end}}{{end}}
-  {{.FieldName}}?: {{.Type}};{{if .TrailingComment}} // {{.TrailingComment}}{{end}}{{end}}
+var LiteralTypeTemplate = `/**
+ * @interface I{{.Name}} {{if .LeadingComments}}{{range $i, $commentLine := .LeadingComments}}
+ * {{$commentLine}}{{end}}{{end}}
+ */
+export interface I{{.Name}} {
+{{- range .Fields}}{{if .LeadingComments}}
+    /**{{range $i, $commentLine := .LeadingComments}}
+     * {{$commentLine}} {{end}}
+     */{{end}}
+    {{.FieldName}}?: {{.Type}};{{if .TrailingComment}} // {{.TrailingComment}}{{end}}{{end}}
 }
 `
 
@@ -44,8 +51,9 @@ func (r *LiteralType) Render() string {
 
 func prepareLiteralType(message *sourceinfo.MessageInfo, imports ImportMap) LiteralType {
 	literalType := LiteralType{
-		Name:   fullQualifiedName(message.Package, fullQualifiedName(message.Name, "")),
-		Fields: nil,
+		Name:            fullQualifiedName(message.Package, fullQualifiedName(message.Name, "")),
+		Fields:          nil,
+		LeadingComments: multilineComment(message.Info.GetLeadingComments()),
 	}
 	for _, field := range message.FieldInfos {
 		literalType.Fields = append(literalType.Fields, LiteralFields{

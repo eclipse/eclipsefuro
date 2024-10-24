@@ -10,7 +10,8 @@ func multilineComment(comments string) []string {
 	if strings.HasSuffix(comments, "\n") {
 		comments = comments[:len(comments)-1]
 	}
-
+	// escape */
+	comments = strings.Replace(comments, "*/", "*\\/", -1)
 	return strings.Split(comments, "\n")
 }
 

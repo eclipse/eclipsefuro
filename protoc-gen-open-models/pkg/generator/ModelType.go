@@ -64,8 +64,10 @@ type FieldConstraints struct {
 	Required         bool    `json:"required,omitempty"`
 }
 
-var ModelTypeTemplate = `{{if .LeadingComments}}{{range $i, $commentLine := .LeadingComments}}
-// {{$commentLine}}{{end}}{{end}}
+var ModelTypeTemplate = `/**
+ * {{.Name}} {{if .LeadingComments}}{{range $i, $commentLine := .LeadingComments}}
+ * {{$commentLine}}{{end}}{{end}}
+ */
 export class {{.Name}} extends FieldNode {
 {{range .Fields}}
   {{if .LeadingComments}}{{range $i, $commentLine := .LeadingComments}}

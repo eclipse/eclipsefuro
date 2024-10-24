@@ -7,8 +7,9 @@ import (
 )
 
 type TransportType struct {
-	Name   string
-	Fields []TransportFields
+	Name            string
+	Fields          []TransportFields
+	LeadingComments []string
 }
 
 type TransportFields struct {
@@ -34,17 +35,24 @@ func (r *TransportType) Render() string {
 	return res.String()
 }
 
-var TransportTypeTemplate = `export interface T{{.Name}} {
-{{- range .Fields}}{{if .LeadingComments}}{{range $i, $commentLine := .LeadingComments}}
-  // {{$commentLine}}{{end}}{{end}}
-  {{.FieldProtoName}}?: {{.Type}};{{if .TrailingComment}} // {{.TrailingComment}}{{end}}{{end}}
+var TransportTypeTemplate = `/**
+ * @interface T{{.Name}} {{if .LeadingComments}}{{range $i, $commentLine := .LeadingComments}}
+ * {{$commentLine}}{{end}}{{end}}
+ */
+export interface T{{.Name}} {
+{{- range .Fields}}{{if .LeadingComments}}
+/**{{range $i, $commentLine := .LeadingComments}}
+ * {{$commentLine}} {{end}}
+ */{{end}}
+    {{.FieldProtoName}}?: {{.Type}};{{if .TrailingComment}} // {{.TrailingComment}}{{end}}{{end}}
 }
 `
 
 func prepareTransportType(message *sourceinfo.MessageInfo, imports ImportMap) TransportType {
 	transportType := TransportType{
-		Name:   fullQualifiedName(message.Package, fullQualifiedName(message.Name, "")),
-		Fields: nil,
+		Name:            fullQualifiedName(message.Package, fullQualifiedName(message.Name, "")),
+		Fields:          nil,
+		LeadingComments: multilineComment(message.Info.GetLeadingComments()),
 	}
 	for _, field := range message.FieldInfos {
 		transportType.Fields = append(transportType.Fields, TransportFields{
