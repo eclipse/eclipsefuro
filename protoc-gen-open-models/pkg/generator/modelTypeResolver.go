@@ -222,6 +222,16 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 			if field.Message.GetName() != importFile {
 				imports.AddImport(rel, t)
 			}
+			if field.Field.Label.String() == "LABEL_REPEATED" {
+				imports.AddImport("@furo/open-models/dist/index", "ARRAY")
+
+				return "ARRAY<" + t + ", I" + t + ">",
+					"__TypeSetter",
+					"I" + t + "[]",
+					"ARRAY<" + t + ", I" + t + ">",
+					"",
+					t
+			}
 			return t, "__TypeSetter", "I" + t, t, "", t
 		}
 
