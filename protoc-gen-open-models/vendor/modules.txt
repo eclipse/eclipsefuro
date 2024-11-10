@@ -11,6 +11,9 @@ github.com/google/gnostic-models/compiler
 github.com/google/gnostic-models/extensions
 github.com/google/gnostic-models/jsonschema
 github.com/google/gnostic-models/openapiv3
+# github.com/iancoleman/strcase v0.2.0
+## explicit; go 1.16
+github.com/iancoleman/strcase
 # google.golang.org/genproto/googleapis/api v0.0.0-20240903143218-8af14fe29dc1
 ## explicit; go 1.21
 google.golang.org/genproto/googleapis/api

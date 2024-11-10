@@ -3,6 +3,7 @@ package generator
 import (
 	"bytes"
 	"github.com/eclipse/eclipsefuro/protoc-gen-open-models/pkg/sourceinfo"
+	"github.com/iancoleman/strcase"
 	"strings"
 	"text/template"
 )
@@ -72,5 +73,6 @@ func fullQualifiedName(pkg string, name string) string {
 	for _, s := range strings.Split(pkg, ".") {
 		p = append(p, strings.ToUpper(s[:1])+s[1:])
 	}
-	return strings.Join(p, "") + name
+
+	return strcase.ToCamel(strings.Join(p, "")) + name
 }
