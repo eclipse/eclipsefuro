@@ -50,8 +50,8 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 	if t, ok := ModelTypesMap[fieldType]; ok {
 		primitiveType := PrimitivesMap[fieldType]
 		if field.Field.Label.String() == "LABEL_REPEATED" {
-			imports.AddImport("@furo/open-models/dist/index", "ARRAY")
-			imports.AddImport("@furo/open-models/dist/index", ModelTypesMap[fieldType])
+			imports.AddImport("@furo/open-models/dist/index", "ARRAY", "")
+			imports.AddImport("@furo/open-models/dist/index", ModelTypesMap[fieldType], "")
 			return "ARRAY<" + t + ", " + primitiveType + ">",
 				"__TypeSetter",
 				primitiveType + "[]",
@@ -59,7 +59,7 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 				"", // ARRAY is uses a typesetter
 				t
 		}
-		imports.AddImport("@furo/open-models/dist/index", ModelTypesMap[fieldType])
+		imports.AddImport("@furo/open-models/dist/index", ModelTypesMap[fieldType], "")
 		return t, "__PrimitivesSetter", primitiveType, t, "", t
 	}
 
@@ -80,6 +80,7 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 						if *nested.Field[1].Type == descriptorpb.FieldDescriptorProto_TYPE_MESSAGE {
 							// message
 							m := *nested.Field[1].TypeName
+							className := allTypes[m].Name
 							maptype = m[1:len(m)]
 							// WELL KNOWN
 
@@ -89,15 +90,15 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 
 								// ANY
 								if typeName == "Any" {
-									imports.AddImport("@furo/open-models/dist/index", "type IAny")
-									imports.AddImport("@furo/open-models/dist/index", "ANY")
+									imports.AddImport("@furo/open-models/dist/index", "type IAny", "")
+									imports.AddImport("@furo/open-models/dist/index", "ANY", "")
 									return "ANY", "__TypeSetter", "IAny", "ANY", "", "ANY"
 								}
 								primitiveMapType := WellKnownTypesMap[typeName]
 
 								// for model types return "MAP<string, STRING, string>;"
-								imports.AddImport("@furo/open-models/dist/index", "MAP")
-								imports.AddImport("@furo/open-models/dist/index", ModelTypesMap[primitiveMapType])
+								imports.AddImport("@furo/open-models/dist/index", "MAP", "")
+								imports.AddImport("@furo/open-models/dist/index", ModelTypesMap[primitiveMapType], "")
 								return "MAP<string," + ModelTypesMap[primitiveMapType] + "," + PrimitivesMap[primitiveMapType] + ">",
 									"__TypeSetter",
 									"{ [key: string]: " + PrimitivesMap[primitiveMapType] + " }",
@@ -111,8 +112,8 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 							if !strings.HasPrefix(rel, "..") {
 								rel = "./" + rel
 							}
-							imports.AddImport(rel, fullQualifiedName(maptype, ""))
-							imports.AddImport("@furo/open-models/dist/index", "MAP")
+							imports.AddImport(rel, PrefixReservedWords(className), fullQualifiedName(maptype, ""))
+							imports.AddImport("@furo/open-models/dist/index", "MAP", "")
 
 							return "MAP<string," + fullQualifiedName(maptype, "") + "," + fullQualifiedName(maptype, "") + ">",
 								"__TypeSetter",
@@ -123,8 +124,8 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 						}
 					}
 					// for model types return "MAP<string, STRING, string>;"
-					imports.AddImport("@furo/open-models/dist/index", "MAP")
-					imports.AddImport("@furo/open-models/dist/index", ModelTypesMap[maptype])
+					imports.AddImport("@furo/open-models/dist/index", "MAP", "")
+					imports.AddImport("@furo/open-models/dist/index", ModelTypesMap[maptype], "")
 					return "MAP<string," + ModelTypesMap[maptype] + "," + PrimitivesMap[maptype] + ">",
 						"__TypeSetter",
 						"{ [key: string]: " + PrimitivesMap[maptype] + " }",
@@ -146,17 +147,18 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 
 			// ANY
 			if typeName == "Any" {
-				imports.AddImport("@furo/open-models/dist/index", "type IAny")
-				imports.AddImport("@furo/open-models/dist/index", "ANY")
+				imports.AddImport("@furo/open-models/dist/index", "type IAny", "")
+				imports.AddImport("@furo/open-models/dist/index", "ANY", "")
 				return "ANY", "__TypeSetter", "IAny", "ANY", "", "ANY"
 			}
 			primitiveType := WellKnownTypesMap[typeName]
-			imports.AddImport("@furo/open-models/dist/index", typeName)
+			imports.AddImport("@furo/open-models/dist/index", typeName, "")
 			return typeName, "__TypeSetter", primitiveType + "| null", typeName, "", typeName
 		}
 
 		// MESSAGE
 		t := field.Field.GetTypeName()
+		className := dotToCamel(allTypes[t].Name)
 		if strings.HasPrefix(t, ".") {
 			t = t[1:]
 		}
@@ -168,12 +170,21 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 			// do not add import for the same file (direct recursion types)
 			t = fullQualifiedName(t, "")
 			if field.Message.GetName() != importFile {
-				imports.AddImport("./"+importFile, t)
+				imports.AddImport("./"+importFile, PrefixReservedWords(className), t)
 			}
 
 			if field.Field.Label.String() == "LABEL_REPEATED" {
-				imports.AddImport("@furo/open-models/dist/index", "ARRAY")
+				imports.AddImport("@furo/open-models/dist/index", "ARRAY", "")
 
+				// if we are in the same package, we use the classNames
+				if field.Field.GetTypeName() == "."+field.Package+"."+field.Message.GetName() {
+					return "ARRAY<" + className + ", I" + className + ">",
+						"__TypeSetter",
+						"I" + className + "[]",
+						"ARRAY<" + className + ", I" + className + ">",
+						"",
+						className
+				}
 				return "ARRAY<" + t + ", I" + t + ">",
 					"__TypeSetter",
 					"I" + t + "[]",
@@ -183,23 +194,23 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 			}
 			// if a field type equals the package name + message type we have a direct recusrion
 			if field.Field.GetTypeName() == "."+field.Package+"."+field.Message.GetName() {
-				imports.AddImport("@furo/open-models/dist/index", "RECURSION")
-				return "RECURSION<" + t + ", I" + t + ">",
+				imports.AddImport("@furo/open-models/dist/index", "RECURSION", "")
+				return "RECURSION<" + className + ", I" + className + ">",
 					"__TypeSetter",
-					"I" + t,
-					"RECURSION<" + t + ", I" + t + ">",
+					"I" + className,
+					"RECURSION<" + className + ", I" + className + ">",
 					"",
-					t
+					className
 			}
 			// todo: check for deep recursion
 			if deepRecursionCheck(field.Field.GetTypeName()) {
-				imports.AddImport("@furo/open-models/dist/index", "RECURSION")
-				return "RECURSION<" + t + ", I" + t + ">",
+				imports.AddImport("@furo/open-models/dist/index", "RECURSION", "")
+				return "RECURSION<" + className + ", I" + className + ">",
 					"__TypeSetter",
-					"I" + t,
-					"RECURSION<" + t + ", I" + t + ">",
+					"I" + className,
+					"RECURSION<" + className + ", I" + className + ">",
 					"",
-					t
+					className
 			}
 
 			return t, "__TypeSetter", "I" + t, t, "", t
@@ -220,10 +231,10 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 			// do not add import for the same file (direct recursion types)
 			t = fullQualifiedName(t, "")
 			if field.Message.GetName() != importFile {
-				imports.AddImport(rel, t)
+				imports.AddImport(rel, PrefixReservedWords(className), t)
 			}
 			if field.Field.Label.String() == "LABEL_REPEATED" {
-				imports.AddImport("@furo/open-models/dist/index", "ARRAY")
+				imports.AddImport("@furo/open-models/dist/index", "ARRAY", "")
 
 				return "ARRAY<" + t + ", I" + t + ">",
 					"__TypeSetter",
@@ -239,6 +250,7 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 	}
 	if fieldType == "TYPE_ENUM" {
 		t := field.Field.GetTypeName()
+		className := dotToCamel(allEnums[t].Name)
 		if strings.HasPrefix(t, ".") {
 			t = t[1:]
 		}
@@ -248,8 +260,8 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 			importFile := t[len(field.Package)+1:]
 			fqn := fullQualifiedName(t, "")
 
-			imports.AddImport("@furo/open-models/dist/index", "ENUM")
-			imports.AddImport("./"+importFile, fqn)
+			imports.AddImport("@furo/open-models/dist/index", "ENUM", "")
+			imports.AddImport("./"+importFile, PrefixReservedWords(className), fqn)
 			// create correct importFile for nested types
 
 			return "ENUM<" + fqn + ">", "__TypeSetter", fqn, "ENUM<" + fqn + ">", "", "ENUM<" + fqn + ">"
@@ -264,8 +276,8 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 			fqn := fullQualifiedName(t, "")
 
 			// enum are without prefix
-			imports.AddImport("@furo/open-models/dist/index", "ENUM")
-			imports.AddImport(rel, fqn)
+			imports.AddImport("@furo/open-models/dist/index", "ENUM", "")
+			imports.AddImport(rel, PrefixReservedWords(className), fqn)
 			if field.Field.Label.String() == "LABEL_REPEATED" {
 				return "ENUM<" + fqn + ">", "__TypeSetter", fqn, "ENUM<" + fqn + ">", "", "ENUM<" + fqn + ">"
 			}

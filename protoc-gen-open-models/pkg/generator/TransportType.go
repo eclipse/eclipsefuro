@@ -3,6 +3,7 @@ package generator
 import (
 	"bytes"
 	"github.com/eclipse/eclipsefuro/protoc-gen-open-models/pkg/sourceinfo"
+	"github.com/iancoleman/strcase"
 	"text/template"
 )
 
@@ -50,7 +51,7 @@ export interface T{{.Name}} {
 
 func prepareTransportType(message *sourceinfo.MessageInfo, imports ImportMap) TransportType {
 	transportType := TransportType{
-		Name:            fullQualifiedName(message.Package, fullQualifiedName(message.Name, "")),
+		Name:            PrefixReservedWords(strcase.ToCamel(message.Name)),
 		Fields:          nil,
 		LeadingComments: multilineComment(message.Info.GetLeadingComments()),
 	}

@@ -7,14 +7,17 @@ import (
 
 type ImportMap struct {
 	// map[__modulepath__]map[__import__]bool
-	Imports map[string]map[string]bool
+	Imports map[string]map[string]string
+	//            ^           ^     ^
+	//            |           |     |
+	//        modulepath   class   fullqualified class
 }
 
-func (im ImportMap) AddImport(typescriptModulePath string, cls string) {
+func (im ImportMap) AddImport(typescriptModulePath string, className string, fullQualifiedClassName string) {
 	if im.Imports[typescriptModulePath] == nil {
-		im.Imports[typescriptModulePath] = map[string]bool{}
+		im.Imports[typescriptModulePath] = map[string]string{}
 	}
-	im.Imports[typescriptModulePath][cls] = true
+	im.Imports[typescriptModulePath][className] = fullQualifiedClassName
 }
 
 func (im ImportMap) Render() string {
@@ -33,6 +36,6 @@ func (im ImportMap) Render() string {
 
 var ImportTemplate = `
 {{- range $import, $clsMap := .Imports}}
-{{ $first := true }}import { {{range $cls, $_ := $clsMap}}{{if not $first}}, {{else}}{{$first = false}}{{end}}{{$cls}}{{end}} } from "{{$import}}";
+{{ $first := true }}import { {{range $cls, $as := $clsMap}}{{if not $first}}, {{else}}{{$first = false}}{{end}}{{$cls}}{{if $as}} as {{$as}}{{end}}{{end}} } from "{{$import}}";
 {{end}}
 `
