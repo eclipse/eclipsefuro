@@ -55,6 +55,7 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 							// message
 							m := *nested.Field[1].TypeName
 							maptype = m[1:len(m)]
+							className := allTypes[m].Name
 
 							// WELL KNOWN
 							if isWellKnownType(tn) {
@@ -62,13 +63,13 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 								typeName := ts[len(ts)-1]
 
 								if typeName == "Any" {
-									imports.AddImport("@furo/open-models/dist/index", "type IAny")
+									imports.AddImport("@furo/open-models/dist/index", "type IAny", "")
 									return "IAny"
 								}
 
 								// well known types are using primitives
 								primitiveMapType := WellKnownTypesMap[typeName]
-								imports.AddImport("@furo/open-models/dist/index", typeName)
+								imports.AddImport("@furo/open-models/dist/index", typeName, "")
 								return "{ [key: string]: " + PrimitivesMap[primitiveMapType] + " }"
 							}
 							fieldPackage := strings.Split("."+field.Package, ".")
@@ -76,7 +77,7 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 							if !strings.HasPrefix(rel, "..") {
 								rel = "./" + rel
 							}
-							imports.AddImport(rel, kindPrefix+fullQualifiedName(maptype, ""))
+							imports.AddImport(rel, kindPrefix+PrefixReservedWords(className), kindPrefix+fullQualifiedName(maptype, ""))
 							return "{ [key: string]: " + kindPrefix + fullQualifiedName(maptype, "") + " }"
 						}
 					}
@@ -95,13 +96,13 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 			typeName := ts[len(ts)-1]
 
 			if typeName == "Any" {
-				imports.AddImport("@furo/open-models/dist/index", "type IAny")
+				imports.AddImport("@furo/open-models/dist/index", "type IAny", "")
 				return "IAny"
 			}
 
 			// well known types are using primitives
 			primitiveType := WellKnownTypesMap[typeName]
-			imports.AddImport("@furo/open-models/dist/index", typeName)
+			imports.AddImport("@furo/open-models/dist/index", typeName, "")
 			return primitiveType
 		}
 
@@ -109,6 +110,7 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 
 		// MESSAGE
 		t := field.Field.GetTypeName()
+		className := dotToCamel(allTypes[t].Name)
 		if strings.HasPrefix(t, ".") {
 			t = t[1:]
 		}
@@ -121,8 +123,9 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 			// add imports for Transport, Literal and Model
 			// do not add import for the same file (direct recursion types)
 			if field.Message.GetName() != importFile {
-
-				imports.AddImport("./"+importFile, kindPrefix+t)
+				imports.AddImport("./"+importFile, kindPrefix+PrefixReservedWords(className), kindPrefix+t)
+			} else {
+				return kindPrefix + className
 			}
 			if field.Field.Label.String() == "LABEL_REPEATED" {
 				return kindPrefix + t + "[]"
@@ -142,7 +145,7 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 			// do not add import for the same file (direct recursion types)
 			t = fullQualifiedName(t, "")
 			if field.Message.GetName() != importFile {
-				imports.AddImport(rel, kindPrefix+t)
+				imports.AddImport(rel, kindPrefix+PrefixReservedWords(className), kindPrefix+t)
 			}
 			if field.Field.Label.String() == "LABEL_REPEATED" {
 				return kindPrefix + t + "[]"
@@ -154,6 +157,7 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 	}
 	if fieldType == "TYPE_ENUM" {
 		t := field.Field.GetTypeName()
+		className := dotToCamel(allEnums[t].Name)
 		if strings.HasPrefix(t, ".") {
 			t = t[1:]
 		}
@@ -164,7 +168,7 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 			fqn := fullQualifiedName(t, "")
 
 			// enum are without prefix
-			imports.AddImport("./"+importFile, fqn)
+			imports.AddImport("./"+importFile, PrefixReservedWords(className), fqn)
 			if field.Field.Label.String() == "LABEL_REPEATED" {
 				return fqn + "[]"
 			}
@@ -181,8 +185,8 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 			fqn := fullQualifiedName(t, "")
 
 			// enum are without prefix
-			imports.AddImport("@furo/open-models/dist/index", "ENUM")
-			imports.AddImport(rel, fqn)
+			imports.AddImport("@furo/open-models/dist/index", "ENUM", "")
+			imports.AddImport(rel, PrefixReservedWords(className), fqn)
 			if field.Field.Label.String() == "LABEL_REPEATED" {
 				return fqn + "[]"
 			}

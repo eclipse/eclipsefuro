@@ -7,6 +7,7 @@ import (
 	"github.com/bufbuild/protoplugin"
 	"github.com/eclipse/eclipsefuro/protoc-gen-open-models/pkg/sourceinfo"
 	openapi_v3 "github.com/google/gnostic/openapiv3"
+	"github.com/iancoleman/strcase"
 	"slices"
 	"strings"
 	"text/template"
@@ -178,7 +179,7 @@ func prepareModelType(message *sourceinfo.MessageInfo, imports ImportMap, si sou
 	readonlyFields := []string{}
 
 	modelType := ModelType{
-		Name:            fullQualifiedName(message.Package, fullQualifiedName(message.Name, "")),
+		Name:            PrefixReservedWords(strcase.ToCamel(message.Name)),
 		Fields:          nil,
 		LeadingComments: multilineComment(message.Info.GetLeadingComments()),
 		MetaTypeName:    message.Package + "." + message.Name,

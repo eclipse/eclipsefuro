@@ -52,7 +52,7 @@ func (r *LiteralType) Render() string {
 
 func prepareLiteralType(message *sourceinfo.MessageInfo, imports ImportMap) LiteralType {
 	literalType := LiteralType{
-		Name:            fullQualifiedName(message.Package, fullQualifiedName(message.Name, "")),
+		Name:            PrefixReservedWords(strcase.ToCamel(message.Name)),
 		Fields:          nil,
 		LeadingComments: multilineComment(message.Info.GetLeadingComments()),
 	}
@@ -75,4 +75,12 @@ func fullQualifiedName(pkg string, name string) string {
 	}
 
 	return strcase.ToCamel(strings.Join(p, "")) + name
+}
+
+func dotToCamel(name string) string {
+	p := []string{}
+	for _, s := range strings.Split(name, ".") {
+		p = append(p, strings.ToUpper(s[:1])+s[1:])
+	}
+	return strcase.ToCamel(strings.Join(p, ""))
 }

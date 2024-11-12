@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"github.com/eclipse/eclipsefuro/protoc-gen-open-models/pkg/sourceinfo"
+	"github.com/iancoleman/strcase"
 	"google.golang.org/genproto/googleapis/api/annotations"
 	"path/filepath"
 	"strings"
@@ -63,17 +64,17 @@ func (r *ServiceType) Render() string {
 
 func prepareServiceType(service sourceinfo.ServiceInfo, imports ImportMap) ServiceType {
 
-	imports.AddImport("@furo/open-models/dist/Fetcher", "Fetcher")
+	imports.AddImport("@furo/open-models/dist/Fetcher", "Fetcher", "")
 
 	pathSegments := strings.Split(service.Package, ".")
 	for i, _ := range pathSegments {
 		pathSegments[i] = ".."
 	}
 
-	imports.AddImport(strings.Join(pathSegments, "/")+"/API_OPTIONS", "API_OPTIONS")
+	imports.AddImport(strings.Join(pathSegments, "/")+"/API_OPTIONS", "API_OPTIONS", "")
 
 	serviceType := ServiceType{
-		Name:            fullQualifiedName(service.Package, service.Name),
+		Name:            strcase.ToCamel(service.Name),
 		Methods:         make([]ServiceMethods, 0, len(service.Methods)),
 		LeadingComments: multilineComment(service.Info.GetLeadingComments()),
 		Package:         service.Package,
@@ -83,7 +84,8 @@ func prepareServiceType(service sourceinfo.ServiceInfo, imports ImportMap) Servi
 
 		requestTypeFQ := fullQualifiedTypeName(method.Method.GetInputType())
 		responseTypeFQ := fullQualifiedTypeName(method.Method.GetOutputType())
-
+		classNameOut := allTypes[method.Method.GetOutputType()].Name
+		classNameIn := allTypes[method.Method.GetInputType()].Name
 		fieldPackage := strings.Split("."+service.Package, ".")
 
 		relIn, _ := filepath.Rel(strings.Join(fieldPackage, "/"), "/"+typenameToPath(method.Method.GetInputType()))
@@ -94,14 +96,14 @@ func prepareServiceType(service sourceinfo.ServiceInfo, imports ImportMap) Servi
 		if !strings.HasPrefix(relOut, "..") {
 			relOut = "./" + relOut
 		}
-		imports.AddImport(relIn, "I"+requestTypeFQ)
-		imports.AddImport(relOut, "I"+responseTypeFQ)
+		imports.AddImport(relIn, "I"+PrefixReservedWords(classNameIn), "I"+requestTypeFQ)
+		imports.AddImport(relOut, "I"+PrefixReservedWords(classNameOut), "I"+responseTypeFQ)
 
 		verb, path, err := extractPathAndPattern(method.HttpRule.ApiOptions)
 		// on err, we have no REST endpoints
 		if err == nil {
 			serviceMethods := ServiceMethods{
-				Name:                method.Name,
+				Name:                PrefixReservedWords(method.Name),
 				RequestTypeLiteral:  "I" + requestTypeFQ,
 				ResponseTypeLiteral: "I" + responseTypeFQ,
 				Verb:                verb,
