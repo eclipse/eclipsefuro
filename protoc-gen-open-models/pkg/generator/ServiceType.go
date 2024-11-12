@@ -96,8 +96,8 @@ func prepareServiceType(service sourceinfo.ServiceInfo, imports ImportMap) Servi
 		if !strings.HasPrefix(relOut, "..") {
 			relOut = "./" + relOut
 		}
-		imports.AddImport(relIn, PrefixReservedWords(classNameIn), "I"+requestTypeFQ)
-		imports.AddImport(relOut, PrefixReservedWords(classNameOut), "I"+responseTypeFQ)
+		imports.AddImport(relIn, "I"+PrefixReservedWords(classNameIn), "I"+requestTypeFQ)
+		imports.AddImport(relOut, "I"+PrefixReservedWords(classNameOut), "I"+responseTypeFQ)
 
 		verb, path, err := extractPathAndPattern(method.HttpRule.ApiOptions)
 		// on err, we have no REST endpoints
