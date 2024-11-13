@@ -13,7 +13,7 @@ import (
 	"os/exec"
 )
 
-const version = "1.0.0"
+const version = "1.40.0"
 
 func main() {
 	const debugMode = false
@@ -35,7 +35,11 @@ func main() {
 			if err != nil {
 				log.Fatal(err)
 			}
-			os.WriteFile("protocdata", data, 0644)
+
+			writeError := os.WriteFile("protocdata", data, 0644)
+			if writeError != nil {
+				log.Fatal(writeError)
+			}
 		}
 		osEnv = protoplugin.Env{
 			Args:    os.Args[1:],
