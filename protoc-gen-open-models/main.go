@@ -13,7 +13,7 @@ import (
 	"os/exec"
 )
 
-const version = "1.40.0"
+const version = "1.41.0"
 
 func main() {
 	const debugMode = false

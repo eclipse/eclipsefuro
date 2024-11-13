@@ -59,7 +59,9 @@ func GenerateAll(responseWriter protoplugin.ResponseWriter, request protoplugin.
 
 	}
 
-	for _, fileDescriptorProto := range request.FileDescriptorProtosToGenerate() {
+	// generate with all dependencies
+	// for _, fileDescriptorProto := range request.FileDescriptorProtosToGenerate() {
+	for _, fileDescriptorProto := range request.AllFileDescriptorProtos() {
 		/*if strings.HasPrefix(fileDescriptorProto.GetPackage(), "openapi.v3") {
 			continue
 		}*/

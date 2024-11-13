@@ -82,33 +82,16 @@ func prepareServiceType(service sourceinfo.ServiceInfo, imports ImportMap) Servi
 
 	for _, method := range service.Methods {
 
-		requestTypeFQ := fullQualifiedTypeName(method.Method.GetInputType())
-		responseTypeFQ := fullQualifiedTypeName(method.Method.GetOutputType())
-		classNameOut := allTypes[method.Method.GetOutputType()].Name
-		classNameIn := allTypes[method.Method.GetInputType()].Name
-		fieldPackage := strings.Split("."+service.Package, ".")
-
-		relIn, _ := filepath.Rel(strings.Join(fieldPackage, "/"), "/"+typenameToPath(method.Method.GetInputType()))
-		relOut, _ := filepath.Rel(strings.Join(fieldPackage, "/"), "/"+typenameToPath(method.Method.GetOutputType()))
-		if !strings.HasPrefix(relIn, "..") {
-			relIn = "./" + relIn
-		}
-		if !strings.HasPrefix(relOut, "..") {
-			relOut = "./" + relOut
-		}
-		imports.AddImport(relIn, "I"+PrefixReservedWords(classNameIn), "I"+requestTypeFQ)
-		imports.AddImport(relOut, "I"+PrefixReservedWords(classNameOut), "I"+responseTypeFQ)
-
 		verb, path, err := extractPathAndPattern(method.HttpRule.ApiOptions)
 		// on err, we have no REST endpoints
 		if err == nil {
 			serviceMethods := ServiceMethods{
 				Name:                PrefixReservedWords(method.Name),
-				RequestTypeLiteral:  "I" + requestTypeFQ,
-				ResponseTypeLiteral: "I" + responseTypeFQ,
+				RequestTypeLiteral:  resolveServiceType(method.Method.GetInputType(), service, imports),
+				ResponseTypeLiteral: resolveServiceType(method.Method.GetOutputType(), service, imports),
 				Verb:                verb,
 				Path:                path,
-				Body:                method.HttpRule.ApiOptions.GetBody(),
+				Body:                cleanFieldName(method.HttpRule.ApiOptions.GetBody()),
 				LeadingComments:     multilineComment(method.Info.GetLeadingComments()),
 				TrailingComment:     method.Info.GetTrailingComments(),
 			}
@@ -118,6 +101,43 @@ func prepareServiceType(service sourceinfo.ServiceInfo, imports ImportMap) Servi
 	}
 
 	return serviceType
+}
+
+func resolveServiceType(typeName string, service sourceinfo.ServiceInfo, imports ImportMap) string {
+	// WELL KNOWN
+
+	if isWellKnownType(typeName) {
+		ts := strings.Split(typeName, ".")
+		name := ts[len(ts)-1]
+
+		// ANY
+		if name == "Any" {
+			imports.AddImport("@furo/open-models/dist/index", "type IAny", "")
+			return "IAny"
+		}
+
+		// Empty
+		if name == "Empty" {
+			return "Record<string, never>"
+		}
+
+		primitiveType := WellKnownTypesMap[name]
+		// imports.AddImport("@furo/open-models/dist/index", name, "")
+		return primitiveType
+	}
+
+	// Any
+	// Empty
+
+	// regular message type
+	classNameIn := allTypes[typeName].Name
+	fieldPackage := strings.Split("."+service.Package, ".")
+	rel, _ := filepath.Rel(strings.Join(fieldPackage, "/"), "/"+typenameToPath(typeName))
+	if !strings.HasPrefix(rel, "..") {
+		rel = "./" + rel
+	}
+	imports.AddImport(rel, "I"+PrefixReservedWords(classNameIn), "I"+fullQualifiedTypeName(typeName))
+	return "I" + fullQualifiedTypeName(typeName)
 }
 
 func baseTypeName(typeName string) string {
