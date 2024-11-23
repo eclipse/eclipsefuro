@@ -67,7 +67,9 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 									return "IAny"
 								}
 
-								// TODO: Empty
+								if typeName == "Empty" {
+									return WellKnownTypesMap[typeName]
+								}
 
 								// well known types are using primitives
 								primitiveMapType := WellKnownTypesMap[typeName]
@@ -102,7 +104,9 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 				return "IAny"
 			}
 
-			// TODO: Empty
+			if typeName == "Empty" {
+				return WellKnownTypesMap[typeName]
+			}
 
 			// well known types are using primitives
 			primitiveType := WellKnownTypesMap[typeName]

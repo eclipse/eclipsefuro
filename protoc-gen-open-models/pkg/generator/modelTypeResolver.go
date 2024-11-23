@@ -21,6 +21,7 @@ var WellKnownTypesMap = map[string]string{
 	"Duration":    "string",
 	"Struct":      "object",
 	"Empty":       "Record<string, never>",
+	"FieldMask":   "string[]",
 }
 
 var ModelTypesMap = map[string]string{
@@ -95,9 +96,12 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 									return "ANY", "__TypeSetter", "IAny", "ANY", "", "ANY"
 								}
 
-								// TODO: Empty
-
 								primitiveMapType := WellKnownTypesMap[typeName]
+
+								if typeName == "Empty" {
+									imports.AddImport("@furo/open-models/dist/index", "EMPTY", "")
+									return "EMPTY", "__TypeSetter", primitiveMapType, "EMPTY", "", "EMPTY"
+								}
 
 								// for model types return "MAP<string, STRING, string>;"
 								imports.AddImport("@furo/open-models/dist/index", "MAP", "")
@@ -155,9 +159,12 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 				return "ANY", "__TypeSetter", "IAny", "ANY", "", "ANY"
 			}
 
-			// TODO: Empty
-
 			primitiveType := WellKnownTypesMap[typeName]
+			if typeName == "Empty" {
+				imports.AddImport("@furo/open-models/dist/index", "EMPTY", "")
+				return "EMPTY", "__TypeSetter", primitiveType, "EMPTY", "", "EMPTY"
+			}
+
 			imports.AddImport("@furo/open-models/dist/index", typeName, "")
 			return typeName, "__TypeSetter", primitiveType + "| null", typeName, "", typeName
 		}
