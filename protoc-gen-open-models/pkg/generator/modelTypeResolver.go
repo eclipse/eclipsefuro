@@ -215,15 +215,15 @@ func resolveModelType(imports ImportMap, field sourceinfo.FieldInfo) (
 					"",
 					className
 			}
-			// todo: check for deep recursion
+			// deep recursion
 			if deepRecursionCheck(field.Field.GetTypeName()) {
 				imports.AddImport("@furo/open-models/dist/index", "RECURSION", "")
-				return "RECURSION<" + className + ", I" + className + ">",
+				return "RECURSION<" + t + ", I" + t + ">",
 					"__TypeSetter",
-					"I" + className,
-					"RECURSION<" + className + ", I" + className + ">",
+					"I" + t,
+					"RECURSION<" + t + ", I" + t + ">",
 					"",
-					className
+					t
 			}
 
 			return t, "__TypeSetter", "I" + t, t, "", t
