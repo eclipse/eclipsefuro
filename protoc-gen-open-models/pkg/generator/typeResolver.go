@@ -67,7 +67,9 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 									return "IAny"
 								}
 
-								// TODO: Empty
+								if typeName == "Empty" {
+									return WellKnownTypesMap[typeName]
+								}
 
 								// well known types are using primitives
 								primitiveMapType := WellKnownTypesMap[typeName]
@@ -102,7 +104,9 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 				return "IAny"
 			}
 
-			// TODO: Empty
+			if typeName == "Empty" {
+				return WellKnownTypesMap[typeName]
+			}
 
 			// well known types are using primitives
 			primitiveType := WellKnownTypesMap[typeName]
@@ -129,6 +133,10 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 			if field.Message.GetName() != importFile {
 				imports.AddImport("./"+importFile, kindPrefix+PrefixReservedWords(className), kindPrefix+t)
 			} else {
+				// repeated recursion like
+				if field.Field.Label.String() == "LABEL_REPEATED" {
+					return kindPrefix + className + "[]"
+				}
 				return kindPrefix + className
 			}
 			if field.Field.Label.String() == "LABEL_REPEATED" {
