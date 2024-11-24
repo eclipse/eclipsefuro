@@ -133,6 +133,10 @@ func resolveInterfaceType(imports ImportMap, field sourceinfo.FieldInfo, kindPre
 			if field.Message.GetName() != importFile {
 				imports.AddImport("./"+importFile, kindPrefix+PrefixReservedWords(className), kindPrefix+t)
 			} else {
+				// repeated recursion like
+				if field.Field.Label.String() == "LABEL_REPEATED" {
+					return kindPrefix + className + "[]"
+				}
 				return kindPrefix + className
 			}
 			if field.Field.Label.String() == "LABEL_REPEATED" {
