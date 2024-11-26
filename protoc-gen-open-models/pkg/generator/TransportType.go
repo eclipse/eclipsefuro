@@ -2,7 +2,7 @@ package generator
 
 import (
 	"bytes"
-	"github.com/eclipse/eclipsefuro/protoc-gen-open-models/pkg/sourceinfo"
+	"github.com/eclipse-furo/eclipsefuro/protoc-gen-open-models/pkg/sourceinfo"
 	"github.com/iancoleman/strcase"
 	"text/template"
 )

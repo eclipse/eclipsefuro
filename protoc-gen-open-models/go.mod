@@ -1,4 +1,4 @@
-module github.com/eclipse/eclipsefuro/protoc-gen-open-models
+module github.com/eclipse-furo/eclipsefuro/protoc-gen-open-models
 
 go 1.21
 

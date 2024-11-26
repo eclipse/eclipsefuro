@@ -1,7 +1,7 @@
 package generator
 
 import (
-	"github.com/eclipse/eclipsefuro/protoc-gen-open-models/pkg/sourceinfo"
+	"github.com/eclipse-furo/eclipsefuro/protoc-gen-open-models/pkg/sourceinfo"
 	"google.golang.org/protobuf/types/descriptorpb"
 	"path/filepath"
 	"strings"
