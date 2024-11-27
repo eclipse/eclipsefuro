@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/bufbuild/protoplugin"
-	"github.com/eclipse/eclipsefuro/protoc-gen-open-models/pkg/generator"
+	"github.com/eclipse-furo/eclipsefuro/protoc-gen-open-models/pkg/generator"
 	"io"
 	"log"
 	"os"

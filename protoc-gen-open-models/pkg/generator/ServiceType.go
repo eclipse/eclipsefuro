@@ -3,7 +3,7 @@ package generator
 import (
 	"bytes"
 	"errors"
-	"github.com/eclipse/eclipsefuro/protoc-gen-open-models/pkg/sourceinfo"
+	"github.com/eclipse-furo/eclipsefuro/protoc-gen-open-models/pkg/sourceinfo"
 	"github.com/iancoleman/strcase"
 	"google.golang.org/genproto/googleapis/api/annotations"
 	"path/filepath"

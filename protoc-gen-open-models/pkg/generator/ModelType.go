@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/bufbuild/protoplugin"
-	"github.com/eclipse/eclipsefuro/protoc-gen-open-models/pkg/sourceinfo"
+	"github.com/eclipse-furo/eclipsefuro/protoc-gen-open-models/pkg/sourceinfo"
 	openapi_v3 "github.com/google/gnostic/openapiv3"
 	"github.com/iancoleman/strcase"
 	"slices"
